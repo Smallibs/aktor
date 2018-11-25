@@ -1,0 +1,27 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.3.0'
+}
+
+group 'org.smallibs'
+version 'Master-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    testCompile "org.jetbrains.kotlin:kotlin-test-junit"
+    testCompile "junit:junit:4.12"
+    testCompile 'com.willowtreeapps.assertk:assertk-jvm:0.12'
+    testCompile "org.awaitility:awaitility-kotlin:3.1.2"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}

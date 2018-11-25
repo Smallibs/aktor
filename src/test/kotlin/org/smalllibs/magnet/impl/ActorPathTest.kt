@@ -1,14 +1,16 @@
-package org.smalllibs.magnet
+package org.smalllibs.magnet.impl
 
 import org.junit.Test
+import kotlin.test.assertEquals
 
-class ActorAddressTest {
+class ActorPathTest {
 
     @Test
-    fun shouldBeParent() {
+    fun shouldChildHasCorrectParent() {
+        val root = ActorPathImpl("root")
+        val child = root.newChild("child")
 
-
-
+        assertEquals(child.parent(), root)
     }
 
 }

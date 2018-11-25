@@ -3,14 +3,22 @@ package org.smalllibs.magnet.impl
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class ActorAddessTest {
+class ActorAddressTest {
 
     @Test
     fun shouldChildHasCorrectParent() {
-        val root = ActorPathImpl("root")
-        val child = root.newChild("child")
+        val root = ActorAddressImpl<String>(ActorPathImpl("root"))
+        val child = ActorAddressImpl<String>(root.path().newChild("child"))
 
-        assertEquals(child.parent(), root)
+        assertEquals(root parentOf child, true)
+    }
+
+    @Test
+    fun shouldParentHasCorrectChild() {
+        val root = ActorAddressImpl<String>(ActorPathImpl("root"))
+        val child = ActorAddressImpl<String>(root.path().newChild("child"))
+
+        assertEquals(child childOf root, true)
     }
 
 }

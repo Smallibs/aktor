@@ -34,7 +34,7 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
         behavior.onStart()
     }
 
-    override fun unbecoming() {
+    override fun unbecome() {
         currentBehavior()?.let {
             behaviors.pop()
             it.onStop()

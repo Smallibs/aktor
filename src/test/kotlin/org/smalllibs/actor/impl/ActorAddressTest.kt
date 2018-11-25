@@ -8,7 +8,7 @@ class ActorAddressTest {
     @Test
     fun shouldChildHasCorrectParent() {
         val root = ActorAddressImpl<String>(ActorPathImpl("root"))
-        val child = ActorAddressImpl<String>(root.path().newChild("child"))
+        val child = ActorAddressImpl<String>(root.path.newChild("child"))
 
         assertEquals(root parentOf child, true)
     }
@@ -16,7 +16,7 @@ class ActorAddressTest {
     @Test
     fun shouldParentHasCorrectChild() {
         val root = ActorAddressImpl<String>(ActorPathImpl("root"))
-        val child = ActorAddressImpl<String>(root.path().newChild("child"))
+        val child = ActorAddressImpl<String>(root.path.newChild("child"))
 
         assertEquals(child childOf root, true)
     }

@@ -10,7 +10,7 @@ class ActorPathTest {
         val root = ActorPathImpl("root")
         val child = root.newChild("child")
 
-        assertEquals(child.parent(), root)
+        assertEquals(child.parent, root)
     }
 
 }

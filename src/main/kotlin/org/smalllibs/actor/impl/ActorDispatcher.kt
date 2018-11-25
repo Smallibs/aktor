@@ -6,7 +6,7 @@ import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.Envelop
 import java.util.*
 
-internal class ActorDispatcher {
+class ActorDispatcher {
 
     private val actors: MutableMap<ActorAddress<*>, ActorImpl<*>> = Collections.synchronizedMap(HashMap())
     private val execution: ActorExecution = ActorExecution()
@@ -19,7 +19,7 @@ internal class ActorDispatcher {
         val actor = ActorImpl(reference)
         actor.become(behavior)
 
-        actors[reference.address()] = actor // TODO(didier) check when an address is already used.
+        actors[reference.address] = actor // TODO(didier) check when an address is already used.
         execution.manage(actor)
 
         return actor
@@ -34,7 +34,7 @@ internal class ActorDispatcher {
 
     private fun <T> actor(address: ActorAddress<T>): ActorImpl<T>? =
         actors[address]?.let {
-            if (it.self().address() == address) {
+            if (it.self().address == address) {
                 @Suppress("UNCHECKED_CAST")
                 it as ActorImpl<T> // Ugly cast to be removed!
             } else {

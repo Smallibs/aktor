@@ -20,7 +20,7 @@ interface Actor<T> {
         become(Behavior(receiver), stacked)
     }
 
-    fun unbecoming()
+    fun unbecome()
 
     infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
         actorFor(receiver, null)

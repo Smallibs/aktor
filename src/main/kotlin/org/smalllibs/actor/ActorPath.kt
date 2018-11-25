@@ -4,9 +4,9 @@ import java.util.*
 
 interface ActorPath {
 
-    fun name(): String
+    val name: String
 
-    fun parent(): ActorPath?
+    val parent: ActorPath?
 
     companion object {
         fun freshName(): String {

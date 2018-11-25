@@ -2,7 +2,7 @@ package org.smalllibs.actor
 
 interface ActorAddress<T> {
 
-    fun path(): ActorPath
+    val path: ActorPath
 
     infix fun childOf(address: ActorAddress<T>): Boolean = address parentOf this
 

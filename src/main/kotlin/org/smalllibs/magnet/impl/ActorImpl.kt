@@ -19,7 +19,7 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
         return behaviors.peek()
     }
 
-    override fun start(behavior: Behavior<T>, stacked: Boolean) {
+    override fun become(behavior: Behavior<T>, stacked: Boolean) {
         currentBehavior()?.let {
             it.onStop()
             if (!stacked) {
@@ -34,7 +34,7 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
         behavior.onStart()
     }
 
-    override fun finish() {
+    override fun unbecoming() {
         currentBehavior()?.let {
             behaviors.pop()
             it.onStop()
@@ -54,7 +54,7 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
             this.actorMailbox.deliver(envelop)
 
     internal fun nextTurn(): (() -> Unit)? =
-            actorMailbox.next()?.let { envelop -> { behavior().receive(this, envelop) } }
+            actorMailbox.next()?.let { envelop -> { behavior().receiver(this, envelop) } }
 
     //
     // Private behaviors

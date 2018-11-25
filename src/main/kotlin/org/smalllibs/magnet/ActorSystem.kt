@@ -4,9 +4,11 @@ import org.smalllibs.magnet.impl.ActorSystemImpl
 
 interface ActorSystem {
 
-    fun <R> actorFor(behavior: Behavior<R>, name: String? = null): ActorReference<R>
+    infix fun <R> actorFor(receiver: Receiver<R>) = actorFor(Behavior(receiver))
 
-    fun <R> actorFor(receive: Receive<R>) = actorFor(Behavior(receive), null)
+    infix fun <R> actorFor(behavior: Behavior<R>) = actorFor(behavior, null)
+
+    fun <R> actorFor(behavior: Behavior<R>, name: String? = null): ActorReference<R>
 
     companion object {
         fun system(site: String): ActorSystem {

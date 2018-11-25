@@ -15,11 +15,11 @@ data class ActorReferenceImpl<T> internal constructor(private val dispatcher: Ac
     }
 
     internal fun <R> register(behavior: Behavior<R>, name: String?): ActorReference<R> {
-        return dispatcher.register(child(name), behavior).self()
+        return dispatcher.register(newChild(name), behavior).self()
     }
 
-    private fun <R> child(name: String?): ActorReferenceImpl<R> {
-        val actorPath = this.address().path().freshChild(name)
+    private fun <R> newChild(name: String?): ActorReferenceImpl<R> {
+        val actorPath = this.address().path().newChild(name)
         val address = ActorAddressImpl<R>(actorPath)
 
         return ActorReferenceImpl(dispatcher, address)

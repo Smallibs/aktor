@@ -1,8 +1,8 @@
 package org.smalllibs.magnet
 
-typealias Receive<T> = (Actor<T>, Envelop<T>) -> Unit
+typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 
-class Behavior<T>(val receive: Receive<T>) {
+class Behavior<T>(val receiver: Receiver<T>) {
 
     fun onStart() {}
 

@@ -6,7 +6,7 @@ data class ActorPathImpl(private val name: String, private val parent: ActorPath
 
     internal constructor(site: String) : this(site, null)
 
-    internal fun freshChild(name: String? = null) = ActorPathImpl(name ?: ActorPath.freshName(), this)
+    internal fun newChild(name: String? = null) = ActorPathImpl(name ?: ActorPath.freshName(), this)
 
     override fun name() = this.name
 

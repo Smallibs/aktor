@@ -36,16 +36,5 @@ reference tell "World!"
 
 ## Actor 'create'
 
-```Kotlin
-val called = AtomicReference("")
-
-val system = ActorSystem.system("example")
-val reference = system.actorFor<String> { a, m ->
-    a actorFor { _, v: Envelop<String> -> called.set("$m.content $v.content") }
-}
-
-reference tell "Hello"
-reference tell "World!"
-// called value should be "Hello World!
-```
+// TODO
 

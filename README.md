@@ -5,16 +5,16 @@ Minimal Actor System written in Kotlin.
 # Example
 
 ```Kotlin
-val called = AtomicInteger(0)
+val called = AtomicReference("")
 
 val system = ActorSystem.system("example")
 
-val reference = system.actorFor<Int> { a, _ ->
-    a become { _, v -> called.set(v.content) }
+val reference = system.actorFor<String> { a, m ->
+    a become { _, v -> called.set("$m.content $v.content") }
 }
 
-reference tell 1
-reference tell 42
+reference tell "Hello"
+reference tell "World!"
 
-// called value should be '42'
+// called value should be "Hello World!
 ```

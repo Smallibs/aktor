@@ -22,16 +22,16 @@ interface Actor<T> {
 
     fun unbecoming()
 
-    fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R>
-
-    fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
+    infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
         actorFor(receiver, null)
 
     fun <R> actorFor(receiver: Receiver<R>, name: String?): ActorReference<R> =
         actorFor(Behavior(receiver), name)
 
-    fun <R> actorFor(behavior: Behavior<R>): ActorReference<R> {
-        return actorFor(behavior, null)
-    }
+    fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R>
+
+
+    infix fun <R> actorFor(behavior: Behavior<R>): ActorReference<R> =
+        actorFor(behavior, null)
 
 }

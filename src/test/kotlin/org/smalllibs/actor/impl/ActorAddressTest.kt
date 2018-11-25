@@ -1,4 +1,4 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
 import org.junit.Test
 import kotlin.test.assertEquals

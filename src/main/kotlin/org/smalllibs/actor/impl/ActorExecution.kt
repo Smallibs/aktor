@@ -1,9 +1,9 @@
 @file:Suppress("JoinDeclarationAndAssignment")
 
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.impl.ActorExecution.Status.RUN
-import org.smalllibs.magnet.impl.ActorExecution.Status.STOPPED
+import org.smalllibs.actor.impl.ActorExecution.Status.RUN
+import org.smalllibs.actor.impl.ActorExecution.Status.STOPPED
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors

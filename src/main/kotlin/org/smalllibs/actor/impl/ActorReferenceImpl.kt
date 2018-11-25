@@ -1,8 +1,8 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.ActorReference
-import org.smalllibs.magnet.Behavior
-import org.smalllibs.magnet.Envelop
+import org.smalllibs.actor.ActorReference
+import org.smalllibs.actor.Behavior
+import org.smalllibs.actor.Envelop
 
 data class ActorReferenceImpl<T> internal constructor(private val dispatcher: ActorDispatcher, private val address: ActorAddressImpl<T>) : ActorReference<T> {
 

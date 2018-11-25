@@ -1,6 +1,6 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.Envelop
+import org.smalllibs.actor.Envelop
 
 internal class ActorMailbox<T> {
 

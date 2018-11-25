@@ -1,6 +1,6 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.ActorAddress
+import org.smalllibs.actor.ActorAddress
 
 data class ActorAddressImpl<T>(private val path: ActorPathImpl) : ActorAddress<T> {
 

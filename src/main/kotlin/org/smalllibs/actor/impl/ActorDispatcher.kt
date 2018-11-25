@@ -1,9 +1,9 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.Actor
-import org.smalllibs.magnet.ActorAddress
-import org.smalllibs.magnet.Behavior
-import org.smalllibs.magnet.Envelop
+import org.smalllibs.actor.Actor
+import org.smalllibs.actor.ActorAddress
+import org.smalllibs.actor.Behavior
+import org.smalllibs.actor.Envelop
 import java.util.*
 
 internal class ActorDispatcher {

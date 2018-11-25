@@ -1,4 +1,4 @@
-package org.smalllibs.magnet
+package org.smalllibs.actor
 
 import java.util.*
 

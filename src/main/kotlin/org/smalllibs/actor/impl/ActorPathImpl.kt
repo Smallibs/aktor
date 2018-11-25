@@ -1,6 +1,6 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.ActorPath
+import org.smalllibs.actor.ActorPath
 
 data class ActorPathImpl(private val name: String, private val parent: ActorPath?) : ActorPath {
 

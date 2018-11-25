@@ -1,9 +1,9 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.Actor
-import org.smalllibs.magnet.ActorReference
-import org.smalllibs.magnet.ActorSystem
-import org.smalllibs.magnet.Behavior
+import org.smalllibs.actor.Actor
+import org.smalllibs.actor.ActorReference
+import org.smalllibs.actor.ActorSystem
+import org.smalllibs.actor.Behavior
 
 class ActorSystemImpl(site: String) : ActorSystem {
 

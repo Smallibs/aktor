@@ -1,10 +1,9 @@
-package org.smalllibs.magnet
+package org.smalllibs.actor
 
 
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
-import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 
 class MassiveActorTest {
@@ -38,4 +37,5 @@ class MassiveActorTest {
 
         println("Execution of " + called.get() + " messages done in " + (System.currentTimeMillis() - t0) + " ms")
     }
+
 }

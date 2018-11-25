@@ -1,4 +1,4 @@
-package org.smalllibs.magnet
+package org.smalllibs.actor
 
 typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 

@@ -1,9 +1,9 @@
-package org.smalllibs.magnet.impl
+package org.smalllibs.actor.impl
 
-import org.smalllibs.magnet.Actor
-import org.smalllibs.magnet.ActorReference
-import org.smalllibs.magnet.Behavior
-import org.smalllibs.magnet.Envelop
+import org.smalllibs.actor.Actor
+import org.smalllibs.actor.ActorReference
+import org.smalllibs.actor.Behavior
+import org.smalllibs.actor.Envelop
 import java.util.*
 
 class ActorImpl<T> internal constructor(private val reference: ActorReferenceImpl<T>) : Actor<T> {

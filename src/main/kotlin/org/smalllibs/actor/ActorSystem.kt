@@ -1,6 +1,6 @@
-package org.smalllibs.magnet
+package org.smalllibs.actor
 
-import org.smalllibs.magnet.impl.ActorSystemImpl
+import org.smalllibs.actor.impl.ActorSystemImpl
 
 interface ActorSystem {
 

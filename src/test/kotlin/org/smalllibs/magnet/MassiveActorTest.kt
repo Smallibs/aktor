@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger
 class MassiveActorTest {
 
     @Test
-    fun shouldDoThousandsTell() {
+    fun shouldDoOneMillionTells() {
         val system = ActorSystem.system("test")
 
         val called = AtomicInteger(0)

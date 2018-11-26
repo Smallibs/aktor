@@ -1,6 +1,7 @@
 package org.smalllibs.actor
 
-import org.smalllibs.actor.impl.ActorSystemImpl
+import org.smalllibs.actor.engine.ThreadBasedActorExecution
+import org.smalllibs.actor.system.ActorSystemImpl
 
 interface ActorSystem {
 
@@ -16,8 +17,8 @@ interface ActorSystem {
     fun <R> actorFor(behavior: Behavior<R>, name: String? = null): ActorReference<R>
 
     companion object {
-        fun system(site: String): ActorSystem {
-            return ActorSystemImpl(site)
+        fun system(site: String, execution: ActorExecution = ThreadBasedActorExecution()): ActorSystem {
+            return ActorSystemImpl(site, execution)
         }
     }
 

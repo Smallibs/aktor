@@ -1,11 +1,11 @@
 @file:Suppress("JoinDeclarationAndAssignment")
 
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.engine
 
 import org.smalllibs.actor.ActorExecution
-import org.smalllibs.actor.impl.ThreadBasedActorExecution.Status.RUN
-import org.smalllibs.actor.impl.ThreadBasedActorExecution.Status.STOPPED
-import java.util.*
+import org.smalllibs.actor.engine.ThreadBasedActorExecution.Status.RUN
+import org.smalllibs.actor.engine.ThreadBasedActorExecution.Status.STOPPED
+import org.smalllibs.actor.impl.ActorImpl
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -28,14 +28,14 @@ internal class ThreadBasedActorExecution(nbThread: Int = 0) : ActorExecution {
     }
 
     override fun manage(actor: ActorImpl<*>) =
-            this.schedulingService.execute {
-                actors[actor] = AtomicReference(STOPPED)
-            }
+        this.schedulingService.execute {
+            actors[actor] = AtomicReference(STOPPED)
+        }
 
     override fun notifyActorTurn(actor: ActorImpl<*>) =
-            this.schedulingService.execute {
-                actors[actor]?.let { performActorTurn(actor, it) }
-            }
+        this.schedulingService.execute {
+            actors[actor]?.let { performActorTurn(actor, it) }
+        }
 
     //
     // Private behaviors
@@ -56,7 +56,7 @@ internal class ThreadBasedActorExecution(nbThread: Int = 0) : ActorExecution {
     }
 
     private fun availableProcessors(nbThread: Int): Int {
-        return Math.min(Runtime.getRuntime().availableProcessors(), Math.max(4, nbThread))
+        return Math.min(Runtime.getRuntime().availableProcessors(), Math.max(2, nbThread))
     }
 
 }

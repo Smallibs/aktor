@@ -4,6 +4,7 @@ import org.smalllibs.actor.Actor
 import org.smalllibs.actor.ActorReference
 import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.Envelop
+import org.smalllibs.actor.reference.ActorReferenceImpl
 import java.util.*
 
 class ActorImpl<T> internal constructor(private val reference: ActorReferenceImpl<T>) : Actor<T> {
@@ -44,28 +45,28 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =
-            reference.register(behavior, name)
+        reference.register(behavior, name)
 
     //
     // Protected behaviors
     //
 
     internal fun deliver(envelop: Envelop<T>) =
-            this.actorMailbox.deliver(envelop)
+        this.actorMailbox.deliver(envelop)
 
     internal fun nextTurn(): (() -> Unit)? =
-            actorMailbox.next()?.let { envelop -> { behavior().receiver(this, envelop) } }
+        actorMailbox.next()?.let { envelop -> { behavior().receiver(this, envelop) } }
 
     //
     // Private behaviors
     //
 
     private fun currentBehavior(): Behavior<T>? =
-            if (!behaviors.isEmpty()) {
-                behaviors.peek()
-            } else {
-                null
-            }
+        if (!behaviors.isEmpty()) {
+            behaviors.peek()
+        } else {
+            null
+        }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

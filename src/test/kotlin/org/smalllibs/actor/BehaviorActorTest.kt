@@ -1,6 +1,5 @@
 package org.smalllibs.actor
 
-
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test

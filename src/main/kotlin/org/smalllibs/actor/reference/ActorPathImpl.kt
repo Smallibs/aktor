@@ -1,4 +1,4 @@
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.reference
 
 import org.smalllibs.actor.ActorPath
 
@@ -6,6 +6,7 @@ data class ActorPathImpl(override val name: String, override val parent: ActorPa
 
     internal constructor(site: String) : this(site, null)
 
-    internal fun newChild(name: String? = null) = ActorPathImpl(name ?: ActorPath.freshName(), this)
+    internal fun newChild(name: String? = null) =
+        ActorPathImpl(name ?: ActorPath.freshName(), this)
 
 }

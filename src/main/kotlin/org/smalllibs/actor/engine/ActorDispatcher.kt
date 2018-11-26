@@ -1,12 +1,13 @@
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.engine
 
 import org.smalllibs.actor.*
+import org.smalllibs.actor.impl.ActorImpl
+import org.smalllibs.actor.reference.ActorReferenceImpl
 import java.util.*
 
-class ActorDispatcher {
+class ActorDispatcher(private val execution: ActorExecution) {
 
     private val actors: MutableMap<ActorAddress<*>, ActorImpl<*>> = Collections.synchronizedMap(HashMap())
-    private val execution: ActorExecution = ThreadBasedActorExecution()
 
     fun <T> register(reference: ActorReferenceImpl<T>, receive: (Actor<T>, Envelop<T>) -> Unit): Actor<T> =
         register(reference, Behavior(receive))

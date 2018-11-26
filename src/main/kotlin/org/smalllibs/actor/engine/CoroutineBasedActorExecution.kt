@@ -1,16 +1,17 @@
 @file:Suppress("JoinDeclarationAndAssignment")
 
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.engine
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.smalllibs.actor.ActorExecution
+import org.smalllibs.actor.impl.ActorImpl
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 
-internal class CoroutineBasedActorExecution(nbThread: Int = 0) : ActorExecution {
+internal class CoroutineBasedActorExecution : ActorExecution {
 
     internal enum class Status {
         STOPPED, RUN
@@ -51,10 +52,6 @@ internal class CoroutineBasedActorExecution(nbThread: Int = 0) : ActorExecution 
                 }
             }
         }
-    }
-
-    private fun availableProcessors(nbThread: Int): Int {
-        return Math.min(Runtime.getRuntime().availableProcessors(), Math.max(4, nbThread))
     }
 
 }

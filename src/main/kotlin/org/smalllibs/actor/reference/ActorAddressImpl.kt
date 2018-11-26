@@ -1,4 +1,4 @@
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.reference
 
 import org.smalllibs.actor.ActorAddress
 

@@ -4,6 +4,7 @@ import org.smalllibs.actor.Actor
 import org.smalllibs.actor.ActorReference
 import org.smalllibs.actor.ActorSystem
 import org.smalllibs.actor.Behavior
+import org.smalllibs.actor.engine.ActorDispatcher
 
 class ActorSystemImpl(site: String) : ActorSystem {
 

@@ -2,14 +2,15 @@
 
 package org.smalllibs.actor.impl
 
-import org.smalllibs.actor.impl.ActorExecution.Status.RUN
-import org.smalllibs.actor.impl.ActorExecution.Status.STOPPED
+import org.smalllibs.actor.ActorExecution
+import org.smalllibs.actor.impl.ThreadBasedActorExecution.Status.RUN
+import org.smalllibs.actor.impl.ThreadBasedActorExecution.Status.STOPPED
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 
-internal class ActorExecution(nbThread: Int = 0) {
+internal class ThreadBasedActorExecution(nbThread: Int = 0) : ActorExecution {
 
     internal enum class Status {
         STOPPED, RUN
@@ -26,12 +27,12 @@ internal class ActorExecution(nbThread: Int = 0) {
         this.actors = HashMap()
     }
 
-    fun manage(actor: ActorImpl<*>) =
+    override fun manage(actor: ActorImpl<*>) =
             this.schedulingService.execute {
                 actors[actor] = AtomicReference(STOPPED)
             }
 
-    fun notifyActorTurn(actor: ActorImpl<*>) =
+    override fun notifyActorTurn(actor: ActorImpl<*>) =
             this.schedulingService.execute {
                 actors[actor]?.let { performActorTurn(actor, it) }
             }

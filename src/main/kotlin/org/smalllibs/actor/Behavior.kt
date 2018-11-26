@@ -8,8 +8,8 @@ class Behavior<T>(val receiver: Receiver<T>) {
 
     fun onResume() {}
 
-    fun onStop() {}
+    fun onPause() {}
 
-    fun onFinish() {}
+    fun onStop() {}
 
 }

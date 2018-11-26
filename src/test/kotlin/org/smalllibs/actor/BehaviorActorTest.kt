@@ -13,7 +13,7 @@ class BehaviorActorTest {
 
         val called = AtomicInteger(0)
         val reference = system.actorFor<Int> { a, _ ->
-            a become { _, v -> called.set(v.content) }
+            a start { _, v -> called.set(v.content) }
         }
 
         reference tell 1

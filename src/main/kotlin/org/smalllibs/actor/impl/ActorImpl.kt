@@ -20,14 +20,14 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
         return behaviors.peek()
     }
 
-    override fun become(behavior: Behavior<T>, stacked: Boolean) {
+    override fun start(behavior: Behavior<T>, stacked: Boolean) {
         currentBehavior()?.let {
-            it.onStop()
+            it.onPause()
             if (!stacked) {
                 behaviors.pop()
-                behavior.onFinish()
-            } else {
                 behavior.onStop()
+            } else {
+                behavior.onPause()
             }
         }
 
@@ -35,13 +35,13 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
         behavior.onStart()
     }
 
-    override fun unbecome() {
+    override fun finish() {
         currentBehavior()?.let {
             behaviors.pop()
-            it.onStop()
+            it.onPause()
         }
 
-        currentBehavior()?.let { it.onResume() }
+        currentBehavior()?.onResume()
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =

@@ -2,6 +2,7 @@ package org.smalllibs.actor.impl
 
 import org.smalllibs.actor.Envelop
 
+// Investigate: Can we use coroutine in this section?
 internal class ActorMailbox<T> {
 
     private var envelops: ArrayList<Envelop<T>> = arrayListOf()

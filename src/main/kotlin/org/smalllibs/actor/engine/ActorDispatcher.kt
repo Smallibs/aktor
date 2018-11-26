@@ -15,7 +15,7 @@ class ActorDispatcher(private val execution: ActorExecution) {
     fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): Actor<T> {
 
         val actor = ActorImpl(reference)
-        actor.become(behavior)
+        actor.start(behavior)
 
         actors[reference.address] = actor // TODO(didier) check when an address is already used.
         execution.manage(actor)

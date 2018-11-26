@@ -1,37 +1,25 @@
 package org.smalllibs.actor
 
-interface Actor<T> {
+interface Actor<T> : ActorFor {
 
     fun self(): ActorReference<T>
 
     fun behavior(): Behavior<T>
 
-    fun become(behavior: Behavior<T>, stacked: Boolean)
+    fun start(behavior: Behavior<T>, stacked: Boolean)
 
-    infix fun become(receiver: Receiver<T>) {
-        become(Behavior(receiver))
+    infix fun start(receiver: Receiver<T>) {
+        start(Behavior(receiver))
     }
 
-    infix fun become(behavior: Behavior<T>) {
-        become(behavior, false)
+    infix fun start(behavior: Behavior<T>) {
+        start(behavior, false)
     }
 
-    fun become(receiver: Receiver<T>, stacked: Boolean) {
-        become(Behavior(receiver), stacked)
+    fun start(receiver: Receiver<T>, stacked: Boolean) {
+        start(Behavior(receiver), stacked)
     }
 
-    fun unbecome()
-
-    infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
-        actorFor(receiver, null)
-
-    fun <R> actorFor(receiver: Receiver<R>, name: String?): ActorReference<R> =
-        actorFor(Behavior(receiver), name)
-
-    fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R>
-
-
-    infix fun <R> actorFor(behavior: Behavior<R>): ActorReference<R> =
-        actorFor(behavior, null)
+    fun finish()
 
 }

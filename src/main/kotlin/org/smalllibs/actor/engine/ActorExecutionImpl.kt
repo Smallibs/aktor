@@ -6,7 +6,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
 
-internal abstract class AbstractActorExecution : ActorExecution {
+internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecution {
 
     internal enum class Status {
         STOPPED, RUN
@@ -26,8 +26,6 @@ internal abstract class AbstractActorExecution : ActorExecution {
             actors[actor]?.let { performActorTurn(actor, it) }
         }
 
-    protected abstract fun execute(run: () -> Unit)
-
     //
     // Private behaviors
     //
@@ -37,7 +35,7 @@ internal abstract class AbstractActorExecution : ActorExecution {
             actor.nextTurn()?.let { action ->
                 status.set(Status.RUN)
 
-                this.execute {
+                runner.execute {
                     action()
                     status.set(Status.STOPPED)
                     notifyActorTurn(actor)

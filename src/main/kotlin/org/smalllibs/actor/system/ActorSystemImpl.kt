@@ -1,12 +1,17 @@
 package org.smalllibs.actor.system
 
-import org.smalllibs.actor.*
+import org.smalllibs.actor.Actor
+import org.smalllibs.actor.ActorReference
+import org.smalllibs.actor.ActorSystem
+import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.engine.ActorDispatcher
+import org.smalllibs.actor.engine.ActorExecutionImpl
+import org.smalllibs.actor.engine.ActorRunner
 import org.smalllibs.actor.reference.ActorAddressImpl
 import org.smalllibs.actor.reference.ActorPathImpl
 import org.smalllibs.actor.reference.ActorReferenceImpl
 
-class ActorSystemImpl(site: String, execution: ActorExecution) : ActorSystem {
+class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 
     private val root: Actor<Any>
 
@@ -18,8 +23,8 @@ class ActorSystemImpl(site: String, execution: ActorExecution) : ActorSystem {
         return root.actorFor(behavior, name)
     }
 
-    private fun root(site: String, execution: ActorExecution): Actor<Any> {
-        val dispatcher = ActorDispatcher(execution)
+    private fun root(site: String, execution: ActorRunner): Actor<Any> {
+        val dispatcher = ActorDispatcher(ActorExecutionImpl(execution))
         val path = ActorPathImpl(site)
         val address = ActorAddressImpl<Any>(path)
         val reference = ActorReferenceImpl(dispatcher, address)

@@ -4,7 +4,7 @@ package org.smalllibs.actor
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
-import org.smalllibs.actor.engine.CoroutineBasedActorExecution
+import org.smalllibs.actor.engine.CoroutineBasedRunner
 import java.util.concurrent.atomic.AtomicInteger
 
 class MassiveActorTest {
@@ -41,7 +41,7 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val system = ActorSystem.system("test", execution = CoroutineBasedActorExecution())
+        val system = ActorSystem.system("test", execution = CoroutineBasedRunner())
 
         val called = AtomicInteger(0)
 

@@ -1,5 +1,6 @@
 package org.smalllibs.actor.engine
 
+import org.smalllibs.actor.ActorAddress
 import org.smalllibs.actor.ActorExecution
 import org.smalllibs.actor.impl.ActorImpl
 import java.util.concurrent.ExecutorService
@@ -12,33 +13,33 @@ internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecut
         STOPPED, RUN
     }
 
-    private val actors: MutableMap<ActorImpl<*>, AtomicReference<Status>> = HashMap()
+    private val actors: MutableMap<ActorAddress, Pair<ActorImpl<*>, AtomicReference<Status>>> = HashMap()
 
     private val schedulingService: ExecutorService = Executors.newSingleThreadExecutor()
 
     override fun manage(actor: ActorImpl<*>) =
         this.schedulingService.execute {
-            actors[actor] = AtomicReference(Status.STOPPED)
+            actors[actor.self().address] = Pair(actor, AtomicReference(Status.STOPPED))
         }
 
-    override fun notifyActorTurn(actor: ActorImpl<*>) =
+    override fun notifyEpoch(address: ActorAddress) =
         this.schedulingService.execute {
-            actors[actor]?.let { performActorTurn(actor, it) }
+            actors[address]?.let { performEpoch(it.first, it.second) }
         }
 
     //
     // Private behaviors
     //
 
-    private fun performActorTurn(actor: ActorImpl<*>, status: AtomicReference<Status>) {
+    private fun performEpoch(actor: ActorImpl<*>, status: AtomicReference<Status>) {
         if (status.get() == Status.STOPPED) {
             actor.nextTurn()?.let { action ->
                 status.set(Status.RUN)
 
-                runner.execute {
+                this.runner.execute {
                     action()
                     status.set(Status.STOPPED)
-                    notifyActorTurn(actor)
+                    notifyEpoch(actor.self().address)
                 }
             }
         }

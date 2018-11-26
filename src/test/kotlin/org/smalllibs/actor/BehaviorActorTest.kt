@@ -12,12 +12,14 @@ class BehaviorActorTest {
         val system = ActorSystem.system("test")
 
         val called = AtomicInteger(0)
-        val reference = system.actorFor<Int> { a, _ ->
-            a start { _, v -> called.set(v.content) }
+        val reference = system.actorFor<Int> { a, v1 ->
+            a start { _, v2 ->
+                called.set(v1.content + v2.content)
+            }
         }
 
-        reference tell 1
-        reference tell 42
+        reference tell 12
+        reference tell 30
 
         await().atMost(FIVE_SECONDS).until { called.get() == 42 }
     }

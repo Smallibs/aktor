@@ -2,7 +2,7 @@ package org.smalllibs.actor
 
 interface ActorReference<T> {
 
-    val address: ActorAddress<T>
+    val address: ActorAddress
 
     infix fun tell(envelop: Envelop<T>)
 

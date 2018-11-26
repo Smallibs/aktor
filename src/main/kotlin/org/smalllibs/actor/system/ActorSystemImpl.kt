@@ -26,8 +26,8 @@ class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
     private fun root(site: String, execution: ActorRunner): Actor<Any> {
         val dispatcher = ActorDispatcher(ActorExecutionImpl(execution))
         val path = ActorPathImpl(site)
-        val address = ActorAddressImpl<Any>(path)
-        val reference = ActorReferenceImpl(dispatcher, address)
+        val address = ActorAddressImpl(path)
+        val reference = ActorReferenceImpl<Any>(dispatcher, address)
 
         return dispatcher.register(reference) { _, _ -> }
     }

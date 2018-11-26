@@ -5,11 +5,13 @@ import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.Envelop
 import org.smalllibs.actor.engine.ActorDispatcher
 
-data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val address: ActorAddressImpl<T>) :
-    ActorReference<T> {
+data class ActorReferenceImpl<T>(
+    val dispatcher: ActorDispatcher,
+    override val address: ActorAddressImpl
+) : ActorReference<T> {
 
     override fun tell(envelop: Envelop<T>) {
-        this.dispatcher.deliver(address, envelop)
+        this.dispatcher.deliver(this, envelop)
     }
 
     internal fun <R> register(behavior: Behavior<R>, name: String?): ActorReference<R> =
@@ -17,7 +19,7 @@ data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val a
 
     private fun <R> newChild(name: String?): ActorReferenceImpl<R> {
         val actorPath = this.address.path.newChild(name)
-        val address = ActorAddressImpl<R>(actorPath)
+        val address = ActorAddressImpl(actorPath)
 
         return ActorReferenceImpl(dispatcher, address)
     }

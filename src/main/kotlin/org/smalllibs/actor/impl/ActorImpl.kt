@@ -68,14 +68,5 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
             null
         }
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || javaClass != other.javaClass) return false
-        val actor = other as ActorImpl<*>?
-        return reference == actor!!.reference
-    }
-
-    override fun hashCode(): Int {
-        return Objects.hash(reference)
-    }
 }
+

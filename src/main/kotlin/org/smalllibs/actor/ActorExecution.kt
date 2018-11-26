@@ -6,6 +6,6 @@ interface ActorExecution {
 
     fun manage(actor: ActorImpl<*>)
 
-    fun notifyActorTurn(actor: ActorImpl<*>)
+    fun notifyEpoch(address: ActorAddress)
 
 }

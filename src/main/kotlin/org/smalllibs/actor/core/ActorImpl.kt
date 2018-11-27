@@ -1,19 +1,18 @@
-package org.smalllibs.actor.impl
+package org.smalllibs.actor.core
 
 import org.smalllibs.actor.Actor
 import org.smalllibs.actor.ActorReference
 import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.Envelop
-import org.smalllibs.actor.reference.ActorReferenceImpl
 import java.util.*
 
-class ActorImpl<T> internal constructor(private val reference: ActorReferenceImpl<T>) : Actor<T> {
+class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>) : Actor<T> {
 
     private val actorMailbox: ActorMailbox<T> = ActorMailbox()
     private val behaviors: Stack<Behavior<T>> = Stack()
 
-    override fun self(): ActorReference<T> {
-        return this.reference
+    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self)) {
+        this.start(behavior)
     }
 
     override fun behavior(): Behavior<T> {
@@ -22,30 +21,30 @@ class ActorImpl<T> internal constructor(private val reference: ActorReferenceImp
 
     override fun start(behavior: Behavior<T>, stacked: Boolean) {
         currentBehavior()?.let {
-            it.onPause()
+            it.onPause(this)
             if (!stacked) {
                 behaviors.pop()
-                behavior.onStop()
+                behavior.onStop(this)
             } else {
-                behavior.onPause()
+                behavior.onPause(this)
             }
         }
 
         behaviors.push(behavior)
-        behavior.onStart()
+        behavior.onStart(this)
     }
 
     override fun finish() {
         currentBehavior()?.let {
             behaviors.pop()
-            it.onPause()
+            it.onStop(this)
         }
 
-        currentBehavior()?.onResume()
+        currentBehavior()?.onResume(this)
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =
-        reference.register(behavior, name)
+        context.self().register(behavior, name)
 
     //
     // Protected behaviors

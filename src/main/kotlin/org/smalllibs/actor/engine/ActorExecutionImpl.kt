@@ -2,7 +2,7 @@ package org.smalllibs.actor.engine
 
 import org.smalllibs.actor.ActorAddress
 import org.smalllibs.actor.ActorExecution
-import org.smalllibs.actor.impl.ActorImpl
+import org.smalllibs.actor.core.ActorImpl
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference
@@ -19,7 +19,7 @@ internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecut
 
     override fun manage(actor: ActorImpl<*>) =
         this.schedulingService.execute {
-            actors[actor.self().address] = Pair(actor, AtomicReference(Status.STOPPED))
+            actors[actor.context.self().address] = Pair(actor, AtomicReference(Status.STOPPED))
         }
 
     override fun notifyEpoch(address: ActorAddress) =
@@ -39,7 +39,7 @@ internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecut
                 this.runner.execute {
                     action()
                     status.set(Status.STOPPED)
-                    notifyEpoch(actor.self().address)
+                    notifyEpoch(actor.context.self().address)
                 }
             }
         }

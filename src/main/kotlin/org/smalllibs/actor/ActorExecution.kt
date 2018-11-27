@@ -1,6 +1,6 @@
 package org.smalllibs.actor
 
-import org.smalllibs.actor.impl.ActorImpl
+import org.smalllibs.actor.core.ActorImpl
 
 interface ActorExecution {
 

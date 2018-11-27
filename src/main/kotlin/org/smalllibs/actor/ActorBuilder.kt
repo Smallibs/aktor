@@ -1,6 +1,6 @@
 package org.smalllibs.actor
 
-interface ActorFor {
+interface ActorBuilder {
 
     infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
         actorFor(receiver, null)

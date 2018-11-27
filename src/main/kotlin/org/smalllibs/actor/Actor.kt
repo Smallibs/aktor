@@ -1,8 +1,8 @@
 package org.smalllibs.actor
 
-interface Actor<T> : ActorFor {
+interface Actor<T> : ActorBuilder {
 
-    fun self(): ActorReference<T>
+    val context: ActorContext<T>
 
     fun behavior(): Behavior<T>
 

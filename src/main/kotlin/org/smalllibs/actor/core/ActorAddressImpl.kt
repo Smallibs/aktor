@@ -8,14 +8,14 @@ data class ActorAddressImpl(override val name: String, override val parent: Acto
     override fun parentOf(address: ActorAddress): Boolean =
         address.parent?.let { this === it } ?: false
 
-    override fun newChild(name: String?): ActorAddressImpl =
-        ActorAddressImpl(name ?: freshName(), this)
-
     private fun freshName(): String =
         UUID.randomUUID().toString()
 
     override fun toString(): String {
         return "${parent ?: ""}/$name"
     }
+
+    fun newChild(name: String?): ActorAddressImpl =
+        ActorAddressImpl(name ?: freshName(), this)
 
 }

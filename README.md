@@ -4,11 +4,25 @@ Minimal Actor System written in Kotlin.
 
 # Relationship
 
-Data relatioships came from Actor system elaboration and was also inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
+Data relationships came from Actor system elaboration and was also inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
 
 ![Data Relationships](https://raw.githubusercontent.com/d-plaindoux/actor.kotlin/master/doc/data-relation.png)
 
 # Prototypes
+
+## Behavior&ltT>
+
+```Kotlin
+    val receiver: Receiver<T>
+
+    fun onStart(actor: Actor<T>)
+
+    fun onResume(actor: Actor<T>)
+
+    fun onPause(actor: Actor<T>)
+
+    fun onStop(actor: Actor<T>)
+```
 
 ## Actor&lt;T>
 
@@ -60,7 +74,7 @@ Data relatioships came from Actor system elaboration and was also inspired by [A
     infix fun tell(content: T)
 ```
 
-## ActorAddress&lt;T>
+## ActorAddress
 
 ```Kotlin
     val name: String

@@ -13,6 +13,8 @@ Data relationships came from Actor system elaboration and was also inspired by [
 ## Behavior&lt;T>
 
 ```Kotlin
+    typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
+
     val receiver: Receiver<T>
 
     fun onStart(actor: Actor<T>)

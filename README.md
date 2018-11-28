@@ -68,11 +68,11 @@ Minimal Actor System written in Kotlin.
     infix fun childOf(address: ActorAddress): Boolean
 
     infix fun parentOf(address: ActorAddress): Boolean
-
+```
 
 # Actor Assertions
 
-## Actor 'tell'
+## 'tell'
 
 
 ```Kotlin
@@ -86,7 +86,7 @@ reference tell "Hello World!"
 // called value should be "Hello World!
 ```
 
-## Actor 'become'
+## 'become'
 
 ```Kotlin
 val called = AtomicReference("")
@@ -102,7 +102,7 @@ reference tell "World!"
 // called value should be "Hello World!
 ```
 
-## Actor 'create'
+## 'create'
 
-// TODO
+// ...
 

@@ -5,13 +5,14 @@ import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
 import org.smalllibs.actor.engine.CoroutineBasedRunner
+import org.smalllibs.actor.engine.ThreadBasedRunner
 import java.util.concurrent.atomic.AtomicInteger
 
 class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingThreads() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.system("test", execution = ThreadBasedRunner())
 
         val called = AtomicInteger(0)
 

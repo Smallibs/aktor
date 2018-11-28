@@ -20,8 +20,8 @@ class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 
     init {
         this.site = actor(site)
-        this.system = actor("system", this.site.context.self().address)
-        this.user = actor("user", this.site.context.self().address)
+        this.system = actor("system", this.site.context.self.address)
+        this.user = actor("user", this.site.context.self.address)
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =

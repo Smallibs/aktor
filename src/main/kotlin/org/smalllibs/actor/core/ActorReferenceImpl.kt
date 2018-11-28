@@ -13,7 +13,7 @@ data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val a
     }
 
     internal fun <R> register(behavior: Behavior<R>, name: String?): ActorReference<R> =
-        dispatcher.register(newChild(name), behavior).context.self()
+        dispatcher.register(newChild(name), behavior).context.self
 
     private fun <R> newChild(name: String?): ActorReferenceImpl<R> =
         ActorReferenceImpl(dispatcher, this.address.newChild(name))

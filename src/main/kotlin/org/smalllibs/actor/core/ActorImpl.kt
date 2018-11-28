@@ -15,9 +15,7 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
         this.start(behavior)
     }
 
-    override fun behavior(): Behavior<T> {
-        return behaviors.peek()
-    }
+    override fun behavior(): Behavior<T>? = currentBehavior()
 
     override fun start(behavior: Behavior<T>, stacked: Boolean) {
         currentBehavior()?.let {
@@ -44,7 +42,7 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =
-        context.self().register(behavior, name)
+        context.self.register(behavior, name)
 
     //
     // Protected behaviors
@@ -54,7 +52,7 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
         this.actorMailbox.deliver(envelop)
 
     internal fun nextTurn(): (() -> Unit)? =
-        actorMailbox.next()?.let { envelop -> { behavior().receiver(this, envelop) } }
+        actorMailbox.next()?.let { envelop -> { behavior()?.let { it.receiver(this, envelop) } } }
 
     //
     // Private behaviors

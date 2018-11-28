@@ -1,6 +1,7 @@
-package org.smalllibs.actor.core
+package org.smalllibs.actor
 
 import org.junit.Test
+import org.smalllibs.actor.core.ActorAddressImpl
 import kotlin.test.assertEquals
 
 class ActorAddressTest {

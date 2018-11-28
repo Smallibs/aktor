@@ -4,7 +4,7 @@ interface Actor<T> : ActorBuilder {
 
     val context: ActorContext<T>
 
-    fun behavior(): Behavior<T>
+    fun behavior(): Behavior<T>?
 
     fun start(behavior: Behavior<T>, stacked: Boolean)
 

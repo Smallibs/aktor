@@ -25,14 +25,14 @@ class ActorDispatcher(private val execution: ActorExecution) {
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =
         getActor(reference)?.let { actor ->
             actor.deliver(envelop)
-            execution.notifyEpoch(actor.context.self().address)
+            execution.notifyEpoch(actor.context.self.address)
         }
 
     fun parent(reference: ActorReference<*>): ActorReference<*>? =
-        actors.values.singleOrNull { it.context.self().address.parentOf(reference.address) }?.let { it.context.self() }
+        actors.values.singleOrNull { it.context.self.address.parentOf(reference.address) }?.let { it.context.self }
 
     fun children(reference: ActorReference<*>): List<ActorReference<*>> =
-        actors.values.filter { reference.address.parentOf(it.context.self().address) }.map { it.context.self() }
+        actors.values.filter { reference.address.parentOf(it.context.self.address) }.map { it.context.self }
 
     //
     // Private behaviors
@@ -44,7 +44,7 @@ class ActorDispatcher(private val execution: ActorExecution) {
 
     private fun <T> getActor(reference: ActorReference<T>): ActorImpl<T>? =
         actors[reference.address]?.let {
-            if (it.context.self().address == reference.address) {
+            if (it.context.self.address == reference.address) {
                 @Suppress("UNCHECKED_CAST")
                 it as ActorImpl<T> // Ugly cast to be removed!
             } else {

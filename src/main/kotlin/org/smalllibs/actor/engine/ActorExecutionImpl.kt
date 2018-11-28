@@ -9,9 +9,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecution {
 
-    internal enum class Status {
-        STOPPED, RUN
-    }
+    internal enum class Status { STOPPED, RUN }
 
     private val actors: MutableMap<ActorAddress, Pair<ActorImpl<*>, AtomicReference<Status>>> = HashMap()
 
@@ -19,7 +17,7 @@ internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecut
 
     override fun manage(actor: ActorImpl<*>) =
         this.schedulingService.execute {
-            actors[actor.context.self().address] = Pair(actor, AtomicReference(Status.STOPPED))
+            actors[actor.context.self.address] = Pair(actor, AtomicReference(Status.STOPPED))
         }
 
     override fun notifyEpoch(address: ActorAddress) =
@@ -39,7 +37,7 @@ internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecut
                 this.runner.execute {
                     action()
                     status.set(Status.STOPPED)
-                    notifyEpoch(actor.context.self().address)
+                    notifyEpoch(actor.context.self.address)
                 }
             }
         }

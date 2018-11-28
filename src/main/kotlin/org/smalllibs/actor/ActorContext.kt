@@ -2,7 +2,7 @@ package org.smalllibs.actor
 
 interface ActorContext<T> {
 
-    fun self(): ActorReference<T>
+    val self: ActorReference<T>
 
     fun parent(): ActorReference<*>?
 

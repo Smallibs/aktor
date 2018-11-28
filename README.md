@@ -137,8 +137,8 @@ fun player(name: String): Receiver<PingPong> = { actor, message ->
 fun Game() {
     val system = ActorSystem.system("test")
     
-    val ping = system.actorFor(player("ping"))
-    val pong = system.actorFor(player("pong"))
+    val ping = system actorFor player("ping")
+    val pong = system actorFor player("pong")
 
     ping tell PingPong(pong)
 }

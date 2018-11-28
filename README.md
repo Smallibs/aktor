@@ -4,6 +4,8 @@ Minimal Actor System written in Kotlin.
 
 # Relationship
 
+Data relatioships came from Actor system elaboration and was also inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
+
 ![Data Relationships](https://raw.githubusercontent.com/d-plaindoux/actor.kotlin/master/doc/data-relation.png)
 
 # Prototypes

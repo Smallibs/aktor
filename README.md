@@ -10,7 +10,7 @@ Data relationships came from Actor system elaboration and was also inspired by [
 
 # Prototypes
 
-## Behavior&ltT>
+## Behavior&lt;T>
 
 ```Kotlin
     val receiver: Receiver<T>

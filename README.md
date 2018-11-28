@@ -124,3 +124,22 @@ reference tell "World!"
 
 // ...
 
+# Example
+
+```Kotlin
+class PingPong(val sender: ActorReference<PingPong>)
+
+fun player(name: String): Receiver<PingPong> = { actor, message ->
+    println("$name playing ...")
+    message.content.sender tell PingPong(actor.context.self)
+}
+
+fun Game() {
+    val system = ActorSystem.system("test")
+    
+    val ping = system.actorFor(player("ping"))
+    val pong = system.actorFor(player("pong"))
+
+    ping tell PingPong(pong)
+}
+```

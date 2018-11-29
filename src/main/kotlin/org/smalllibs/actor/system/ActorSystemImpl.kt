@@ -6,13 +6,14 @@ import org.smalllibs.actor.Behavior
 import org.smalllibs.actor.core.ActorAddressImpl
 import org.smalllibs.actor.core.ActorImpl
 import org.smalllibs.actor.core.ActorReferenceImpl
+import org.smalllibs.actor.core.ActorUniverse
 import org.smalllibs.actor.engine.ActorDispatcher
 import org.smalllibs.actor.engine.ActorExecutionImpl
 import org.smalllibs.actor.engine.ActorRunner
 
 class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 
-    private val dispatcher: ActorDispatcher = ActorDispatcher(ActorExecutionImpl(execution))
+    private val dispatcher: ActorDispatcher = ActorDispatcher(ActorUniverse(), ActorExecutionImpl(execution))
 
     private val site: ActorImpl<Any>
     private val system: ActorImpl<Any>

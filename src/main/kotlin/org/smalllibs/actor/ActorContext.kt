@@ -6,6 +6,6 @@ interface ActorContext<T> {
 
     fun parent(): ActorReference<*>?
 
-    fun children(): List<ActorReference<*>>
+    fun children(): Collection<ActorReference<*>>
 
 }

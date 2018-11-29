@@ -7,6 +7,6 @@ class ActorContextImpl<T>(override val self: ActorReferenceImpl<T>) : ActorConte
 
     override fun parent(): ActorReference<*>? = this.self.dispatcher.parent(self)
 
-    override fun children(): List<ActorReference<*>> = this.self.dispatcher.children(self)
+    override fun children(): Collection<ActorReference<*>> = this.self.dispatcher.children(self)
 
 }

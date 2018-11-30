@@ -1,6 +1,6 @@
 # Aktor
 
-Minimal Actor System written in Kotlin. 
+Actor System written in Kotlin. 
 
 # Relationship
 

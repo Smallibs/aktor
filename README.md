@@ -97,7 +97,9 @@ Data relationships came from Actor system elaboration and was also inspired by [
 val called = AtomicReference("")
 
 val system = ActorSystem.system("example")
-val reference = system.actorFor<String> { _, m -> called.set(m.content) }
+val reference = system.actorFor<String> { _, m -> 
+    called.set(m.content) 
+}
 
 reference tell "Hello World!"
 
@@ -111,7 +113,9 @@ val called = AtomicReference("")
 
 val system = ActorSystem.system("example")
 val reference = system.actorFor<String> { a, m ->
-    a become { _, v -> called.set("$m.content $v.content") }
+    a become { _, v -> 
+        called.set("$m.content $v.content") 
+    }
 }
 
 reference tell "Hello"

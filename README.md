@@ -131,7 +131,7 @@ reference tell "World!"
 # Example
 
 ```Kotlin
-class PingPong(val sender: ActorReference<PingPong>)
+data class PingPong(val sender: ActorReference<PingPong>)
 
 fun player(name: String): Receiver<PingPong> = { actor, message ->
     println("$name playing ...")

@@ -63,7 +63,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun parent(): ActorReference<*>?
 
-    fun children(): List<ActorReference<*>>
+    fun children(): Collection<ActorReference<*>>
 ```
 
 ## ActorReference&lt;T>

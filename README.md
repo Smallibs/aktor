@@ -35,11 +35,11 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     infix fun start(receiver: Receiver<T>)
 
-    fun start(behavior: Behavior<T>, stacked: Boolean)
+    fun start(receiver: Receiver<T>, stacked: Boolean)
 
     infix fun start(behavior: Behavior<T>)
 
-    fun start(receiver: Receiver<T>, stacked: Boolean)
+    fun start(behavior: Behavior<T>, stacked: Boolean)
 
     fun finish()
 ```

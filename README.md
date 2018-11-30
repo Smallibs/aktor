@@ -1,4 +1,4 @@
-# &mu;Actor
+# Aktor
 
 Minimal Actor System written in Kotlin. 
 

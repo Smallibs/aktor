@@ -4,7 +4,7 @@ Actor System written in Kotlin.
 
 # Relationship
 
-Data relationships came from Actor system elaboration and was also inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
+Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
 
 ![Data Relationships](https://raw.githubusercontent.com/d-plaindoux/actor.kotlin/master/doc/data-relation.png)
 
@@ -21,7 +21,7 @@ Data relationships came from Actor system elaboration and was also inspired by [
 
     fun onResume(actor: Actor<T>)
 
-    fun onPause(actor: Actor<T>)
+    fun onPause(actor: Actor<T>)Actor
 
     fun onStop(actor: Actor<T>)
 ```

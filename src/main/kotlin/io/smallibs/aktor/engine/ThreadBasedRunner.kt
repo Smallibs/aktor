@@ -3,7 +3,7 @@ package io.smallibs.aktor.engine
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-internal class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
+class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
 
     private val actorService: ExecutorService = Executors.newFixedThreadPool(availableProcessors(nbThread))
 

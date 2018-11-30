@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_PARAMETER")
+
 package io.smallibs.aktor
 
 typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit

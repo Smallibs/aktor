@@ -21,7 +21,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun onResume(actor: Actor<T>)
 
-    fun onPause(actor: Actor<T>)Actor
+    fun onPause(actor: Actor<T>)
 
     fun onStop(actor: Actor<T>)
 ```

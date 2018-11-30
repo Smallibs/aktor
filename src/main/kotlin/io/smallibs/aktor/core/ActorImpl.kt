@@ -1,9 +1,9 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.Actor
-import io.smallibs.actor.ActorReference
-import io.smallibs.actor.Behavior
-import io.smallibs.actor.Envelop
+import io.smallibs.aktor.Actor
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.Envelop
 import java.util.*
 
 class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>) :

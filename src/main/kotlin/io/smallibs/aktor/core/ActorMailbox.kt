@@ -1,6 +1,6 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.Envelop
+import io.smallibs.aktor.Envelop
 
 // Investigate: Can we use coroutine in this section?
 internal class ActorMailbox<T> {

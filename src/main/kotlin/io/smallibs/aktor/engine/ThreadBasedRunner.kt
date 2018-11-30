@@ -1,4 +1,4 @@
-package io.smallibs.actor.engine
+package io.smallibs.aktor.engine
 
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors

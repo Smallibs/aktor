@@ -1,7 +1,7 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.ActorAddress
-import io.smallibs.actor.ActorReference
+import io.smallibs.aktor.ActorAddress
+import io.smallibs.aktor.ActorReference
 import java.util.*
 
 class ActorUniverse {

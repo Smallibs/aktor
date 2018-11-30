@@ -1,7 +1,7 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 import org.junit.Test
-import io.smallibs.actor.core.ActorAddressImpl
+import io.smallibs.aktor.core.ActorAddressImpl
 import kotlin.test.assertEquals
 
 class ActorAddressTest {

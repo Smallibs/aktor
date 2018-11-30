@@ -1,8 +1,8 @@
-package io.smallibs.actor.engine
+package io.smallibs.aktor.engine
 
-import io.smallibs.actor.ActorAddress
-import io.smallibs.actor.ActorExecution
-import io.smallibs.actor.core.ActorImpl
+import io.smallibs.aktor.ActorAddress
+import io.smallibs.aktor.ActorExecution
+import io.smallibs.aktor.core.ActorImpl
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.AtomicReference

@@ -1,4 +1,4 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 

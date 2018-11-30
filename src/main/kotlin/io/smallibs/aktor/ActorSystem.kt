@@ -1,8 +1,8 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
-import io.smallibs.actor.engine.ActorRunner
-import io.smallibs.actor.engine.ThreadBasedRunner
-import io.smallibs.actor.system.ActorSystemImpl
+import io.smallibs.aktor.engine.ActorRunner
+import io.smallibs.aktor.engine.ThreadBasedRunner
+import io.smallibs.aktor.system.ActorSystemImpl
 
 interface ActorSystem : ActorBuilder {
 

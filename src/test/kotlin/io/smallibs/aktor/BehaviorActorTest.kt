@@ -1,9 +1,8 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
-import io.smallibs.actor.ActorSystem
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicInteger
 

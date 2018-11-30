@@ -1,6 +1,6 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.ActorAddress
+import io.smallibs.aktor.ActorAddress
 import java.util.*
 
 data class ActorAddressImpl(override val name: String, override val parent: ActorAddress? = null) :

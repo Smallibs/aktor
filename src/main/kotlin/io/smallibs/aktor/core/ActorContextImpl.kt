@@ -1,7 +1,7 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.ActorContext
-import io.smallibs.actor.ActorReference
+import io.smallibs.aktor.ActorContext
+import io.smallibs.aktor.ActorReference
 
 class ActorContextImpl<T>(override val self: ActorReferenceImpl<T>) :
     ActorContext<T> {

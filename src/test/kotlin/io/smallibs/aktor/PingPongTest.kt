@@ -1,4 +1,4 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 import org.awaitility.Duration
 import org.awaitility.kotlin.await

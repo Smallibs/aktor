@@ -1,4 +1,4 @@
-package io.smallibs.actor.engine
+package io.smallibs.aktor.engine
 
 interface ActorRunner {
 

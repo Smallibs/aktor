@@ -1,13 +1,11 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
-import io.smallibs.actor.ActorReference
-import io.smallibs.actor.ActorSystem
-import io.smallibs.actor.engine.CoroutineBasedRunner
-import io.smallibs.actor.engine.ThreadBasedRunner
+import io.smallibs.aktor.engine.CoroutineBasedRunner
+import io.smallibs.aktor.engine.ThreadBasedRunner
 import java.util.concurrent.atomic.AtomicInteger
 
 class MassiveActorTest {

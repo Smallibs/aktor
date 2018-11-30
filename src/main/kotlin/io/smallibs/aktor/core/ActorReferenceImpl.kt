@@ -1,9 +1,9 @@
-package io.smallibs.actor.core
+package io.smallibs.aktor.core
 
-import io.smallibs.actor.ActorReference
-import io.smallibs.actor.Behavior
-import io.smallibs.actor.Envelop
-import io.smallibs.actor.engine.ActorDispatcher
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.engine.ActorDispatcher
 
 data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val address: ActorAddressImpl) :
     ActorReference<T> {

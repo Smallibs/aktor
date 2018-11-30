@@ -1,4 +1,4 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
 interface ActorContext<T> {
 

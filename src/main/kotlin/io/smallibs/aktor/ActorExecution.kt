@@ -1,6 +1,6 @@
-package io.smallibs.actor
+package io.smallibs.aktor
 
-import io.smallibs.actor.core.ActorImpl
+import io.smallibs.aktor.core.ActorImpl
 
 interface ActorExecution {
 

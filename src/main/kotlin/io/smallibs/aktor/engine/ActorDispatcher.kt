@@ -1,13 +1,13 @@
-package io.smallibs.actor.engine
+package io.smallibs.aktor.engine
 
-import io.smallibs.actor.Actor
-import io.smallibs.actor.ActorExecution
-import io.smallibs.actor.ActorReference
-import io.smallibs.actor.Behavior
-import io.smallibs.actor.Envelop
-import io.smallibs.actor.core.ActorImpl
-import io.smallibs.actor.core.ActorReferenceImpl
-import io.smallibs.actor.core.ActorUniverse
+import io.smallibs.aktor.Actor
+import io.smallibs.aktor.ActorExecution
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.core.ActorImpl
+import io.smallibs.aktor.core.ActorReferenceImpl
+import io.smallibs.aktor.core.ActorUniverse
 
 class ActorDispatcher private constructor(private val universe: ActorUniverse, private val execution: ActorExecution) {
 

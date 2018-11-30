@@ -2,13 +2,13 @@ package io.smallibs.aktor.system
 
 import io.smallibs.aktor.ActorContext
 import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.ActorRunner
 import io.smallibs.aktor.ActorSystem
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.engine.ActorDispatcher
-import io.smallibs.aktor.engine.ActorRunner
 
 class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 

@@ -1,4 +1,7 @@
-package io.smallibs.aktor.engine
+package io.smallibs.aktor
+
+import io.smallibs.aktor.runner.CoroutineBasedRunner
+import io.smallibs.aktor.runner.ThreadBasedRunner
 
 interface ActorRunner {
 

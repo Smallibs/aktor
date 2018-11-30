@@ -8,6 +8,7 @@ import io.smallibs.aktor.Envelop
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.core.ActorUniverse
+import io.smallibs.aktor.ActorRunner
 
 class ActorDispatcher private constructor(private val universe: ActorUniverse, private val execution: ActorExecution) {
 

@@ -4,15 +4,13 @@ package io.smallibs.aktor
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
-import io.smallibs.aktor.engine.CoroutineBasedRunner
-import io.smallibs.aktor.engine.ThreadBasedRunner
 import java.util.concurrent.atomic.AtomicInteger
 
 class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingThreads() {
-        val system = ActorSystem.system("test", execution = ThreadBasedRunner())
+        val system = ActorSystem.system("test", ActorRunner.threaded())
 
         val called = AtomicInteger(0)
 
@@ -42,7 +40,7 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val system = ActorSystem.system("test", execution = CoroutineBasedRunner())
+        val system = ActorSystem.system("test", ActorRunner.coroutine())
 
         val called = AtomicInteger(0)
 

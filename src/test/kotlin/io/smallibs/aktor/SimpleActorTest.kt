@@ -18,7 +18,9 @@ class SimpleActorTest {
 
         reference tell true
 
-        await().atMost(FIVE_SECONDS).until { called.get() }
+        await().atMost(FIVE_SECONDS).until {
+            called.get()
+        }
     }
 
     @Test
@@ -30,7 +32,9 @@ class SimpleActorTest {
 
         reference tell 42
 
-        await().atMost(FIVE_SECONDS).until { called.get() == 42 }
+        await().atMost(FIVE_SECONDS).until {
+            called.get() == 42
+        }
     }
 
     @Test
@@ -43,7 +47,9 @@ class SimpleActorTest {
 
         primary tell 42
 
-        await().atMost(FIVE_SECONDS).until { called.get() == 42 }
+        await().atMost(FIVE_SECONDS).until {
+            called.get() == 42
+        }
     }
 
 }

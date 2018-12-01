@@ -1,8 +1,8 @@
 package io.smallibs.aktor
 
-import org.junit.Test
 import io.smallibs.aktor.core.ActorAddressImpl
-import kotlin.test.assertEquals
+import org.junit.Test
+import kotlin.test.assertTrue
 
 class ActorAddressTest {
 
@@ -11,7 +11,7 @@ class ActorAddressTest {
         val root = ActorAddressImpl("root")
         val child = root.newChild("child")
 
-        assertEquals(root parentOf child, true)
+        assertTrue { root parentOf child }
     }
 
     @Test
@@ -19,7 +19,7 @@ class ActorAddressTest {
         val root = ActorAddressImpl("root")
         val child = root.newChild("child")
 
-        assertEquals(child childOf root, true)
+        assertTrue { child childOf root }
     }
 
 }

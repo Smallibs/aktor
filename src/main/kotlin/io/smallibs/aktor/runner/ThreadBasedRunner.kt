@@ -12,8 +12,8 @@ class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
         this.actorService.execute(run)
     }
 
-    private fun availableProcessors(nbThread: Int?): Int {
-        return Math.max(2, nbThread ?: Runtime.getRuntime().availableProcessors())
-    }
+    private fun availableProcessors(nbThread: Int?): Int =
+        (nbThread ?: Runtime.getRuntime().availableProcessors())
+            .coerceAtLeast(2)
 
 }

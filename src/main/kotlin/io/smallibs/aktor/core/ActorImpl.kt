@@ -12,11 +12,7 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
     private val actorMailbox: ActorMailbox<T> = ActorMailbox()
     private val behaviors: Stack<Behavior<T>> = Stack()
 
-    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(
-        ActorContextImpl(
-            self
-        )
-    ) {
+    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self)) {
         this.start(behavior)
     }
 

@@ -1,14 +1,9 @@
 package io.smallibs.aktor.engine
 
-import io.smallibs.aktor.Actor
-import io.smallibs.aktor.ActorExecution
-import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.*
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.core.ActorUniverse
-import io.smallibs.aktor.ActorRunner
 
 class ActorDispatcher private constructor(private val universe: ActorUniverse, private val execution: ActorExecution) {
 
@@ -17,17 +12,15 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
         ActorExecutionImpl(runner)
     )
 
-    fun <T> register(reference: ActorReferenceImpl<T>, receive: (Actor<T>, Envelop<T>) -> Unit): ActorImpl<T> =
+    fun <T> register(reference: ActorReferenceImpl<T>, receive: Receiver<T>): ActorImpl<T> =
         register(reference, Behavior(receive))
 
-    fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): ActorImpl<T> {
-        val actor = ActorImpl(reference, behavior)
-
-        universe.add(reference, actor)
-        execution.manage(actor)
-
-        return actor
-    }
+    fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): ActorImpl<T> =
+        ActorImpl(reference, behavior)
+            .also { actor ->
+                universe.add(reference, actor)
+                execution.manage(actor)
+            }
 
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =
         universe.find(reference)?.let { actor ->
@@ -35,8 +28,10 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
             execution.notifyEpoch(actor.context.self.address)
         }
 
-    fun <T> parent(reference: ActorReferenceImpl<T>): ActorReference<*>? = universe.parent(reference)
+    fun <T> parent(reference: ActorReferenceImpl<T>): ActorReference<*>? =
+        universe.parent(reference)
 
-    fun <T> children(reference: ActorReferenceImpl<T>): Collection<ActorReference<*>> = universe.children(reference)
+    fun <T> children(reference: ActorReferenceImpl<T>): Collection<ActorReference<*>> =
+        universe.children(reference)
 
 }

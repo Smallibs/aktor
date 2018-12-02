@@ -22,7 +22,9 @@ class BehaviorActorTest {
         reference tell 12
         reference tell 30
 
-        await().atMost(FIVE_SECONDS).until { called.get() == 42 }
+        await().atMost(FIVE_SECONDS).until {
+            called.get() == 42
+        }
     }
 
     @Test
@@ -47,6 +49,8 @@ class BehaviorActorTest {
         reference tell 15
         reference tell 15
 
-        await().atMost(FIVE_SECONDS).until { called.get() == 42 }
+        await().atMost(FIVE_SECONDS).until {
+            called.get() == 42
+        }
     }
 }

@@ -13,12 +13,11 @@ internal class ActorMailbox<T> {
     }
 
     @Synchronized
-    fun next(): Envelop<T>? {
+    fun next(): Envelop<T>? =
         if (envelops.isEmpty()) {
-            return null
+            null
         } else {
-            return envelops.removeAt(0)
+            envelops.removeAt(0)
         }
-    }
 
 }

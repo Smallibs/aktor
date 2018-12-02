@@ -8,8 +8,11 @@ interface ActorRunner {
     fun execute(run: () -> Unit)
 
     companion object {
-        fun coroutine() = CoroutineBasedRunner()
-        fun threaded(nbThread: Int? = null) = ThreadBasedRunner(nbThread)
+        fun coroutine(): ActorRunner =
+            CoroutineBasedRunner()
+
+        fun threaded(nbThread: Int? = null): ActorRunner =
+            ThreadBasedRunner(nbThread)
     }
 
 }

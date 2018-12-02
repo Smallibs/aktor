@@ -21,7 +21,7 @@ class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
         this.user = actor("user", address)
     }
 
-    override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =
+    override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         this.user.actorFor(behavior, name)
 
     private fun actor(site: String, parent: ActorAddressImpl? = null): ActorImpl<Any> {

@@ -42,7 +42,7 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
         currentBehavior()?.onResume(this)
     }
 
-    override fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R> =
+    override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         context.self.register(behavior, name)
 
     //

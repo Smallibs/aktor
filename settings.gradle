@@ -1,3 +1,12 @@
-rootProject.name = 'aktor'
-rootProject.name = 'aktor'
+pluginManagement {
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "kotlin-multiplatform") {
+                useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:${requested.version}")
+            }
+        }
+    }
+}
+rootProject.name = 'io.aktor'
 
+enableFeaturePreview('GRADLE_METADATA')

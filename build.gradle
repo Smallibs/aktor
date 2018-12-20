@@ -29,6 +29,7 @@ kotlin {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-common'
                 implementation 'org.jetbrains.kotlin:kotlin-test-annotations-common'
+                implementation 'org.jetbrains.kotlinx:atomicfu-common:0.11.12'
                 implementation 'org.awaitility:awaitility-kotlin:3.1.5'
             }
         }
@@ -41,6 +42,8 @@ kotlin {
         jvmTest {
             dependencies {
                 implementation 'org.jetbrains.kotlin:kotlin-test-junit'
+                implementation 'org.jetbrains.kotlinx:atomicfu:0.11.12'
+
             }
         }
         jsMain {
@@ -51,6 +54,7 @@ kotlin {
         }
         jsTest {
             dependencies {
+                implementation 'org.jetbrains.kotlinx:atomicfu-js:0.11.12'
                 implementation 'org.jetbrains.kotlin:kotlin-test-js'
             }
         }

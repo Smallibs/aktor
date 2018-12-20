@@ -1,7 +1,6 @@
 package io.smallibs.aktor
 
-import io.smallibs.concurrent.AtomicReference
-import io.smallibs.concurrent.incrementAndGet
+import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
 private const val actors = 1000
@@ -13,7 +12,7 @@ class MassiveActorTest {
     fun shouldDoOneMillionTellsUsingCoroutine() {
         val system = ActorSystem.system("test", execution = ActorRunner.coroutine())
 
-        var called = AtomicReference(0)
+        var called = atomic(0)
 
         val references = (0 until actors).map {
             system.actorFor<Boolean> { _, _ -> called.incrementAndGet() }

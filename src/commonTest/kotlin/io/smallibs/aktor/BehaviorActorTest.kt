@@ -1,8 +1,6 @@
 package io.smallibs.aktor
 
-import io.smallibs.concurrent.AtomicReference
-import io.smallibs.concurrent.addAndGet
-import kotlinx.coroutines.delay
+import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
 class BehaviorActorTest {
@@ -11,10 +9,10 @@ class BehaviorActorTest {
     fun shouldBeCalledAndStartABehavior() {
         val system = ActorSystem.system("test")
 
-        val called = AtomicReference(0)
+        val called = atomic(0)
         val reference = system.actorFor<Int> { a, v1 ->
             a start { _, v2 ->
-                called.set(v1.content + v2.content)
+                called.getAndSet(v1.content + v2.content)
             }
         }
 
@@ -32,14 +30,14 @@ class BehaviorActorTest {
     fun shouldBeCalledAndStartAndFinishABehavior() {
         val system = ActorSystem.system("test")
 
-        val done = AtomicReference(false)
-        val called = AtomicReference(0)
+        val done = atomic(false)
+        val called = atomic(0)
         val reference = system.actorFor<Int> { a, v1 ->
-            if (done.get()) {
+            if (done.value) {
                 called.addAndGet(v1.content)
             } else {
                 a.start({ _, v2 ->
-                    done.set(true)
+                    done.getAndSet(true)
                     called.addAndGet(v1.content + v2.content)
                     a.finish()
                 }, true)

@@ -33,7 +33,7 @@ class SimpleActorTest {
 
         reference tell 42
 
-        assertTrue { Await.Until(500) { called.value == 42 } }
+        Await(5000).until { called.value == 42 }
     }
 
     @Test
@@ -46,7 +46,7 @@ class SimpleActorTest {
 
         primary tell 42
 
-        assertTrue { Await.Until(5000) { called.value == 42 } }
+        Await(5000).until { called.value == 42 }
     }
 
 }

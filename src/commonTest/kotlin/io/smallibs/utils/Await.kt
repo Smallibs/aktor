@@ -5,20 +5,18 @@ package io.smallibs.utils
 expect fun getCurrentTime(): Long;
 expect fun waitFor(duration: Int);
 
-object Await {
-    object Until {
-        operator fun invoke(timeOut: Long, predicate: () -> Boolean): Boolean {
-            val currentTime = getCurrentTime()
+object TimeOutException : Exception()
 
-            while (!predicate()) {
-                if (getCurrentTime() - currentTime > timeOut) {
-                    return false
-                }
+class Await(val timeout: Long) {
+    fun until(predicate: () -> Boolean) {
+        val currentTime = getCurrentTime()
 
-                waitFor(100)
+        while (!predicate()) {
+            if (getCurrentTime() - currentTime > timeout) {
+                throw TimeOutException
             }
 
-            return true
+            waitFor(100)
         }
     }
 }

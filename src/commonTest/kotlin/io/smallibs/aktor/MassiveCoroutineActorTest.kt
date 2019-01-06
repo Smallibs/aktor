@@ -24,7 +24,7 @@ class MassiveActorTest {
             references.forEach { a -> a tell true }
         }
 
-        assertTrue { Await.Until(5000) { called.value == messages * actors } }
+        Await(5000).until { called.value == messages * actors }
     }
 
 }

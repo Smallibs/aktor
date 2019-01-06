@@ -43,7 +43,7 @@ class PingPongTest {
         ping tell PingPong(pong)
 
 
-        assertTrue { Await.Until(5000) { endedPlayers.value == 1 } }
+        Await(5000).until { endedPlayers.value == 1 }
 
     }
 

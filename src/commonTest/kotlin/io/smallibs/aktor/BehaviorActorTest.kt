@@ -21,7 +21,7 @@ class BehaviorActorTest {
 
         reference tell 12 tell 30
 
-        assertTrue { Await.Until(5000) { called.value == 42 } }
+        Await(5000).until { called.value == 42 }
     }
 
     @Test
@@ -44,6 +44,6 @@ class BehaviorActorTest {
 
         reference tell 12 tell 15 tell 15
 
-        assertTrue { Await.Until(5000) { called.value == 42 } }
+        Await(5000).until { called.value == 42 }
     }
 }

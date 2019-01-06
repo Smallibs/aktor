@@ -1,5 +1,6 @@
 package io.smallibs.aktor
 
+import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -20,7 +21,7 @@ class BehaviorActorTest {
 
         reference tell 12 tell 30
 
-        assertTrue { Await.Until(500) { called.value == 42 } }
+        assertTrue { Await.Until(5000) { called.value == 42 } }
     }
 
     @Test
@@ -43,6 +44,6 @@ class BehaviorActorTest {
 
         reference tell 12 tell 15 tell 15
 
-        assertTrue { Await.Until(500) { called.value == 42 } }
+        assertTrue { Await.Until(5000) { called.value == 42 } }
     }
 }

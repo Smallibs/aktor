@@ -1,8 +1,10 @@
 package io.smallibs.aktor
 
+import io.smallibs.utils.Await
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class PingPongTest {
 
@@ -41,11 +43,8 @@ class PingPongTest {
         ping tell PingPong(pong)
 
 
-        /*
-        await.atMost(Duration.FIVE_SECONDS).until {
-            endedPlayers.get() == 1
-        }
-        */
+        assertTrue { Await.Until(5000) { endedPlayers.value == 1 } }
+
     }
 
 }

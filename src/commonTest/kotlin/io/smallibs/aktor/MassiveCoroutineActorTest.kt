@@ -1,5 +1,6 @@
 package io.smallibs.aktor
 
+import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 import kotlin.test.assertTrue
@@ -13,7 +14,7 @@ class MassiveActorTest {
     fun shouldDoOneMillionTellsUsingCoroutine() {
         val system = ActorSystem.system("test", execution = ActorRunner.coroutine())
 
-        var called = atomic(0)
+        val called = atomic(0)
 
         val references = (0 until actors).map {
             system.actorFor<Boolean> { _, _ -> called.incrementAndGet() }
@@ -23,7 +24,7 @@ class MassiveActorTest {
             references.forEach { a -> a tell true }
         }
 
-        assertTrue { Await.Until(500000) { called.value == messages * actors } }
+        assertTrue { Await.Until(5000) { called.value == messages * actors } }
     }
 
 }

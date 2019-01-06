@@ -2,11 +2,13 @@ package io.smallibs.aktor
 
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class BehaviorActorTest {
 
     @Test
     fun shouldBeCalledAndStartABehavior() {
+
         val system = ActorSystem.system("test")
 
         val called = atomic(0)
@@ -16,14 +18,9 @@ class BehaviorActorTest {
             }
         }
 
-        reference tell 12
-        reference tell 30
+        reference tell 12 tell 30
 
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get() == 42
-        }
-        */
+        assertTrue { Await.Until(500) { called.value == 42 } }
     }
 
     @Test
@@ -44,14 +41,8 @@ class BehaviorActorTest {
             }
         }
 
-        reference tell 12
-        reference tell 15
-        reference tell 15
+        reference tell 12 tell 15 tell 15
 
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get() == 42
-        }
-        */
+        assertTrue { Await.Until(500) { called.value == 42 } }
     }
 }

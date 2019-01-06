@@ -3,6 +3,7 @@ package io.smallibs.aktor
 
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class SimpleActorTest {
 
@@ -31,11 +32,7 @@ class SimpleActorTest {
 
         reference tell 42
 
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get() == 42
-        }
-        */
+        assertTrue { Await.Until(500) { called.value == 42 } }
     }
 
     @Test
@@ -48,11 +45,7 @@ class SimpleActorTest {
 
         primary tell 42
 
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get() == 42
-        }
-        */
+        assertTrue { Await.Until(500) { called.value == 42 } }
     }
 
 }

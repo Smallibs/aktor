@@ -2,6 +2,7 @@ package io.smallibs.aktor
 
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
+import kotlin.test.assertTrue
 
 private const val actors = 1000
 private const val messages = 1000
@@ -22,11 +23,7 @@ class MassiveActorTest {
             references.forEach { a -> a tell true }
         }
 
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get() == messages * actors
-        }
-        */
+        assertTrue { Await.Until(500000) { called.value == messages * actors } }
     }
 
 }

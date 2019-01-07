@@ -19,7 +19,8 @@ class BehaviorActorTest {
             }
         }
 
-        reference tell 12 tell 30
+        reference tell 12
+        reference tell 30
 
         Await(5000).until { called.value == 42 }
     }
@@ -42,7 +43,9 @@ class BehaviorActorTest {
             }
         }
 
-        reference tell 12 tell 15 tell 15
+        reference tell 12
+        reference tell 15
+        reference tell 15
 
         Await(5000).until { called.value == 42 }
     }

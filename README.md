@@ -1,6 +1,6 @@
 # Aktor
 
-Actor System written in Kotlin. 
+Multiplatform Actor System written in Kotlin. 
 
 # Relationship
 
@@ -11,7 +11,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 # Prototypes
 
 ## Behavior&lt;T>
-
+System
 ```Kotlin
     typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 

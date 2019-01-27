@@ -127,7 +127,7 @@ reference tell "World!"
 ## 'create'
 
 ```Kotlin
-val called = AtomicReference("")
+val called = atomic("")
 
 data class Create(name: String)
 

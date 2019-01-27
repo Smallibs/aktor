@@ -9,6 +9,7 @@ class Registry {
 
     interface RegistryMessage
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : RegistryMessage
+    data class UnregisterActor(val reference: ActorReference<*>) : RegistryMessage
     data class SearchActor(val type: KClass<*>, val sender: ActorReference<SearchActorResponse<*>>) :
         RegistryMessage
 
@@ -21,6 +22,8 @@ class Registry {
             when (content) {
                 is RegisterActor<*> ->
                     actor start registry(actors + Pair(content.type, content.reference))
+                is UnregisterActor ->
+                    actor start registry(actors.filter { entry -> entry.value.address == content.reference.address })
                 is SearchActor ->
                     content.sender tell SearchActorResponse(actors[content.type])
             }

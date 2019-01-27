@@ -2,8 +2,8 @@ package io.smallibs.utils
 
 import kotlin.js.Date
 
-actual fun getCurrentTime(): Long =
+actual fun currentTimeMillis(): Long =
     Date().getUTCMilliseconds().toLong()
 
-actual fun waitFor(duration: Int) =
+actual fun sleep(duration: Int) =
     Unit

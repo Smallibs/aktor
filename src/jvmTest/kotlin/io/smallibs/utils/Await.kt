@@ -1,7 +1,7 @@
 package io.smallibs.utils 
 
-actual fun getCurrentTime() : Long =
+actual fun currentTimeMillis() : Long =
     System.currentTimeMillis()
 
-actual fun waitFor(duration: Int) =
+actual fun sleep(duration: Int) =
     Thread.sleep(duration.toLong())

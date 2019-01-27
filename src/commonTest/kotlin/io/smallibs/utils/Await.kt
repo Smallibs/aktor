@@ -2,21 +2,21 @@ package io.smallibs.utils
 
 // Should use Data
 
-expect fun getCurrentTime(): Long;
-expect fun waitFor(duration: Int);
+expect fun currentTimeMillis(): Long;
+expect fun sleep(duration: Int);
 
 object TimeOutException : Exception()
 
 class Await(val timeout: Long) {
     fun until(predicate: () -> Boolean) {
-        val currentTime = getCurrentTime()
+        val currentTime = currentTimeMillis()
 
         while (!predicate()) {
-            if (getCurrentTime() - currentTime > timeout) {
+            if (currentTimeMillis() - currentTime > timeout) {
                 throw TimeOutException
             }
 
-            waitFor(100)
+            sleep(100)
         }
     }
 }

@@ -94,7 +94,7 @@ System
 
 
 ```Kotlin
-val called = AtomicReference("")
+val called = atomic("")
 
 val system = ActorSystem.system("example")
 val reference = system.actorFor<String> { _, m -> 
@@ -109,7 +109,7 @@ reference tell "Hello World!"
 ## 'become'
 
 ```Kotlin
-val called = AtomicReference("")
+val called = atomic("")
 
 val system = ActorSystem.system("example")
 val reference = system.actorFor<String> { a, m ->
@@ -126,7 +126,23 @@ reference tell "World!"
 
 ## 'create'
 
-// ...
+```Kotlin
+val called = AtomicReference("")
+
+data class Create(name: String)
+
+val system = ActorSystem.system("example")
+val reference = system.actorFor<Create> { a, e -> 
+    a.actorFor<String>({ _, v -> 
+       called.set("$m.content $v.content") 
+    }, e.name)
+}
+
+reference tell "Hello"
+reference.child("Hello")?.asA<String>().let { it tell "World !" }
+
+// called value should be "Hello World!
+```
 
 # Example
 

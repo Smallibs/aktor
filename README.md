@@ -139,9 +139,7 @@ val reference = system.actorFor<Create> { a, e ->
 }
 
 reference tell "Hello"
-reference.child("Hello")?.asA<String>().let { it tell "World !" }
-
-// called value should be "Hello World!
+// ...
 ```
 
 # Example

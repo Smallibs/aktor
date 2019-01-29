@@ -27,7 +27,8 @@ class RegistryTest {
 
         // oO -- remove the 'as'
         val atomic = atomic(false)
-        val search = (system actorFor search<Registry>({ atomic.getAndSet(true )})) as ActorReference<Registry.SearchActorResponse<*>>
+        val search = (system actorFor search<Registry>({ atomic.getAndSet(true) }))
+                as ActorReference<Registry.SearchActorResponse<*>>
 
         registry tell Registry.SearchActor(Registry.RegistryMessage::class, search)
 
@@ -49,7 +50,8 @@ class RegistryTest {
 
         // oO -- remove the 'as'
         val atomic = atomic(false)
-        val search = (system actorFor search<Registry>({ atomic.getAndSet(true )})) as ActorReference<Registry.SearchActorResponse<*>>
+        val search =
+            (system actorFor search<Registry>({ atomic.getAndSet(true) })) as ActorReference<Registry.SearchActorResponse<*>>
 
         registry tell Registry.SearchActor(Registry.RegistryMessage::class, search)
 

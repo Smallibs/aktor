@@ -43,9 +43,9 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
     override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         context.self.register(behavior, name)
 
-    //
-    // Protected behaviors
-    //
+//
+// Protected behaviors
+//
 
     internal fun deliver(envelop: Envelop<T>) =
         this.actorMailbox.deliver(envelop)
@@ -53,9 +53,9 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
     internal fun nextTurn(): (() -> Unit)? =
         actorMailbox.next()?.let { envelop -> { behavior()?.let { it.receive(this, envelop) } } }
 
-    //
-    // Private behaviors
-    //
+//
+// Private behaviors
+//
 
     private fun currentBehavior(): Behavior<T>? =
         behaviors.getOrNull(0)

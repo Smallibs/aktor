@@ -4,7 +4,6 @@ package io.smallibs.aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class SimpleActorTest {
 

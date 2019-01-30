@@ -33,13 +33,17 @@ class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
     override val context: ActorContext<Any>
         get() = site.context
 
-    override fun behavior(): Behavior<Any>? =
+    override fun behavior(): Behavior<Any> =
         site.behavior()
 
-    override fun start(behavior: Behavior<Any>, stacked: Boolean) =
-        site.start(behavior, stacked)
+    override fun become(behavior: Behavior<Any>, stacked: Boolean) =
+        site.become(behavior, stacked)
 
-    override fun finish() =
+    override fun unbecome() =
+        site.unbecome()
+
+    override fun finish() {
         site.finish()
-
+        // TODO End of the whole system
+    }
 }

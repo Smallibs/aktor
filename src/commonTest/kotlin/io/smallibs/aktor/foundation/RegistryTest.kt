@@ -19,8 +19,8 @@ class RegistryTest {
         registry tell Registry.RegisterActor(Registry.RegistryMessage::class, registry)
 
         fun <T : Any> search(
-            success: (ActorReference<T>) -> Unit,
-            failure: () -> Unit = {}
+            success: (ActorReference<T>) -> Boolean,
+            failure: () -> Boolean = { true }
         ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
@@ -42,16 +42,16 @@ class RegistryTest {
         val registry = system actorFor Registry.new()
 
         fun <T : Any> search(
-            success: (ActorReference<T>) -> Unit,
-            failure: () -> Unit = {}
+            success: (ActorReference<T>) -> Boolean,
+            failure: () -> Boolean = { true }
         ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
         // oO -- remove the 'as'
         val atomic = atomic(false)
-        val search =
-            (system actorFor search<Registry>({ atomic.getAndSet(true) })) as ActorReference<Registry.SearchActorResponse<*>>
+        val search = (system actorFor search<Registry>({ atomic.getAndSet(true) }))
+                as ActorReference<Registry.SearchActorResponse<*>>
 
         registry tell Registry.SearchActor(Registry.RegistryMessage::class, search)
 

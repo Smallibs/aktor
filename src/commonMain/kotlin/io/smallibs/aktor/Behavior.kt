@@ -2,7 +2,10 @@
 
 package io.smallibs.aktor
 
+import io.smallibs.aktor.core.Behaviors.system
+
 typealias Receiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
+typealias SystemReceiver<T> = (Actor<T>, SystemEnvelop<T>) -> Unit
 
 interface Behavior<T> {
 
@@ -25,7 +28,7 @@ interface Behavior<T> {
         override fun receive(actor: Actor<T>, envelop: Envelop<T>) =
             when (envelop) {
                 is ProtocolEnvelop<T> -> receiver(actor, envelop)
-                is SystemEnvelop<T> -> TODO()
+                is SystemEnvelop<T> -> system<T>()(actor, envelop)
             }
     }
 

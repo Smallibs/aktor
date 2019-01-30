@@ -21,9 +21,9 @@ class Registry {
 
             when (content) {
                 is RegisterActor<*> ->
-                    actor start registry(actors + Pair(content.type, content.reference))
+                    actor become registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
-                    actor start registry(actors.filter { entry -> entry.value.address == content.reference.address })
+                    actor become registry(actors.filter { entry -> entry.value.address == content.reference.address })
                 is SearchActor ->
                     content.sender tell SearchActorResponse(actors[content.type])
             }

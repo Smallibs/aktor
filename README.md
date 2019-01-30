@@ -19,9 +19,9 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun onStart(actor: Actor<T>)
 
-    fun onBecome(actor: Actor<T>)
+    fun onResume(actor: Actor<T>)
 
-    fun onUnbecome(actor: Actor<T>)
+    fun onPause(actor: Actor<T>)
 
     fun onFinish(actor: Actor<T>)
 ```

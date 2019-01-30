@@ -11,7 +11,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 # Prototypes
 
 ## Behavior&lt;T>
-System
+
 ```Kotlin
     typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 
@@ -19,11 +19,11 @@ System
 
     fun onStart(actor: Actor<T>)
 
-    fun onResume(actor: Actor<T>)
+    fun onBecome(actor: Actor<T>)
 
-    fun onPause(actor: Actor<T>)
+    fun onUnbecome(actor: Actor<T>)
 
-    fun onStop(actor: Actor<T>)
+    fun onFinish(actor: Actor<T>)
 ```
 
 ## Actor&lt;T>
@@ -33,14 +33,16 @@ System
 ```Kotlin
     fun behavior(): Behavior<T>?
 
-    infix fun start(receiver: Receiver<T>)
+    infix fun become(receiver: Receiver<T>)
 
-    fun start(receiver: Receiver<T>, stacked: Boolean)
+    fun become(receiver: Receiver<T>, stacked: Boolean)
 
-    infix fun start(behavior: Behavior<T>)
+    infix fun become(behavior: Behavior<T>)
 
-    fun start(behavior: Behavior<T>, stacked: Boolean)
+    fun become(behavior: Behavior<T>, stacked: Boolean)
 
+    fun unbecome()
+    
     fun finish()
 ```
 

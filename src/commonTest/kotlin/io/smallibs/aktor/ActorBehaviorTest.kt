@@ -4,7 +4,7 @@ import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
-class BehaviorActorTest {
+class ActorBehaviorTest {
 
     @Test
     fun shouldBeCalledAndStartABehavior() {

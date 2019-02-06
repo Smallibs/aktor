@@ -17,7 +17,7 @@ interface Behavior<T> {
 
     fun onPause(actor: Actor<T>) {}
 
-    fun onStop(actor: Actor<T>) {}
+    fun onFinish(actor: Actor<T>) {}
 
     companion object {
         infix fun <T> of(receiver: Receiver<T>): Behavior<T> =

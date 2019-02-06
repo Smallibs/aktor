@@ -17,27 +17,26 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
         currentBehavior()
 
     override fun become(behavior: Behavior<T>, stacked: Boolean) {
-        currentBehavior().let {
-            it.onPause(this)
-            if (!stacked) {
-                removeCurrentBehavior()
-                behavior.onStop(this)
+        currentStackedBehavior()?.let {
+            if (stacked) {
+                it.onPause(this)
             } else {
-                behavior.onPause(this)
+                removeStackedBehavior()
+                it.onFinish(this)
             }
         }
 
-        setCurrentBehavior(behavior)
+        stackToCurrentBehaviors(behavior)
         behavior.onStart(this)
     }
 
     override fun unbecome() {
-        currentBehavior().let {
-            removeCurrentBehavior()
-            it.onStop(this)
+        currentStackedBehavior()?.let {
+            removeStackedBehavior()
+            it.onFinish(this)
+            currentBehavior().onResume(this)
         }
 
-        currentBehavior().onResume(this)
     }
 
     override fun finish() {
@@ -61,15 +60,17 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
     // Private behaviors
     //
 
-    private fun currentBehavior(): Behavior<T> =
-        behaviors.getOrNull(0) ?: initial
+    private fun currentStackedBehavior(): Behavior<T>? =
+        behaviors.getOrNull(0)
 
-
-    private fun removeCurrentBehavior() =
+    private fun removeStackedBehavior() =
         behaviors.getOrNull(0)?.let { behaviors.removeAt(0) }
 
-    private fun setCurrentBehavior(behavior: Behavior<T>) =
+    private fun stackToCurrentBehaviors(behavior: Behavior<T>) =
         behaviors.add(0, behavior)
+
+    private fun currentBehavior(): Behavior<T> =
+        currentStackedBehavior() ?: initial
 
 }
 

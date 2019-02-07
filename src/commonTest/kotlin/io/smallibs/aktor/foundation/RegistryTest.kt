@@ -16,21 +16,19 @@ class RegistryTest {
         val system = ActorSystem.system("test")
 
         val registry = system actorFor Registry.new()
-        registry tell Registry.RegisterActor(Registry.RegistryMessage::class, registry)
+        registry tell Registry.register(registry)
 
-        fun <T : Any> search(
+        fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
         ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
-        // oO -- remove the 'as'
         val atomic = atomic(false)
-        val search = (system actorFor search<Registry>({ atomic.getAndSet(true) }))
-                as ActorReference<Registry.SearchActorResponse<*>>
+        val receptor = system actorFor waitingFor<Registry.Protocol>({ atomic.getAndSet(true) })
 
-        registry tell Registry.SearchActor(Registry.RegistryMessage::class, search)
+        registry tell Registry.findActor(receptor)
 
         Await(5000).until { atomic.value }
     }
@@ -41,19 +39,17 @@ class RegistryTest {
 
         val registry = system actorFor Registry.new()
 
-        fun <T : Any> search(
+        fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
         ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
-        // oO -- remove the 'as'
         val atomic = atomic(false)
-        val search = (system actorFor search<Registry>({ atomic.getAndSet(true) }))
-                as ActorReference<Registry.SearchActorResponse<*>>
+        val receptor = system actorFor waitingFor<Registry.Protocol>({ atomic.getAndSet(true) })
 
-        registry tell Registry.SearchActor(Registry.RegistryMessage::class, search)
+        registry tell Registry.findActor(receptor)
 
         assertFailsWith<TimeOutException> { Await(5000).until { atomic.value } }
     }

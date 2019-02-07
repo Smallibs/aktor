@@ -1,5 +1,7 @@
 # Aktor
 
+[![Build Status](https://travis-ci.org/Smallibs/aktor.svg?branch=master)](https://travis-ci.org/Smallibs/aktor)
+
 Multiplatform Actor System written in Kotlin. 
 
 # Relationship

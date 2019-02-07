@@ -38,6 +38,7 @@ class Registry {
         inline fun <reified T : Any> register(reference: ActorReference<T>): RegisterActor<T> =
             RegisterActor(T::class, reference)
 
+        @Suppress("UNCHECKED_CAST")
         inline fun <reified T : Any> findActor(receptor: ActorReference<SearchActorResponse<T>>): SearchActor =
             SearchActor(T::class, receptor as ActorReference<SearchActorResponse<*>>)
 

@@ -1,12 +1,12 @@
 package io.smallibs.aktor
 
-import io.smallibs.aktor.core.SystemMessage
+import io.smallibs.aktor.core.System
 
 interface ActorReference<T> {
 
     val address: ActorAddress
 
-    infix fun tell(content: SystemMessage) {
+    infix fun tell(content: System.Protocol) {
         tell(SystemEnvelop(content))
     }
 

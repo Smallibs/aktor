@@ -2,8 +2,11 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.ActorReference
 
-interface SystemMessage
+interface System {
 
-object StopActor : SystemMessage
-data class StoppedActor(val reference: ActorReference<*>) : SystemMessage
+    interface Protocol
+    object StopActor : Protocol
+    data class StoppedActor(val reference: ActorReference<*>) : Protocol
+
+}
 

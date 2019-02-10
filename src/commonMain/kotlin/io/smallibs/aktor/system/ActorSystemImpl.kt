@@ -5,6 +5,7 @@ import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.engine.ActorDispatcher
+import io.smallibs.aktor.foundation.Directory
 
 class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 
@@ -16,18 +17,27 @@ class ActorSystemImpl(site: String, execution: ActorRunner) : ActorSystem {
 
     init {
         this.site = actor(site)
-        this.system = actor("system", this.site)
-        this.user = actor("user", this.site)
+        this.system = actor("system", parent = this.site)
+        this.user = actor("user", parent = this.site)
+
+        // Add core registry
+        val actorReference = system actorFor Directory.new()
+
+
     }
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         this.user.actorFor(behavior, name)
 
-    private fun actor(site: String, parent: ActorImpl<Any>? = null): ActorImpl<Any> {
+    private fun actor(
+        site: String,
+        receiver: Receiver<Any> = { _, _ -> },
+        parent: ActorImpl<Any>? = null
+    ): ActorImpl<Any> {
         val address = ActorAddressImpl(site, parent?.let { context.self.address })
         val reference = ActorReferenceImpl<Any>(dispatcher, address)
 
-        return dispatcher.register(reference) { _, _ -> }
+        return dispatcher.register(reference, receiver)
     }
 
     override val context: ActorContext<Any>

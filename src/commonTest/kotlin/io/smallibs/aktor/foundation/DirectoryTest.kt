@@ -9,26 +9,26 @@ import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
 
-class RegistryTest {
+class DirectoryTest {
 
     @Test
     fun shouldRegisterAndRetrieveActor() {
         val system = ActorSystem.system("test")
 
-        val registry = system actorFor Registry.new()
-        registry tell Registry.register(registry)
+        val registry = system actorFor Directory.new()
+        registry tell Directory.register(registry)
 
         fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
-        ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
+        ): Receiver<Directory.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
         val atomic = atomic(false)
-        val receptor = system actorFor waitingFor<Registry.Protocol>({ atomic.getAndSet(true) })
+        val receptor = system actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
 
-        registry tell Registry.findActor(receptor)
+        registry tell Directory.findActor(receptor)
 
         Await(5000).until { atomic.value }
     }
@@ -37,19 +37,19 @@ class RegistryTest {
     fun shouldNotRetrieveActor() {
         val system = ActorSystem.system("test")
 
-        val registry = system actorFor Registry.new()
+        val registry = system actorFor Directory.new()
 
         fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
-        ): Receiver<Registry.SearchActorResponse<T>> = { _, envelop ->
+        ): Receiver<Directory.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
         val atomic = atomic(false)
-        val receptor = system actorFor waitingFor<Registry.Protocol>({ atomic.getAndSet(true) })
+        val receptor = system actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
 
-        registry tell Registry.findActor(receptor)
+        registry tell Directory.findActor(receptor)
 
         assertFailsWith<TimeOutException> { Await(5000).until { atomic.value } }
     }

@@ -6,13 +6,14 @@ object Behaviors {
 
     fun <T> system(): SystemReceiver<T> = { actor, message ->
         when (message.content) {
-            is StopActor -> {
-                actor.context.children().forEach { it tell StopActor }
+            is System.StopActor -> {
+                actor.context.children().forEach { it tell System.StopActor }
                 actor.finish()
-                actor.context.parent()?.let { it tell StoppedActor(actor.context.self) }
+                actor.context.parent()?.let { it tell System.StoppedActor(actor.context.self) }
             }
-            is StoppedActor -> {
-                TODO()
+            is System.StoppedActor -> {
+                // Bubbling message from actor to parent
+                actor.context.parent()?.let { it tell message.content }
             }
         }
     }

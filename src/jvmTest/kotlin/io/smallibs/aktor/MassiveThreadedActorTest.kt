@@ -1,7 +1,7 @@
 package io.smallibs.aktor
 
 
-import io.smallibs.aktor.ActorSystem.Companion.system
+import io.smallibs.aktor.ActorSystem.Companion.new
 import io.smallibs.aktor.runner.ThreadBasedRunner
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
@@ -14,7 +14,6 @@ private const val actors = 1000
 private const val messages = 1000
 
 class MassiveThreadedActorTest {
-
 
     private val format = DecimalFormat.getIntegerInstance()
     private fun Int.format(): String =
@@ -30,7 +29,7 @@ class MassiveThreadedActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingThreads() {
-        val system = system("test", execution = ThreadBasedRunner())
+        val system = new("test", execution = ThreadBasedRunner())
 
         val called = AtomicInteger(0)
 

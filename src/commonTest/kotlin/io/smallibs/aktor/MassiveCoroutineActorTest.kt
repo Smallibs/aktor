@@ -3,7 +3,6 @@ package io.smallibs.aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 private const val actors = 1000
 private const val messages = 1000
@@ -12,7 +11,7 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val system = ActorSystem.system("test", execution = ActorRunner.coroutine())
+        val system = ActorSystem.new("test", execution = ActorRunner.coroutine())
 
         val called = atomic(0)
 

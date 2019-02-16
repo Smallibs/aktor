@@ -1,12 +1,11 @@
 package io.smallibs.aktor
 
-import io.smallibs.aktor.system.ActorSystemImpl
+import io.smallibs.aktor.bootstrap.Bootstrap
 
 interface ActorSystem : Actor<Any> {
 
     companion object {
-        fun system(site: String, execution: ActorRunner = ActorRunner.coroutine()): ActorSystem =
-            ActorSystemImpl(site, execution)
+        fun new(site: String, execution: ActorRunner = ActorRunner.coroutine()) = Bootstrap.new(site, execution)
     }
 
 }

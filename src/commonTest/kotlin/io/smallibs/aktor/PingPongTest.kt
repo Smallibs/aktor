@@ -29,7 +29,7 @@ class PingPongTest {
 
     @Test
     fun shouldPlayGame() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         val endedPlayers = atomic(0)
 

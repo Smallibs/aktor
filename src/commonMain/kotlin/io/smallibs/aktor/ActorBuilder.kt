@@ -2,6 +2,9 @@ package io.smallibs.aktor
 
 interface  ActorBuilder {
 
+    infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R> =
+        property install this
+
     infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
         actorFor(receiver, Names.generate())
 

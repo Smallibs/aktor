@@ -13,7 +13,7 @@ class DirectoryTest {
 
     @Test
     fun shouldRegisterAndRetrieveActor() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         val registry = system actorFor Directory.new()
         registry tell Directory.register(registry)
@@ -35,7 +35,7 @@ class DirectoryTest {
 
     @Test
     fun shouldNotRetrieveActor() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         val registry = system actorFor Directory.new()
 

@@ -49,7 +49,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorBecome() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }
@@ -62,7 +62,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorUnbecome() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }
@@ -75,7 +75,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorBecomeAndUnbecome() {
-        val system = ActorSystem.system("test")
+        val system = ActorSystem.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }

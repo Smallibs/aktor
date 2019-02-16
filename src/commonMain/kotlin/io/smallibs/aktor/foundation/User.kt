@@ -6,7 +6,6 @@ import io.smallibs.aktor.Receiver
 class User {
 
     interface Protocol
-    object Start : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 
 

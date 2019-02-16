@@ -19,6 +19,9 @@ class Site {
                 is Start -> {
                     val system = actor actorFor System.new()
                     val user = actor actorFor User.new()
+
+                    system tell System.Start
+
                     actor become registry(Runtime(system, user))
                 }
             }

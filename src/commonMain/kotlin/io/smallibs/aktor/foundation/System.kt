@@ -14,10 +14,7 @@ class System {
     private fun registry(): Receiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Start -> {
-                    val directory = actor actorFor Directory.new()
-                    actor become registry(directory)
-                }
+                is Start -> actor become registry(actor actorFor Directory.new())
             }
 
         }

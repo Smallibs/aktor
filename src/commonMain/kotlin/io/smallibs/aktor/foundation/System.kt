@@ -4,7 +4,7 @@ import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.CoreReceiver
 import io.smallibs.aktor.ProtocolReceiver
-import io.smallibs.aktor.core.Behaviors
+import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject

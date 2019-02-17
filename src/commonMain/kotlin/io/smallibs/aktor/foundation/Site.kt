@@ -1,7 +1,7 @@
 package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.*
-import io.smallibs.aktor.core.Behaviors
+import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 

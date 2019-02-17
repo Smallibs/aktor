@@ -14,17 +14,20 @@ class ActorBecomeTest {
     }
 
     class TestBehavior(val notifier: (Event) -> Unit) : Behavior<Order> {
-        override fun receive(actor: Actor<Order>, envelop: Envelop<Order>) {
+        override val core: CoreReceiver<Order>
+            get() = { _, _ -> Unit }
+        override val protocol: ProtocolReceiver<Order>
+            get() = { a, m -> receive(a, m) }
+
+        override fun receive(actor: Actor<Order>, envelop: Envelop<Order>) =
             when (envelop) {
                 is ProtocolEnvelop ->
                     when (envelop.content) {
                         Order.BECOME -> actor become this
                         Order.UNBECOME -> actor.unbecome()
                     }
-                is SystemEnvelop -> {
-                }
+                is CoreEnvelop -> Unit
             }
-        }
 
         override fun onStart(actor: Actor<Order>) {
             super.onStart(actor)
@@ -49,7 +52,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorBecome() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }
@@ -62,7 +65,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorUnbecome() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }
@@ -75,7 +78,7 @@ class ActorBecomeTest {
 
     @Test
     fun shouldAskAnActorBecomeAndUnbecome() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         var called = listOf(Event.INITIALIZED)
         val reference = system actorFor TestBehavior { called = called + it }

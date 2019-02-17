@@ -9,12 +9,12 @@ class PingPongTest {
 
     class PingPong(val sender: ActorReference<PingPong>)
 
-    private fun arbiter(nbEnded: AtomicInt): Receiver<String> = { _, message ->
+    private fun arbiter(nbEnded: AtomicInt): ProtocolReceiver<String> = { _, message ->
         println("${message.content} ending game ...")
         nbEnded.incrementAndGet()
     }
 
-    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): Receiver<PingPong> =
+    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): ProtocolReceiver<PingPong> =
         { actor, message ->
             if (turn < 1_000) {
                 actor become player(arbiter, name, turn + 1)
@@ -25,11 +25,11 @@ class PingPongTest {
             }
         }
 
-    private val endGame: Receiver<PingPong> = { _, _ -> }
+    private val endGame: ProtocolReceiver<PingPong> = { _, _ -> }
 
     @Test
     fun shouldPlayGame() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         val endedPlayers = atomic(0)
 
@@ -39,9 +39,7 @@ class PingPongTest {
 
         ping tell PingPong(pong)
 
-
         Await(5000).until { endedPlayers.value == 1 }
-
     }
 
 }

@@ -1,8 +1,8 @@
 package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.ActorSystem
-import io.smallibs.aktor.Receiver
+import io.smallibs.aktor.Bootstrap
+import io.smallibs.aktor.ProtocolReceiver
 import io.smallibs.utils.Await
 import io.smallibs.utils.TimeOutException
 import kotlinx.atomicfu.atomic
@@ -13,20 +13,20 @@ class DirectoryTest {
 
     @Test
     fun shouldRegisterAndRetrieveActor() {
-        val system = ActorSystem.new("test")
+        val site = Bootstrap.new("test")
 
-        val registry = system actorFor Directory.new()
+        val registry = site actorFor Directory.new()
         registry tell Directory.register(registry)
 
         fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
-        ): Receiver<Directory.SearchActorResponse<T>> = { _, envelop ->
+        ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
         val atomic = atomic(false)
-        val receptor = system actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
+        val receptor = site actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
 
         registry tell Directory.findActor(receptor)
 
@@ -35,19 +35,19 @@ class DirectoryTest {
 
     @Test
     fun shouldNotRetrieveActor() {
-        val system = ActorSystem.new("test")
+        val site = Bootstrap.new("test")
 
-        val registry = system actorFor Directory.new()
+        val registry = site actorFor Directory.new()
 
         fun <T : Any> waitingFor(
             success: (ActorReference<T>) -> Boolean,
             failure: () -> Boolean = { true }
-        ): Receiver<Directory.SearchActorResponse<T>> = { _, envelop ->
+        ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { _, envelop ->
             envelop.content.reference?.let { success(it) } ?: failure()
         }
 
         val atomic = atomic(false)
-        val receptor = system actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
+        val receptor = site actorFor waitingFor<Directory.Protocol>({ atomic.getAndSet(true) })
 
         registry tell Directory.findActor(receptor)
 

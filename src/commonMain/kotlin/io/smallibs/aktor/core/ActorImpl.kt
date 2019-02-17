@@ -39,9 +39,8 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
 
     }
 
-    override fun finish() {
-        TODO()
-    }
+    override fun finish() =
+        this.context.self tell Core.Stop
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         context.self.register(behavior, name)

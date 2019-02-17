@@ -8,16 +8,16 @@ interface Actor<T> : ActorBuilder {
 
     fun become(behavior: Behavior<T>, stacked: Boolean)
 
-    infix fun become(receiver: Receiver<T>) {
-        become(Behavior of receiver)
+    infix fun become(protocol: ProtocolReceiver<T>) {
+        become(Behavior of Pair(behavior().core, protocol))
     }
 
     infix fun become(behavior: Behavior<T>) {
         become(behavior, false)
     }
 
-    fun become(receiver: Receiver<T>, stacked: Boolean) {
-        become(Behavior of receiver, stacked)
+    fun become(protocol: ProtocolReceiver<T>, stacked: Boolean) {
+        become(Behavior of Pair(behavior().core, protocol), stacked)
     }
 
     fun unbecome()

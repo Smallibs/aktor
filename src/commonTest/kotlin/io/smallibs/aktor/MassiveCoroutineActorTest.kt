@@ -11,7 +11,7 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val system = ActorSystem.new("test", execution = ActorRunner.coroutine())
+        val system = Bootstrap.new("test", execution = ActorRunner.coroutine())
 
         val called = atomic(0)
 

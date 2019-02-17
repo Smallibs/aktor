@@ -2,14 +2,22 @@
 
 package io.smallibs.aktor
 
-import io.smallibs.aktor.core.Behaviors.system
+import io.smallibs.aktor.core.Behaviors
 
-typealias Receiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
-typealias SystemReceiver<T> = (Actor<T>, SystemEnvelop<T>) -> Unit
+typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
+typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Unit
+typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
 
 interface Behavior<T> {
 
-    fun receive(actor: Actor<T>, envelop: Envelop<T>)
+    val core: CoreReceiver<T>
+    val protocol: ProtocolReceiver<T>
+
+    fun receive(actor: Actor<T>, envelop: Envelop<T>): Unit =
+        when (envelop) {
+            is CoreEnvelop<T> -> core(actor, envelop)
+            is ProtocolEnvelop<T> -> protocol(actor, envelop)
+        }
 
     fun onStart(actor: Actor<T>) {}
 
@@ -20,16 +28,15 @@ interface Behavior<T> {
     fun onFinish(actor: Actor<T>) {}
 
     companion object {
-        infix fun <T> of(receiver: Receiver<T>): Behavior<T> =
-            ForReceiver(receiver)
-    }
+        infix fun <T> of(protocol: ProtocolReceiver<T>): Behavior<T> =
+            ForReceiver(Behaviors.core, protocol)
 
-    class ForReceiver<T>(private val receiver: Receiver<T>) : Behavior<T> {
-        override fun receive(actor: Actor<T>, envelop: Envelop<T>) =
-            when (envelop) {
-                is ProtocolEnvelop<T> -> receiver(actor, envelop)
-                is SystemEnvelop<T> -> system<T>()(actor, envelop)
-            }
-    }
+        infix fun <T> of(receivers: Pair<CoreReceiver<T>, ProtocolReceiver<T>>): Behavior<T> =
+            ForReceiver(receivers.first, receivers.second)
 
+        class ForReceiver<T>(
+            override val core: CoreReceiver<T>,
+            override val protocol: ProtocolReceiver<T>
+        ) : Behavior<T>
+    }
 }

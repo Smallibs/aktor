@@ -9,7 +9,7 @@ class SimpleActorTest {
 
     @Test
     fun shouldBeCalled() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         val called = atomic(false)
         val reference = system.actorFor<Boolean> { _, _ -> called.getAndSet(true) }
@@ -25,7 +25,7 @@ class SimpleActorTest {
 
     @Test
     fun shouldBeCalledWithTheCorrectValue() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         val called = atomic(0)
         val reference = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }
@@ -37,7 +37,7 @@ class SimpleActorTest {
 
     @Test
     fun shouldPerformActorTellChain() {
-        val system = ActorSystem.new("test")
+        val system = Bootstrap.new("test")
 
         val called = atomic(0)
         val secondary = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }

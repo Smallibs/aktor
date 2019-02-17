@@ -2,33 +2,41 @@ package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.Receiver
+import io.smallibs.aktor.CoreReceiver
+import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.core.Behaviors
+import io.smallibs.aktor.core.Core
+import io.smallibs.aktor.utils.exhaustive
+import io.smallibs.aktor.utils.reject
 
-class System {
+object System {
 
     interface Protocol
-    object Start : Protocol
     data class ToDirectory(val message: Directory.Protocol) : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 
-    private fun registry(): Receiver<Protocol> =
+    private val core: CoreReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Start -> actor become registry(actor actorFor Directory.new())
-            }
-
+                is Core.Start -> actor become protocol(actor actorFor Directory.new())
+                is Core.Stopped -> actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
+                else -> Behaviors.core(actor, message)
+            }.exhaustive
         }
 
-    private fun registry(directory: ActorReference<Directory.Protocol>): Receiver<Protocol> =
+    private val protocol: ProtocolReceiver<Protocol> = { _, _ -> Unit }
+
+    private fun protocol(directory: ActorReference<Directory.Protocol>): ProtocolReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
                 is ToDirectory -> directory tell message.content.message
-                is Install -> actor actorFor message.content.behavior
-            }
+                is Install -> {
+                    actor actorFor message.content.behavior; Unit
+                }
+                else -> reject
+            }.exhaustive
         }
 
-    companion object {
-        fun new() = Behavior of System().registry()
-    }
+    fun new(): Behavior<System.Protocol> = Behavior of Pair(System.core, System.protocol)
 
 }

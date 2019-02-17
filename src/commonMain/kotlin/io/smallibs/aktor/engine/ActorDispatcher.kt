@@ -12,7 +12,7 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
         ActorExecutionImpl(runner)
     )
 
-    fun <T> register(reference: ActorReferenceImpl<T>, receive: Receiver<T>): ActorImpl<T> =
+    fun <T> register(reference: ActorReferenceImpl<T>, receive: ProtocolReceiver<T>): ActorImpl<T> =
         register(reference, Behavior of receive)
 
     fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): ActorImpl<T> =

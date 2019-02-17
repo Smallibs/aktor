@@ -5,11 +5,11 @@ interface  ActorBuilder {
     infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R> =
         property install this
 
-    infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R> =
-        actorFor(receiver, Names.generate())
+    infix fun <R> actorFor(protocolReceiver: ProtocolReceiver<R>): ActorReference<R> =
+        actorFor(protocolReceiver, Names.generate())
 
-    fun <R> actorFor(receiver: Receiver<R>, name: String): ActorReference<R> =
-        actorFor(Behavior of receiver, name)
+    fun <R> actorFor(protocol: ProtocolReceiver<R>, name: String): ActorReference<R> =
+        actorFor(Behavior of protocol, name)
 
     infix fun <R> actorFor(behavior: Behavior<R>): ActorReference<R> =
         actorFor(behavior, Names.generate())

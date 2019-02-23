@@ -1,17 +1,26 @@
 package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.*
-import io.smallibs.aktor.core.Core.Behaviors
+import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
-class Site(val system: ActorReference<System.Protocol>, val user: ActorReference<User.Protocol>) : Behavior<Site.Protocol> {
+class Site(val system: ActorReference<System.Protocol>, val user: ActorReference<User.Protocol>) :
+    Behavior<Site.Protocol> {
 
     interface Protocol
     data class UserInstall<R>(val behavior: Behavior<R>) : Protocol
     data class SystemInstall<R>(val behavior: Behavior<R>) : Protocol
 
-    override var core: CoreReceiver<Protocol> = Behaviors.core
+    override var core: CoreReceiver<Protocol> = { actor, message ->
+        when (message.content) {
+            is Core.Start -> {
+                system tell message.content
+                user tell message.content
+            }
+            else -> Core.Behaviors.core(actor, message)
+        }.exhaustive
+    }
 
     override val protocol: ProtocolReceiver<Protocol> =
         { _, message ->
@@ -28,7 +37,7 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
     }
 }
 
-data class SiteActor(val actor: Actor<Site.Protocol>, private val site: Site) : Actor<Site.Protocol> by actor {
+class SiteActor(private val actor: Actor<Site.Protocol>, private val site: Site) : Actor<Site.Protocol> by actor {
     val system = site.system
     val user = site.user
 }

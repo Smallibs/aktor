@@ -9,7 +9,7 @@ class ActorBehaviorTest {
     @Test
     fun shouldBeCalledAndStartABehavior() {
 
-        val system = Bootstrap.new("test")
+        val system = Aktor.new("test")
 
         val called = atomic(0)
         val reference = system.actorFor<Int> { a, v1 ->
@@ -26,7 +26,7 @@ class ActorBehaviorTest {
 
     @Test
     fun shouldBeCalledAndStartAndFinishABehavior() {
-        val system = Bootstrap.new("test")
+        val system = Aktor.new("test")
 
         val done = atomic(false)
         val called = atomic(0)

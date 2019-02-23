@@ -2,24 +2,25 @@ package io.smallibs.aktor
 
 import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
+import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.engine.ActorDispatcher
 import io.smallibs.aktor.foundation.Site
 import io.smallibs.aktor.foundation.SiteActor
 import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.foundation.User
 
-object Bootstrap {
+object Aktor {
 
     fun new(siteName: String, execution: ActorRunner = ActorRunner.coroutine()): SiteActor {
         val dispatcher = ActorDispatcher(execution)
 
-        val address = ActorAddressImpl(siteName)
-        val reference = ActorReferenceImpl<Site.Protocol>(dispatcher, address)
+        val addressSite = ActorAddressImpl(siteName)
+        val referenceSite = ActorReferenceImpl<Site.Protocol>(dispatcher, addressSite)
 
-        val addressSystem = ActorAddressImpl("system", address)
+        val addressSystem = ActorAddressImpl("system", addressSite)
         val referenceSystem = ActorReferenceImpl<System.Protocol>(dispatcher, addressSystem)
 
-        val addressUser = ActorAddressImpl("user", address)
+        val addressUser = ActorAddressImpl("user", addressSite)
         val referenceUser = ActorReferenceImpl<User.Protocol>(dispatcher, addressUser)
 
         val site = Site.new(referenceSystem, referenceUser)
@@ -27,7 +28,11 @@ object Bootstrap {
         dispatcher.register(referenceSystem, System.new())
         dispatcher.register(referenceUser, User.new())
 
-        return SiteActor(dispatcher.register(reference, site), site)
+        val actorSite = dispatcher.register(referenceSite, site)
+
+        referenceSite tell Core.Start
+
+        return SiteActor(actorSite, site)
     }
 
 }

@@ -30,7 +30,7 @@ object Core {
                 }.exhaustive
             }
 
-        fun <T> consume(): ProtocolReceiver<T> = { _, _ -> Unit }
+        val consume: ProtocolReceiver<*> = { _, _ -> Unit }
     }
 
 }

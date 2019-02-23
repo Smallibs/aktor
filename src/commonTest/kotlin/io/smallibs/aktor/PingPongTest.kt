@@ -29,7 +29,7 @@ class PingPongTest {
 
     @Test
     fun shouldPlayGame() {
-        val system = Bootstrap.new("test")
+        val system = Aktor.new("test")
 
         val endedPlayers = atomic(0)
 

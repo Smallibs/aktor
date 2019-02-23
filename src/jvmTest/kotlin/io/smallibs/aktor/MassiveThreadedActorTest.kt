@@ -1,7 +1,7 @@
 package io.smallibs.aktor
 
 
-import io.smallibs.aktor.Bootstrap.new
+import io.smallibs.aktor.Aktor.new
 import io.smallibs.aktor.runner.ThreadBasedRunner
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS

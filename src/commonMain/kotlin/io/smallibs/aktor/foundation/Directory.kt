@@ -13,12 +13,7 @@ object Directory {
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
     data class UnregisterActor(val reference: ActorReference<*>) : Protocol
     data class SearchActor(val type: KClass<*>, val sender: ActorReference<SearchActorResponse<*>>) : Protocol
-
     data class SearchActorResponse<T>(val reference: ActorReference<T>?)
-
-    //
-    // registry exhaustive
-    //
 
     private fun registry(actors: Map<KClass<*>, ActorReference<*>>): ProtocolReceiver<Protocol> =
         { actor, message ->
@@ -37,18 +32,28 @@ object Directory {
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
 
-    inline fun <reified T : Any> register(reference: ActorReference<T>): RegisterActor<T> =
-        RegisterActor(T::class, reference)
-
-    @Suppress("UNCHECKED_CAST")
-    inline fun <reified T : Any> findActor(receptor: ActorReference<SearchActorResponse<T>>): SearchActor =
-        SearchActor(T::class, receptor as ActorReference<SearchActorResponse<*>>)
-
-    fun unregister(reference: ActorReference<*>): UnregisterActor =
-        UnregisterActor(reference)
-
-    fun with(system: ActorReference<System.Protocol>) = { message: Protocol ->
+    infix fun from(system: ActorReference<System.Protocol>): DirectoryApi = DirectoryApi { message ->
         system tell System.ToDirectory(message)
+    }
+
+    class DirectoryApi(val bridge: (Protocol) -> Unit) {
+        inline infix fun <reified T : Any> register(reference: ActorReference<T>) =
+            bridge(RegisterActor(T::class, reference))
+
+        @Suppress("UNCHECKED_CAST")
+        inline infix fun <reified T : Any> find(receptor: ActorReference<SearchActorResponse<T>>) =
+            bridge(SearchActor(T::class, receptor as ActorReference<SearchActorResponse<*>>))
+
+        infix fun unregister(reference: ActorReference<*>) =
+            bridge(UnregisterActor(reference))
+
+    }
+
+    fun <T : Any> onSearchComplete(
+        success: (ActorReference<T>) -> Unit,
+        failure: () -> Unit = { }
+    ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { _, envelop ->
+        envelop.content.reference?.let { success(it) } ?: failure()
     }
 
 }

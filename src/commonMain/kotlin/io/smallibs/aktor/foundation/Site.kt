@@ -2,6 +2,7 @@ package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.*
 import io.smallibs.aktor.core.Core
+import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
@@ -18,16 +19,22 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
                 system tell message.content
                 user tell message.content
             }
-            else -> Core.Behaviors.core(actor, message)
+            is Core.Stopped ->
+                system tell message.content
+            else ->
+                Behaviors.core(actor, message)
         }.exhaustive
     }
 
     override val protocol: ProtocolReceiver<Protocol> =
         { _, message ->
             when (message.content) {
-                is SystemInstall<*> -> system tell System.Install(message.content.behavior)
-                is UserInstall<*> -> user tell User.Install(message.content.behavior)
-                else -> reject
+                is SystemInstall<*> ->
+                    system tell System.Install(message.content.behavior)
+                is UserInstall<*> ->
+                    user tell User.Install(message.content.behavior)
+                else ->
+                    reject
             }.exhaustive
         }
 

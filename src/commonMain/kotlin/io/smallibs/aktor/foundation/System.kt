@@ -4,8 +4,8 @@ import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.CoreReceiver
 import io.smallibs.aktor.ProtocolReceiver
-import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.core.Core
+import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
@@ -18,9 +18,12 @@ object System {
     private val core: CoreReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Core.Start -> actor become protocol(actor actorFor Directory.new())
-                is Core.Stopped -> actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
-                else -> Behaviors.core(actor, message)
+                is Core.Start ->
+                    actor become protocol(actor actorFor Directory.new())
+                is Core.Stopped ->
+                    actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
+                else ->
+                    Behaviors.core(actor, message)
             }.exhaustive
         }
 
@@ -29,11 +32,13 @@ object System {
     private fun protocol(directory: ActorReference<Directory.Protocol>): ProtocolReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is ToDirectory -> directory tell message.content.message
+                is ToDirectory ->
+                    directory tell message.content.message
                 is Install -> {
                     actor actorFor message.content.behavior; Unit
                 }
-                else -> reject
+                else ->
+                    reject
             }.exhaustive
         }
 

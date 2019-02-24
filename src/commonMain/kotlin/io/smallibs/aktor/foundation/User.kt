@@ -13,8 +13,10 @@ object User {
     private fun registry(): ProtocolReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Install -> actor actorFor message.content.behavior
-                else -> reject
+                is Install ->
+                    actor actorFor message.content.behavior
+                else ->
+                    reject
             }.exhaustive
         }
 

@@ -23,20 +23,21 @@ object Directory {
                 is RegisterActor<*> ->
                     actor become registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
-                    actor become registry(actors.filter { entry -> entry.value.address == content.reference.address })
+                    actor become registry(actors.filter { entry -> entry.value.address != content.reference.address })
                 is SearchActor ->
                     content.sender tell SearchActorResponse(actors[content.type])
-                else -> reject
+                else ->
+                    reject
             }.exhaustive
         }
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
 
-    infix fun from(system: ActorReference<System.Protocol>): DirectoryApi = DirectoryApi { message ->
+    infix fun from(system: ActorReference<System.Protocol>): Bridge = Bridge { message ->
         system tell System.ToDirectory(message)
     }
 
-    class DirectoryApi(val bridge: (Protocol) -> Unit) {
+    class Bridge(val bridge: (Protocol) -> Unit) {
         inline infix fun <reified T : Any> register(reference: ActorReference<T>) =
             bridge(RegisterActor(T::class, reference))
 

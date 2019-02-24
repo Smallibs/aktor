@@ -100,7 +100,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ```Kotlin
 val called = atomic("")
 
-val system = ActorSystem.new("example")
+val system = Aktor.new("example")
 val reference = system.actorFor<String> { _, m -> 
     called.set(m.content) 
 }
@@ -115,7 +115,7 @@ reference tell "Hello World!"
 ```Kotlin
 val called = atomic("")
 
-val system = ActorSystem.new("example")
+val system = Aktor.new("example")
 val reference = system.actorFor<String> { a, m ->
     a become { _, v -> 
         called.set("$m.content $v.content") 
@@ -135,7 +135,7 @@ val called = atomic("")
 
 data class Create(name: String)
 
-val system = ActorSystem.new("example")
+val system = Aktor.new("example")
 val reference = system.actorFor<Create> { a, e -> 
     a.actorFor<String>({ _, v -> 
        called.set("$m.content $v.content") 
@@ -157,7 +157,7 @@ fun player(name: String): Receiver<PingPong> = { actor, message ->
 }
 
 fun Game() {
-    val system = ActorSystem.system("test")
+    val system = Aktor.new("test")
     
     val ping = system actorFor player("ping")
     val pong = system actorFor player("pong")

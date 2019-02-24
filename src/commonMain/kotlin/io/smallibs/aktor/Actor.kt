@@ -22,6 +22,6 @@ interface Actor<T> : ActorBuilder {
 
     fun unbecome()
 
-    fun finish()
+    fun finish() : Boolean
 
 }

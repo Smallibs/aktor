@@ -1,5 +1,6 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.core
 
+import io.smallibs.aktor.*
 import io.smallibs.utils.Await
 import kotlin.test.Test
 
@@ -13,7 +14,8 @@ class ActorBecomeTest {
         BECOME, UNBECOME
     }
 
-    class TestBehavior(val notifier: (Event) -> Unit) : Behavior<Order> {
+    class TestBehavior(val notifier: (Event) -> Unit) :
+        Behavior<Order> {
         override val core: CoreReceiver<Order>
             get() = { _, _ -> Unit }
         override val protocol: ProtocolReceiver<Order>
@@ -59,7 +61,10 @@ class ActorBecomeTest {
 
         reference tell Order.BECOME
 
-        Await(5000).until { called == listOf(Event.INITIALIZED, Event.STARTED) }
+        Await(5000).until { called == listOf(
+            Event.INITIALIZED,
+            Event.STARTED
+        ) }
 
     }
 
@@ -86,7 +91,12 @@ class ActorBecomeTest {
         reference tell Order.BECOME
         reference tell Order.UNBECOME
 
-        Await(5000).until { called == listOf(Event.INITIALIZED, Event.STARTED, Event.FINISHED, Event.RESUMED) }
+        Await(5000).until { called == listOf(
+            Event.INITIALIZED,
+            Event.STARTED,
+            Event.FINISHED,
+            Event.RESUMED
+        ) }
 
     }
 

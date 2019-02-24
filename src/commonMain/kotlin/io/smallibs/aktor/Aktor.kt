@@ -11,10 +11,10 @@ import io.smallibs.aktor.foundation.User
 
 object Aktor {
 
-    fun new(siteName: String, execution: ActorRunner = ActorRunner.coroutine()): SiteActor {
+    fun new(siteName: String? = null, execution: ActorRunner = ActorRunner.coroutine()): SiteActor {
         val dispatcher = ActorDispatcher(execution)
 
-        val addressSite = ActorAddressImpl(siteName)
+        val addressSite = ActorAddressImpl(siteName ?: Names.generate())
         val referenceSite = ActorReferenceImpl<Site.Protocol>(dispatcher, addressSite)
 
         val addressSystem = ActorAddressImpl("system", addressSite)

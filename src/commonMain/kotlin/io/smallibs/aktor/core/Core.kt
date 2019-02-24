@@ -1,6 +1,7 @@
 package io.smallibs.aktor.core
 
 import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.CoreReceiver
 import io.smallibs.aktor.ProtocolReceiver
 import io.smallibs.aktor.utils.exhaustive
@@ -19,9 +20,12 @@ object Core {
             { actor, message ->
                 when (message.content) {
                     is Core.Stop -> {
-                        actor.context.children().forEach { it tell Core.Stop }
-                        actor.finish()
-                        actor.context.parent()?.let { it tell Core.Stopped(actor.context.self) }
+                        if (actor.finish()) {
+                            actor.context.children().forEach { it tell Core.Stop }
+                            actor.context.parent()?.let { it tell Core.Stopped(actor.context.self) }
+                        } else {
+                            Unit
+                        }
                     }
                     is Core.Stopped -> {
                         actor.context.parent()?.let { it tell message.content }
@@ -30,7 +34,6 @@ object Core {
                 }.exhaustive
             }
 
-        val consume: ProtocolReceiver<*> = { _, _ -> Unit }
     }
 
 }

@@ -3,11 +3,15 @@ package io.smallibs.aktor.foundation
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
+import kotlin.math.acos
 import kotlin.reflect.KClass
 
 object Directory {
+
+    val name = "directory"
 
     interface Protocol
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
@@ -53,7 +57,8 @@ object Directory {
     fun <T : Any> onSearchComplete(
         success: (ActorReference<T>) -> Unit,
         failure: () -> Unit = { }
-    ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { _, envelop ->
+    ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { actor, envelop ->
+        actor.context.self tell Core.Stop
         envelop.content.reference?.let { success(it) } ?: failure()
     }
 

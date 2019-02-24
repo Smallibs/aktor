@@ -19,7 +19,7 @@ object System {
         { actor, message ->
             when (message.content) {
                 is Core.Start ->
-                    actor become protocol(actor actorFor Directory.new())
+                    actor become protocol(actor.actorFor(Directory.new(), Directory.name))
                 is Core.Stopped ->
                     actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
                 else ->
@@ -27,7 +27,9 @@ object System {
             }.exhaustive
         }
 
-    private val protocol: ProtocolReceiver<Protocol> = { _, _ -> Unit }
+    private val protocol: ProtocolReceiver<Protocol> = { actor, message ->
+        actor.context.self tell message // Stashing
+    }
 
     private fun protocol(directory: ActorReference<Directory.Protocol>): ProtocolReceiver<Protocol> =
         { actor, message ->

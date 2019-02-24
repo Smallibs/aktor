@@ -19,6 +19,9 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
                 execution.manage(actor)
             }
 
+    fun <R> unregister(reference: ActorReferenceImpl<R>) : Boolean =
+        universe.remove(reference)
+
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =
         universe.find(reference)?.let { actor ->
             actor.deliver(envelop)

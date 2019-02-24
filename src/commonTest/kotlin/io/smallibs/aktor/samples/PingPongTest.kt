@@ -1,5 +1,8 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.samples
 
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Aktor
+import io.smallibs.aktor.ProtocolReceiver
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic

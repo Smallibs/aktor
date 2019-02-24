@@ -2,11 +2,13 @@ package io.smallibs.aktor.utils
 
 val reject = null
 
+class NotExhaustive: Exception()
+
 class Exhaustive<T>(val t: T)
 
 val <T> T?.exhaustive: Exhaustive<T>
     get() =
         when (this) {
-            null -> throw Exception()
+            null -> throw NotExhaustive()
             else -> Exhaustive(this)
         }

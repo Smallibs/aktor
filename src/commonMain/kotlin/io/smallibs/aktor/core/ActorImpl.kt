@@ -4,6 +4,7 @@ import io.smallibs.aktor.Actor
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.utils.NotExhaustive
 
 class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initial: Behavior<T>) : Actor<T> {
 
@@ -39,8 +40,8 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
 
     }
 
-    override fun finish() =
-        this.context.self tell Core.Stop
+    override fun finish() : Boolean =
+        context.self.unregister(context.self)
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
         context.self.register(behavior, name)
@@ -53,7 +54,16 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
         this.actorMailbox.deliver(envelop)
 
     internal fun nextTurn(): (() -> Unit)? =
-        actorMailbox.next()?.let { envelop -> { behavior().receive(this, envelop) } }
+        actorMailbox.next()?.let { envelop ->
+            {
+                // println("actor ${this.context.self.address.name} executes $envelop")
+                try {
+                    behavior().receive(this, envelop)
+                } catch (e: NotExhaustive) {
+                    // consume for the moment - Dead letter
+                }
+            }
+        }
 
     //
     // Private behaviors

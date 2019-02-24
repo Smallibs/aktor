@@ -1,5 +1,7 @@
 # Aktor
 
+[![Build Status](https://travis-ci.org/Smallibs/aktor.svg?branch=master)](https://travis-ci.org/Smallibs/aktor)
+
 Multiplatform Actor System written in Kotlin. 
 
 # Relationship
@@ -98,7 +100,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ```Kotlin
 val called = atomic("")
 
-val system = ActorSystem.system("example")
+val system = ActorSystem.new("example")
 val reference = system.actorFor<String> { _, m -> 
     called.set(m.content) 
 }
@@ -113,7 +115,7 @@ reference tell "Hello World!"
 ```Kotlin
 val called = atomic("")
 
-val system = ActorSystem.system("example")
+val system = ActorSystem.new("example")
 val reference = system.actorFor<String> { a, m ->
     a become { _, v -> 
         called.set("$m.content $v.content") 
@@ -133,7 +135,7 @@ val called = atomic("")
 
 data class Create(name: String)
 
-val system = ActorSystem.system("example")
+val system = ActorSystem.new("example")
 val reference = system.actorFor<Create> { a, e -> 
     a.actorFor<String>({ _, v -> 
        called.set("$m.content $v.content") 

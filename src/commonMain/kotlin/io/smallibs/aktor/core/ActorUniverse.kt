@@ -27,9 +27,8 @@ class ActorUniverse {
     }
 
     @Synchronized
-    fun <T> remove(reference: ActorReferenceImpl<T>) {
-        actors.remove(reference.address)
-    }
+    fun <T> remove(reference: ActorReferenceImpl<T>) : Boolean =
+        actors.remove(reference.address) != null
 
     @Synchronized
     fun <T> find(reference: ActorReference<T>): ActorImpl<T>? =

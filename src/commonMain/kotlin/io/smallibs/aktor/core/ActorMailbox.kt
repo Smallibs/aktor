@@ -6,7 +6,7 @@ import kotlin.jvm.Synchronized
 // Investigate: Can we use coroutine in this section instead of synchronized block
 internal class ActorMailbox<T> {
 
-    private var envelops: ArrayList<Envelop<T>> = arrayListOf()
+    private val envelops: ArrayList<Envelop<T>> = arrayListOf()
 
     @Synchronized
     fun deliver(envelop: Envelop<T>) {

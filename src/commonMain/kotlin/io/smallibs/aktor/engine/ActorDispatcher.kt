@@ -12,15 +12,15 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
         ActorExecutionImpl(runner)
     )
 
-    fun <T> register(reference: ActorReferenceImpl<T>, receive: Receiver<T>): ActorImpl<T> =
-        register(reference, Behavior of receive)
-
     fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): ActorImpl<T> =
         ActorImpl(reference, behavior)
             .also { actor ->
                 universe.add(reference, actor)
                 execution.manage(actor)
             }
+
+    fun <R> unregister(reference: ActorReferenceImpl<R>) : Boolean =
+        universe.remove(reference)
 
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =
         universe.find(reference)?.let { actor ->

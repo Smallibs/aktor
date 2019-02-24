@@ -1,16 +1,16 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.samples
 
 
+import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class SimpleActorTest {
 
     @Test
     fun shouldBeCalled() {
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val called = atomic(false)
         val reference = system.actorFor<Boolean> { _, _ -> called.getAndSet(true) }
@@ -26,7 +26,7 @@ class SimpleActorTest {
 
     @Test
     fun shouldBeCalledWithTheCorrectValue() {
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val called = atomic(0)
         val reference = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }
@@ -38,7 +38,7 @@ class SimpleActorTest {
 
     @Test
     fun shouldPerformActorTellChain() {
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val called = atomic(0)
         val secondary = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }

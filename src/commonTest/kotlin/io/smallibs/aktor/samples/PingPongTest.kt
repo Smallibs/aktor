@@ -1,38 +1,38 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.samples
 
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Aktor
+import io.smallibs.aktor.ProtocolReceiver
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
 class PingPongTest {
 
     class PingPong(val sender: ActorReference<PingPong>)
 
-    private fun arbiter(nbEnded: AtomicInt): Receiver<String> = { _, message ->
+    private fun arbiter(nbEnded: AtomicInt): ProtocolReceiver<String> = { _, message ->
         println("${message.content} ending game ...")
         nbEnded.incrementAndGet()
     }
 
-    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): Receiver<PingPong> =
+    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): ProtocolReceiver<PingPong> =
         { actor, message ->
             if (turn < 1_000) {
-                actor start player(arbiter, name, turn + 1)
+                actor become player(arbiter, name, turn + 1)
                 message.content.sender tell PingPong(actor.context.self)
             } else {
-                actor start endGame
+                actor become endGame
                 arbiter tell name
             }
         }
 
-    private val endGame: Receiver<PingPong> = { _, _ ->
-        // Do nothing
-    }
+    private val endGame: ProtocolReceiver<PingPong> = { _, _ -> }
 
     @Test
     fun shouldPlayGame() {
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val endedPlayers = atomic(0)
 
@@ -42,9 +42,7 @@ class PingPongTest {
 
         ping tell PingPong(pong)
 
-
         Await(5000).until { endedPlayers.value == 1 }
-
     }
 
 }

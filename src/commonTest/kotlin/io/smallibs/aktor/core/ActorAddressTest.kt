@@ -1,4 +1,4 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.core
 
 import io.smallibs.aktor.core.ActorAddressImpl
 import kotlin.test.Test

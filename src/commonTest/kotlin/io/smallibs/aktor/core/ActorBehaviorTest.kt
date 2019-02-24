@@ -1,20 +1,20 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.core
 
+import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
-import kotlin.test.assertTrue
 
-class BehaviorActorTest {
+class ActorBehaviorTest {
 
     @Test
     fun shouldBeCalledAndStartABehavior() {
 
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val called = atomic(0)
         val reference = system.actorFor<Int> { a, v1 ->
-            a start { _, v2 ->
+            a become { _, v2 ->
                 called.getAndSet(v1.content + v2.content)
             }
         }
@@ -27,7 +27,7 @@ class BehaviorActorTest {
 
     @Test
     fun shouldBeCalledAndStartAndFinishABehavior() {
-        val system = ActorSystem.system("test")
+        val system = Aktor.new("test")
 
         val done = atomic(false)
         val called = atomic(0)
@@ -35,10 +35,10 @@ class BehaviorActorTest {
             if (done.value) {
                 called.addAndGet(v1.content)
             } else {
-                a.start({ _, v2 ->
+                a.become({ _, v2 ->
                     done.getAndSet(true)
                     called.addAndGet(v1.content + v2.content)
-                    a.finish()
+                    a.unbecome()
                 }, true)
             }
         }

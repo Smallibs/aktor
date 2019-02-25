@@ -5,42 +5,45 @@ import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
 import io.smallibs.aktor.utils.NotExhaustive
+import io.smallibs.aktor.utils.exhaustive
 
-class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initial: Behavior<T>) : Actor<T> {
+class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
 
     private val actorMailbox: ActorMailbox<T> = ActorMailbox()
 
     private val behaviors: MutableList<Behavior<T>> = mutableListOf()
 
-    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self), behavior)
+    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self)) {
+        behaviors.add(behavior)
+        behavior.onStart(this)
+    }
 
     override fun behavior(): Behavior<T> =
         currentBehavior()
 
     override fun become(behavior: Behavior<T>, stacked: Boolean) {
-        currentStackedBehavior()?.let {
+        currentBehavior().also {
             if (stacked) {
                 it.onPause(this)
             } else {
-                removeStackedBehavior()
+                removeBehavior()
                 it.onFinish(this)
             }
         }
 
-        stackToCurrentBehaviors(behavior)
+        addBehavior(behavior)
         behavior.onStart(this)
     }
 
     override fun unbecome() {
-        currentStackedBehavior()?.let {
-            removeStackedBehavior()
+        currentBehavior().also {
+            removeBehavior()
             it.onFinish(this)
             currentBehavior().onResume(this)
         }
-
     }
 
-    override fun finish() : Boolean =
+    override fun kill(): Boolean =
         context.self.unregister(context.self)
 
     override fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R> =
@@ -56,7 +59,6 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
     internal fun nextTurn(): (() -> Unit)? =
         actorMailbox.next()?.let { envelop ->
             {
-                // println("actor ${this.context.self.address.name} executes $envelop")
                 try {
                     behavior().receive(this, envelop)
                 } catch (e: NotExhaustive) {
@@ -69,17 +71,14 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val initia
     // Private behaviors
     //
 
-    private fun currentStackedBehavior(): Behavior<T>? =
-        behaviors.getOrNull(0)
+    private fun currentBehavior(): Behavior<T> =
+        behaviors.getOrNull(0) ?: Behavior of { _, _ -> Unit }
 
-    private fun removeStackedBehavior() =
+    private fun removeBehavior() =
         behaviors.getOrNull(0)?.let { behaviors.removeAt(0) }
 
-    private fun stackToCurrentBehaviors(behavior: Behavior<T>) =
+    private fun addBehavior(behavior: Behavior<T>) =
         behaviors.add(0, behavior)
-
-    private fun currentBehavior(): Behavior<T> =
-        currentStackedBehavior() ?: initial
 
 }
 

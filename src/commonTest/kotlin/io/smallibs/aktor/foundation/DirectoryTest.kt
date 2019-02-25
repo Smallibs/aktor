@@ -45,7 +45,7 @@ class DirectoryTest {
 
         Await(5000).until { atomic.value }
 
-        test tell Core.Stop
+        test tell Core.Kill
 
         atomic.getAndSet(false)
         directory find (site actorFor onSearchComplete<TestActor.Protocol>({}, { atomic.getAndSet(true) }))

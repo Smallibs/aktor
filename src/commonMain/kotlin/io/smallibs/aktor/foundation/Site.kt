@@ -15,15 +15,11 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
 
     override var core: CoreReceiver<Protocol> = { actor, message ->
         when (message.content) {
-            is Core.Start -> {
-                system tell message.content
-                user tell message.content
-            }
-            is Core.Stopped ->
+            is Core.Killed ->
                 system tell message.content
             else ->
                 Behaviors.core(actor, message)
-        }.exhaustive
+        }
     }
 
     override val protocol: ProtocolReceiver<Protocol> =

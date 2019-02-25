@@ -61,10 +61,14 @@ class ActorBecomeTest {
 
         reference tell Order.BECOME
 
-        Await(5000).until { called == listOf(
-            Event.INITIALIZED,
-            Event.STARTED
-        ) }
+        Await(5000).until {
+            called == listOf(
+                Event.INITIALIZED,
+                Event.STARTED,
+                Event.FINISHED,
+                Event.STARTED
+            )
+        }
 
     }
 
@@ -77,7 +81,13 @@ class ActorBecomeTest {
 
         reference tell Order.UNBECOME
 
-        Await(5000).until { called == listOf(Event.INITIALIZED) }
+        Await(5000).until {
+            called == listOf(
+                Event.INITIALIZED,
+                Event.STARTED,
+                Event.FINISHED
+            )
+        }
 
     }
 
@@ -91,12 +101,15 @@ class ActorBecomeTest {
         reference tell Order.BECOME
         reference tell Order.UNBECOME
 
-        Await(5000).until { called == listOf(
-            Event.INITIALIZED,
-            Event.STARTED,
-            Event.FINISHED,
-            Event.RESUMED
-        ) }
+        Await(5000).until {
+            called == listOf(
+                Event.INITIALIZED,
+                Event.STARTED,
+                Event.FINISHED,
+                Event.STARTED,
+                Event.FINISHED
+            )
+        }
 
     }
 

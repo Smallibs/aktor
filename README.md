@@ -45,7 +45,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun unbecome()
     
-    fun finish()
+    fun killed() : Boolean
 ```
 
 ### Actor Management

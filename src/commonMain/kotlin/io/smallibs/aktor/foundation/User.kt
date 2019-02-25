@@ -7,6 +7,8 @@ import io.smallibs.aktor.utils.reject
 
 object User {
 
+    const val name = "user"
+
     interface Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 

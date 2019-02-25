@@ -6,12 +6,11 @@ import io.smallibs.aktor.ProtocolReceiver
 import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
-import kotlin.math.acos
 import kotlin.reflect.KClass
 
 object Directory {
 
-    val name = "directory"
+    const val name = "directory"
 
     interface Protocol
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
@@ -58,7 +57,7 @@ object Directory {
         success: (ActorReference<T>) -> Unit,
         failure: () -> Unit = { }
     ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { actor, envelop ->
-        actor.context.self tell Core.Stop
+        actor.context.self tell Core.Kill
         envelop.content.reference?.let { success(it) } ?: failure()
     }
 

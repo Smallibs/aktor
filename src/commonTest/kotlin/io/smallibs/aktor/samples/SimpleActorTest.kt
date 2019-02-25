@@ -9,22 +9,6 @@ import kotlin.test.Test
 class SimpleActorTest {
 
     @Test
-    fun shouldBeCalled() {
-        val system = Aktor.new("test")
-
-        val called = atomic(false)
-        val reference = system.actorFor<Boolean> { _, _ -> called.getAndSet(true) }
-
-        reference tell true
-
-        /*
-        await().atMost(FIVE_SECONDS).until {
-            called.get()
-        }
-        */
-    }
-
-    @Test
     fun shouldBeCalledWithTheCorrectValue() {
         val system = Aktor.new("test")
 
@@ -34,6 +18,20 @@ class SimpleActorTest {
         reference tell 42
 
         Await(5000).until { called.value == 42 }
+    }
+
+    @Test
+    fun shouldBeCalledPreservingSequence() {
+        val system = Aktor.new("test")
+
+        val called = atomic(listOf<Int>())
+        val reference = system.actorFor<Int> { _, m -> called.getAndSet(called.value + m.content) }
+
+        reference tell 41
+        reference tell 42
+        reference tell 43
+
+        Await(5000).until { called.value == listOf(41, 42, 43) }
     }
 
     @Test

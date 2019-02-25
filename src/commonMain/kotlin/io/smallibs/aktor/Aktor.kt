@@ -19,18 +19,18 @@ object Aktor {
 
         val addressSystem = ActorAddressImpl("system", addressSite)
         val referenceSystem = ActorReferenceImpl<System.Protocol>(dispatcher, addressSystem)
+        dispatcher.register(referenceSystem, System.new())
+        referenceSystem tell Core.Live
 
         val addressUser = ActorAddressImpl("user", addressSite)
         val referenceUser = ActorReferenceImpl<User.Protocol>(dispatcher, addressUser)
+        dispatcher.register(referenceUser, User.new())
+        referenceUser tell Core.Live
 
         val site = Site.new(referenceSystem, referenceUser)
-
-        dispatcher.register(referenceSystem, System.new())
-        dispatcher.register(referenceUser, User.new())
-
         val actorSite = dispatcher.register(referenceSite, site)
 
-        referenceSite tell Core.Start
+        referenceSite tell Core.Live
 
         return SiteActor(actorSite, site)
     }

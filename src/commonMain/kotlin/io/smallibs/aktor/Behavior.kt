@@ -3,10 +3,11 @@
 package io.smallibs.aktor
 
 import io.smallibs.aktor.core.Core.Behaviors
+import io.smallibs.aktor.utils.Exhaustive
 
-typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
 typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Unit
 typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
+typealias ExhaustiveProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Exhaustive<Unit>
 
 interface Behavior<T> {
 

@@ -19,9 +19,8 @@ object Names {
      */
     fun generate(): String {
         val proposal = leftPart.pickRandom() + "_" + rightPart.pickRandom()
-
         val count = generated.put(proposal, (generated.get(proposal) ?: 0) + 1)
-        return if (count == 1) proposal else proposal + "_" + count
+        return count?.let { proposal + "_" + count } ?: proposal
     }
 
     private val leftPart = arrayOf(
@@ -531,7 +530,7 @@ object Names {
         // Inge Lehmann - Danish seismologist and geophysicist. Known for discovering in 1936 that the Earth has a solid inner core inside a molten outer core. https://en.wikipedia.org/wiki/Inge_Lehmann
         "lehmann",
 
-        // Daniel Lewin - Mathematician, Akamai co-founder, soldier, 9/11 victim-- Developed optimization techniques for routing traffic on the internet. Died attempting to finish the 9-11 hijackers. https://en.wikipedia.org/wiki/Daniel_Lewin
+        // Daniel Lewin - Mathematician, Akamai co-founder, soldier, 9/11 victim-- Developed optimization techniques for routing traffic on the internet. Died attempting to kill the 9-11 hijackers. https://en.wikipedia.org/wiki/Daniel_Lewin
         "lewin",
 
         // Ruth Lichterman - one of the original programmers of the ENIAC. https://en.wikipedia.org/wiki/ENIAC - https://en.wikipedia.org/wiki/Ruth_Teitelbaum

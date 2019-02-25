@@ -11,6 +11,8 @@ import io.smallibs.aktor.utils.reject
 
 object System {
 
+    const val name = "system"
+
     interface Protocol
     data class ToDirectory(val message: Directory.Protocol) : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
@@ -18,18 +20,14 @@ object System {
     private val core: CoreReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Core.Start ->
+                is Core.Live ->
                     actor become protocol(actor.actorFor(Directory.new(), Directory.name))
-                is Core.Stopped ->
+                is Core.Killed ->
                     actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
                 else ->
                     Behaviors.core(actor, message)
             }.exhaustive
         }
-
-    private val protocol: ProtocolReceiver<Protocol> = { actor, message ->
-        actor.context.self tell message // Stashing
-    }
 
     private fun protocol(directory: ActorReference<Directory.Protocol>): ProtocolReceiver<Protocol> =
         { actor, message ->
@@ -44,6 +42,6 @@ object System {
             }.exhaustive
         }
 
-    fun new(): Behavior<System.Protocol> = Behavior of Pair(System.core, System.protocol)
+    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashed(System.core)
 
 }

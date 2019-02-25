@@ -1,38 +1,70 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.CoreReceiver
-import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.*
+import io.smallibs.aktor.foundation.Stashed
+import io.smallibs.aktor.utils.NotExhaustive
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
 object Core {
 
     interface Protocol
-    object Start : Protocol
-    object Stop : Protocol
-    data class Stopped(val reference: ActorReference<*>) : Protocol
+    object Live : Protocol
+    object Kill : Protocol
+    data class Killed(val reference: ActorReference<*>) : Protocol
 
     object Behaviors {
 
         val core: CoreReceiver<*> =
             { actor, message ->
                 when (message.content) {
-                    is Core.Stop -> {
-                        if (actor.finish()) {
-                            actor.context.children().forEach { it tell Core.Stop }
-                            actor.context.parent()?.let { it tell Core.Stopped(actor.context.self) }
+                    is Core.Kill -> {
+                        if (actor.kill()) {
+                            actor.context.children().forEach { it tell Core.Kill }
+                            actor.context.parent()?.let { it tell Core.Killed(actor.context.self) }
                         } else {
                             Unit
                         }
                     }
-                    is Core.Stopped -> {
+                    is Core.Killed -> {
                         actor.context.parent()?.let { it tell message.content }
                     }
                     else -> reject
                 }.exhaustive
             }
+
+        fun <T> stashed(
+            coreReceiver: CoreReceiver<T>,
+            behavior: ExhaustiveProtocolReceiver<T> = { _, _ -> reject.exhaustive }
+        ): Behavior<T> =
+            StashBehavior(coreReceiver, behavior)
+
+        private class StashBehavior<T>(
+            val coreReceiver: CoreReceiver<T>,
+            val behavior: ExhaustiveProtocolReceiver<T>,
+            val stashed: Stashed<T> = Stashed(listOf())
+        ) : Behavior<T> {
+
+            override val core: CoreReceiver<T> get() = coreReceiver
+
+            override val protocol: ProtocolReceiver<T> = { actor, message ->
+                try {
+                    behavior(actor, message)
+                } catch (e: NotExhaustive) {
+                    stashed.stash(message.content)
+                }
+            }
+
+            override fun onPause(actor: Actor<T>) {
+                super.onPause(actor)
+                stashed.unstashAll(actor.context.self)
+            }
+
+            override fun onFinish(actor: Actor<T>) {
+                super.onFinish(actor)
+                stashed.unstashAll(actor.context.self)
+            }
+        }
 
     }
 

@@ -15,13 +15,20 @@ object System {
 
     interface Protocol
     data class ToDirectory(val message: Directory.Protocol) : Protocol
+    data class ToDeadLetter(val message: DeadLetter.Protocol) : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 
     private val core: CoreReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Core.Live ->
-                    actor become protocol(actor.actorFor(Directory.new(), Directory.name))
+                is Core.Live -> {
+                    val directory = actor.actorFor(Directory.new(), Directory.name)
+                    val deadLetter = actor.actorFor(DeadLetter.new(), DeadLetter.name)
+
+                    actor become protocol(directory, deadLetter)
+
+                    Directory from actor.context.self register deadLetter
+                }
                 is Core.Killed ->
                     actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
                 else ->
@@ -29,13 +36,19 @@ object System {
             }.exhaustive
         }
 
-    private fun protocol(directory: ActorReference<Directory.Protocol>): ProtocolReceiver<Protocol> =
+    private fun protocol(
+        directory: ActorReference<Directory.Protocol>,
+        deadLetter: ActorReference<DeadLetter.Protocol>
+    ): ProtocolReceiver<Protocol> =
         { actor, message ->
             when (message.content) {
                 is ToDirectory ->
                     directory tell message.content.message
+                is ToDeadLetter->
+                    deadLetter tell message.content.message
                 is Install -> {
-                    actor actorFor message.content.behavior; Unit
+                    actor actorFor message.content.behavior
+                    Unit
                 }
                 else ->
                     reject

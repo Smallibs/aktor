@@ -59,7 +59,6 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
     internal fun nextTurn(): (() -> Unit)? =
         actorMailbox.next()?.let { envelop ->
             {
-                println("actor ${this.context.self.address.name} executes $envelop")
                 try {
                     behavior().receive(this, envelop)
                 } catch (e: NotExhaustive) {

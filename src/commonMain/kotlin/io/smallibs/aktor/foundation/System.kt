@@ -55,6 +55,6 @@ object System {
             }.exhaustive
         }
 
-    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashed(System.core)
+    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashBehavior(System.core)
 
 }

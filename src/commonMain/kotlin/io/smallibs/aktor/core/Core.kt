@@ -37,7 +37,7 @@ object Core {
                 }.exhaustive
             }
 
-        fun <T> stashed(
+        fun <T> stashBehavior(
             coreReceiver: CoreReceiver<T>,
             behavior: ExhaustiveProtocolReceiver<T> = { _, _ -> reject.exhaustive }
         ): Behavior<T> =

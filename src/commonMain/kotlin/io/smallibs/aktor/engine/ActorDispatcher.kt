@@ -5,12 +5,10 @@ import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.core.ActorUniverse
 
-class ActorDispatcher private constructor(private val universe: ActorUniverse, private val execution: ActorExecution) {
+class ActorDispatcher(runner: ActorRunner) {
 
-    constructor(runner: ActorRunner) : this(
-        ActorUniverse(),
-        ActorExecutionImpl(runner)
-    )
+    private val universe: ActorUniverse = ActorUniverse()
+    private val execution: ActorExecution = ActorExecutionImpl(runner)
 
     fun <T> register(reference: ActorReferenceImpl<T>, behavior: Behavior<T>): ActorImpl<T> =
         ActorImpl(reference, behavior)

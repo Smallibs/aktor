@@ -17,6 +17,11 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
         when (message.content) {
             is Core.Killed ->
                 system tell message.content
+            is Core.Escalate ->
+                when (message.content.message) {
+                    is System.Protocol ->
+                        system tell message.content.message
+                }
             else ->
                 Behaviors.core(actor, message)
         }

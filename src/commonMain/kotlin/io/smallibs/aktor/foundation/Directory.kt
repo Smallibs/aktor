@@ -36,8 +36,8 @@ object Directory {
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
 
-    infix fun from(system: ActorReference<System.Protocol>): Bridge = Bridge { message ->
-        system tell System.ToDirectory(message)
+    infix fun from(system: ActorReference<*>): Bridge = Bridge { message ->
+        system tell Core.Escalate(System.ToDirectory(message))
     }
 
     class Bridge(val bridge: (Protocol) -> Unit) {

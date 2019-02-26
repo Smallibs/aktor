@@ -4,8 +4,9 @@ import io.smallibs.aktor.Actor
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.foundation.DeadLetter
+import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.utils.NotExhaustive
-import io.smallibs.aktor.utils.exhaustive
 
 class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
 
@@ -62,7 +63,7 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
                 try {
                     behavior().receive(this, envelop)
                 } catch (e: NotExhaustive) {
-                    // consume for the moment - Dead letter
+                    context.self tell Core.Escalate(System.ToDeadLetter(DeadLetter.NotManaged(context.self, envelop)))
                 }
             }
         }

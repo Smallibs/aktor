@@ -17,7 +17,7 @@ class ActorDispatcher(runner: ActorRunner) {
                 execution.manage(actor)
             }
 
-    fun <R> unregister(reference: ActorReferenceImpl<R>) : Boolean =
+    fun <R> unregister(reference: ActorReferenceImpl<R>): Boolean =
         universe.remove(reference)
 
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =

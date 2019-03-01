@@ -15,9 +15,12 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ## Behavior&lt;T>
 
 ```Kotlin
-    typealias Receiver<T> = (Actor<T>, Envelop<T>) -> Unit
+    typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Unit
+    typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
 
-    val receiver: Receiver<T>
+    val core: CoreReceiver<T>
+    
+    val protocol: ProtocolReceiver<T>
 
     fun onStart(actor: Actor<T>)
 
@@ -33,11 +36,13 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ### Behavior management
 
 ```Kotlin
-    fun behavior(): Behavior<T>?
+    val context: ActorContext<T>
+
+    fun behavior(): Behavior<T>
 
     infix fun become(receiver: Receiver<T>)
 
-    fun become(receiver: Receiver<T>, stacked: Boolean)
+    fun become(receiver: ProtocolReceiver<T>, stacked: Boolean)
 
     infix fun become(behavior: Behavior<T>)
 
@@ -45,19 +50,21 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun unbecome()
     
-    fun killed() : Boolean
+    fun kill() : Boolean
 ```
 
-### Actor Management
+### Actor Builder
 
 ```Kotlin
-    infix fun <R> actorFor(receiver: Receiver<R>): ActorReference<R>
+    infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R>
 
-    fun <R> actorFor(receiver: Receiver<R>, name: String?): ActorReference<R>
+    infix fun <R> actorFor(protocolReceiver: ProtocolReceiver<R>): ActorReference<R>
+
+    fun <R> actorFor(protocol: ProtocolReceiver<R>, name: String): ActorReference<R>
 
     infix fun <R> actorFor(behavior: Behavior<R>): ActorReference<R>
 
-    fun <R> actorFor(behavior: Behavior<R>, name: String?): ActorReference<R>
+    fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R>
 ```
 
 ## ActorContext&lt;T>

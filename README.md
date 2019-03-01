@@ -149,7 +149,7 @@ val reference = system.actorFor<Create> { a, e ->
     }, e.name)
 }
 
-reference tell "Hello"
+reference tell Create("Hello")
 // ...
 ```
 

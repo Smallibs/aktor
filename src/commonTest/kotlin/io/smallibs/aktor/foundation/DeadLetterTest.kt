@@ -3,7 +3,8 @@ package io.smallibs.aktor.foundation
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Aktor
 import io.smallibs.aktor.ProtocolReceiver
-import io.smallibs.aktor.utils.NotExhaustive
+import io.smallibs.aktor.utils.exhaustive
+import io.smallibs.aktor.utils.reject
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
@@ -15,7 +16,7 @@ class DeadLetterTest {
         interface Protocol
         object Dummy : Protocol
 
-        val receiver: ProtocolReceiver<Protocol> = { _, _ -> throw NotExhaustive() }
+        val receiver: ProtocolReceiver<Protocol> = { _, _ -> reject.exhaustive }
     }
 
     @Test

@@ -55,7 +55,9 @@ object Core {
                 try {
                     behavior(actor, message)
                 } catch (e: NotExhaustive) {
-                    stashed.stash(message.content)
+                    if (!stashed.stash(message.content)) {
+                        throw NotExhaustive() // TODO
+                    }
                 }
             }
 

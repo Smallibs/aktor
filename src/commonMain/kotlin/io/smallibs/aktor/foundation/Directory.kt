@@ -16,6 +16,12 @@ object Directory {
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
     data class UnregisterActor(val reference: ActorReference<*>) : Protocol
     data class SearchActor(val type: KClass<*>, val sender: ActorReference<SearchActorResponse<*>>) : Protocol
+    data class SearchNamedActor(
+        val type: KClass<*>,
+        val name: String,
+        val sender: ActorReference<SearchActorResponse<*>>
+    ) : Protocol
+
     data class SearchActorResponse<T>(val reference: ActorReference<T>?)
 
     private fun registry(actors: Map<KClass<*>, ActorReference<*>>): ProtocolReceiver<Protocol> =
@@ -29,6 +35,10 @@ object Directory {
                     actor become registry(actors.filter { entry -> entry.value.address != content.reference.address })
                 is SearchActor ->
                     content.sender tell SearchActorResponse(actors[content.type])
+                is SearchNamedActor ->
+                    content.sender tell SearchActorResponse(actors[content.type].takeIf { reference ->
+                        content.name == reference?.address?.name
+                    })
                 else ->
                     reject
             }.exhaustive
@@ -36,8 +46,8 @@ object Directory {
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
 
-    infix fun from(system: ActorReference<*>): Bridge = Bridge { message ->
-        system tell Core.Escalate(System.ToDirectory(message))
+    infix fun from(reference: ActorReference<*>): Bridge = Bridge { message ->
+        reference tell Core.Escalate(System.ToDirectory(message))
     }
 
     class Bridge(val bridge: (Protocol) -> Unit) {
@@ -47,6 +57,10 @@ object Directory {
         @Suppress("UNCHECKED_CAST")
         inline infix fun <reified T : Any> find(receptor: ActorReference<SearchActorResponse<T>>) =
             bridge(SearchActor(T::class, receptor as ActorReference<SearchActorResponse<*>>))
+
+        @Suppress("UNCHECKED_CAST")
+        inline fun <reified T : Any> find(name: String, receptor: ActorReference<SearchActorResponse<T>>) =
+            bridge(SearchNamedActor(T::class, name, receptor as ActorReference<SearchActorResponse<*>>))
 
         infix fun unregister(reference: ActorReference<*>) =
             bridge(UnregisterActor(reference))

@@ -8,7 +8,7 @@ Multiplatform Actor System written in Kotlin.
 
 Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/akka/2.5/general/addressing.html).
 
-![Data Relationships](https://raw.githubusercontent.com/d-plaindoux/actor.kotlin/master/doc/data-relation.png)
+![Data Relationships](https://raw.githubusercontent.com/d-plaindoux/actor.kotlin/master/doc/images/data-relation.png)
 
 # Prototypes
 

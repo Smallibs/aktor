@@ -26,6 +26,9 @@ class ActorDispatcher(runner: ActorRunner) {
             execution.notifyEpoch(actor.context.self.address)
         }
 
+    fun root(reference: ActorReferenceImpl<*>): ActorReference<*> =
+        universe.root(reference)
+
     fun <T> parent(reference: ActorReferenceImpl<T>): ActorReference<*>? =
         universe.parent(reference)
 

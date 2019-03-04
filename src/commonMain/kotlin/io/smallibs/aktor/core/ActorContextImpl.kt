@@ -5,6 +5,9 @@ import io.smallibs.aktor.ActorReference
 
 class ActorContextImpl<T>(override val self: ActorReferenceImpl<T>) : ActorContext<T> {
 
+    override fun root(): ActorReference<*> =
+        this.self.dispatcher.root(self)
+
     override fun parent(): ActorReference<*>? =
         this.self.dispatcher.parent(self)
 

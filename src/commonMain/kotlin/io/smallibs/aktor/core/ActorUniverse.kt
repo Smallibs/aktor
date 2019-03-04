@@ -9,6 +9,15 @@ class ActorUniverse {
     private val actors: MutableMap<ActorAddress, ActorImpl<*>> = mutableMapOf()
 
     @Synchronized
+    tailrec fun root(reference: ActorReference<*>): ActorReference<*> {
+        val parent = parent(reference)
+        return when (parent) {
+            null -> reference
+            else -> root(parent)
+        }
+    }
+
+    @Synchronized
     fun parent(reference: ActorReference<*>): ActorReference<*>? =
         actors.values
             .singleOrNull { it.context.self.address.parentOf(reference.address) }
@@ -27,7 +36,7 @@ class ActorUniverse {
     }
 
     @Synchronized
-    fun <T> remove(reference: ActorReferenceImpl<T>) : Boolean =
+    fun <T> remove(reference: ActorReferenceImpl<T>): Boolean =
         actors.remove(reference.address) != null
 
     @Synchronized

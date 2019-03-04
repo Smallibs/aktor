@@ -16,8 +16,7 @@ private const val messages = 1000
 class MassiveThreadedActorTest {
 
     private val format = DecimalFormat.getIntegerInstance()
-    private fun Int.format(): String =
-        format.format(this)
+    private fun Int.format() = format.format(this)
 
     private inline fun <T> stopWatch(label: () -> String, block: () -> T): T {
         val start = System.nanoTime()

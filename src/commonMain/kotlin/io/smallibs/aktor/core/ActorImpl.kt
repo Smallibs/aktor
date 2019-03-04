@@ -63,7 +63,7 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
                 try {
                     behavior().receive(this, envelop)
                 } catch (e: NotExhaustive) {
-                    context.self tell Core.Escalate(System.ToDeadLetter(DeadLetter.NotManaged(context.self, envelop)))
+                    context.self tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(context.self, envelop)))
                 }
             }
         }

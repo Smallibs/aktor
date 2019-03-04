@@ -2,7 +2,6 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.*
 import io.smallibs.aktor.foundation.Stashed
-import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.utils.NotExhaustive
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
@@ -13,14 +12,14 @@ object Core {
     object Live : Protocol
     object Kill : Protocol
     data class Killed(val reference: ActorReference<*>) : Protocol
-    data class Escalate(val message: Any) : Protocol
+    data class ToRoot(val message: Any) : Protocol
 
     object Behaviors {
 
         val core: CoreReceiver<*> =
             { actor, message ->
                 when (message.content) {
-                    is Core.Kill -> {
+                    is Kill -> {
                         if (actor.kill()) {
                             actor.context.children().forEach { it tell Core.Kill }
                             actor.context.parent()?.let { it tell Core.Killed(actor.context.self) }
@@ -28,12 +27,13 @@ object Core {
                             Unit
                         }
                     }
-                    is Core.Killed -> {
+                    is Killed -> {
                         actor.context.parent()?.let { it tell message.content }
                     }
-                    is Escalate ->
-                        actor.context.parent()?.let { it tell message.content }
-                    else -> reject
+                    is ToRoot ->
+                        actor.context.root() tell message.content
+                    else ->
+                        reject
                 }.exhaustive
             }
 

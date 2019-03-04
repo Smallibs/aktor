@@ -45,7 +45,7 @@ object DeadLetter {
     }
 
     infix fun from(system: ActorReference<*>): Bridge = Bridge { message ->
-        system tell Core.Escalate(System.ToDeadLetter(message))
+        system tell Core.ToRoot(System.ToDeadLetter(message))
     }
 
     class Bridge(val bridge: (Protocol) -> Unit) {

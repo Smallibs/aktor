@@ -21,10 +21,12 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
                 when (message.content.message) {
                     is System.Protocol ->
                         system tell message.content.message
+                    else ->
+                        reject
                 }
             else ->
                 Behaviors.core(actor, message)
-        }
+        }.exhaustive
     }
 
     override val protocol: ProtocolReceiver<Protocol> =
@@ -45,7 +47,7 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
     }
 }
 
-class SiteActor(private val actor: Actor<Site.Protocol>, private val site: Site) : Actor<Site.Protocol> by actor {
+class SiteActor(private val actor: Actor<Site.Protocol>, site: Site) : Actor<Site.Protocol> by actor {
     val system = site.system
     val user = site.user
 }

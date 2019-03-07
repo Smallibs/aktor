@@ -4,6 +4,9 @@ import io.smallibs.aktor.*
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.core.ActorUniverse
+import io.smallibs.aktor.core.Core
+import io.smallibs.aktor.foundation.DeadLetter
+import io.smallibs.aktor.foundation.System
 
 class ActorDispatcher(runner: ActorRunner) {
 
@@ -20,11 +23,18 @@ class ActorDispatcher(runner: ActorRunner) {
     fun <R> unregister(reference: ActorReferenceImpl<R>): Boolean =
         universe.remove(reference)
 
-    fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>) =
-        universe.find(reference)?.let { actor ->
-            actor.deliver(envelop)
-            execution.notifyEpoch(actor.context.self.address)
+    fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>): Unit? {
+        val actor = universe.find(reference)
+
+        return when (actor) {
+            null ->
+                universe.root() tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(reference, envelop)))
+            else -> {
+                actor.deliver(envelop)
+                execution.notifyEpoch(actor.context.self.address)
+            }
         }
+    }
 
     fun root(reference: ActorReferenceImpl<*>): ActorReference<*> =
         universe.root(reference)

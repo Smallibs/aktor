@@ -28,7 +28,9 @@ class ActorDispatcher(runner: ActorRunner) {
 
         return when (actor) {
             null ->
-                universe.root() tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(reference, envelop)))
+                universe.root()?.let {
+                    it tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(reference, envelop)))
+                }
             else -> {
                 actor.deliver(envelop)
                 execution.notifyEpoch(actor.context.self.address)

@@ -9,8 +9,12 @@ class ActorUniverse {
     private val actors: MutableMap<ActorAddress, ActorImpl<*>> = mutableMapOf()
 
     @Synchronized
-    fun root(): ActorReference<*> =
-        root(actors.entries.first().value.context.self)
+    fun root(): ActorReference<*>? =
+        if (actors.isEmpty()) {
+            null
+        } else {
+            root(actors.entries.first().value.context.self)
+        }
 
     @Synchronized
     tailrec fun root(reference: ActorReference<*>): ActorReference<*> {

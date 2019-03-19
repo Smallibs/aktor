@@ -1,8 +1,9 @@
 package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
-import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
@@ -12,19 +13,21 @@ object DeadLetter {
     const val name = "dead-letter"
 
     interface Protocol
-    data class NotManaged(val reference: ActorReference<*>, val envelop: Envelop<*>) : Protocol
+    data class NotManaged(val reference: ActorReference<*>, val envelop: Envelop<*>, val reason: String) : Protocol
     data class Configure(val notifier: Notifier) : Protocol
 
-    private fun registry(notifier: Notifier): ProtocolReceiver<DeadLetter.Protocol> =
+    private fun registry(notifier: Notifier): ProtocolBehavior<DeadLetter.Protocol> =
         { actor, message ->
             when (message.content) {
-                is NotManaged ->
+                is NotManaged -> {
                     notifier.notify(message.content.reference, message.content.envelop)
+                    actor.behavior()
+                }
                 is Configure ->
-                    actor become registry(message.content.notifier)
+                    Behavior of registry(message.content.notifier)
                 else ->
                     reject
-            }.exhaustive
+            }.exhaustive.value
         }
 
     fun new(notifier: Notifier = Notifier.default()) =
@@ -39,7 +42,9 @@ object DeadLetter {
         }
 
         companion object {
-            fun default() = Delegate { _, _ -> Unit }
+            fun default() = Delegate { reference, message ->
+                println("[Warning] ${reference.address} cannot manager ${message}" )
+            }
         }
 
     }

@@ -2,7 +2,8 @@ package io.smallibs.aktor.samples
 
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Aktor
-import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.AtomicInt
 import kotlinx.atomicfu.atomic
@@ -12,23 +13,24 @@ class PingPongTest {
 
     class PingPong(val sender: ActorReference<PingPong>)
 
-    private fun arbiter(nbEnded: AtomicInt): ProtocolReceiver<String> = { _, message ->
+    private fun arbiter(nbEnded: AtomicInt): ProtocolBehavior<String> = { actor, message ->
         println("${message.content} ending game ...")
         nbEnded.incrementAndGet()
+        actor.behavior()
     }
 
-    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): ProtocolReceiver<PingPong> =
+    private fun player(arbiter: ActorReference<String>, name: String, turn: Int = 0): ProtocolBehavior<PingPong> =
         { actor, message ->
             if (turn < 1_000) {
-                actor become player(arbiter, name, turn + 1)
                 message.content.sender tell PingPong(actor.context.self)
+                Behavior of player(arbiter, name, turn + 1)
             } else {
-                actor become endGame
                 arbiter tell name
+                Behavior of endGame
             }
         }
 
-    private val endGame: ProtocolReceiver<PingPong> = { _, _ -> }
+    private val endGame: ProtocolBehavior<PingPong> = { a, _ -> a.behavior() }
 
     @Test
     fun shouldPlayGame() {

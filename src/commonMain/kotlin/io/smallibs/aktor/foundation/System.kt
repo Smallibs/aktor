@@ -2,10 +2,9 @@ package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.CoreReceiver
-import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.CoreBehavior
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
-import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
@@ -18,28 +17,30 @@ object System {
     data class ToDeadLetter(val message: DeadLetter.Protocol) : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 
-    private val core: CoreReceiver<Protocol> =
+    private val core: CoreBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
                 is Core.Live -> {
                     val directory = actor.actorFor(Directory.new(), Directory.name)
                     val deadLetter = actor.actorFor(DeadLetter.new(), DeadLetter.name)
 
-                    actor become protocol(directory, deadLetter)
-
                     Directory from actor.context.self register deadLetter
+
+                    Behavior.of(protocol(directory, deadLetter))
                 }
-                is Core.Killed ->
+                is Core.Killed -> {
                     actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
+                    actor.behavior()
+                }
                 else ->
-                    Behaviors.core(actor, message)
-            }.exhaustive
+                    actor.behavior()
+            }
         }
 
     private fun protocol(
         directory: ActorReference<Directory.Protocol>,
         deadLetter: ActorReference<DeadLetter.Protocol>
-    ): ProtocolReceiver<Protocol> =
+    ): ProtocolBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
                 is ToDirectory ->
@@ -53,6 +54,8 @@ object System {
                 else ->
                     reject
             }.exhaustive
+
+            actor.behavior()
         }
 
     fun new(): Behavior<System.Protocol> = Core.Behaviors.stashBehavior(System.core)

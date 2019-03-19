@@ -2,7 +2,7 @@ package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.ProtocolReceiver
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
@@ -24,24 +24,28 @@ object Directory {
 
     data class SearchActorResponse<T>(val reference: ActorReference<T>?)
 
-    private fun registry(actors: Map<KClass<*>, ActorReference<*>>): ProtocolReceiver<Protocol> =
+    private fun registry(actors: Map<KClass<*>, ActorReference<*>>): ProtocolBehavior<Protocol> =
         { actor, message ->
             val content = message.content
 
             when (content) {
                 is RegisterActor<*> ->
-                    actor become registry(actors + Pair(content.type, content.reference))
+                    Behavior of registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
-                    actor become registry(actors.filter { entry -> entry.value.address != content.reference.address })
-                is SearchActor ->
+                    Behavior of registry(actors.filter { entry -> entry.value.address != content.reference.address })
+                is SearchActor -> {
                     content.sender tell SearchActorResponse(actors[content.type])
-                is SearchNamedActor ->
+                    actor.behavior()
+                }
+                is SearchNamedActor -> {
                     content.sender tell SearchActorResponse(actors[content.type].takeIf { reference ->
                         content.name == reference?.address?.name
                     })
+                    actor.behavior()
+                }
                 else ->
                     reject
-            }.exhaustive
+            }.exhaustive.value
         }
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
@@ -67,12 +71,14 @@ object Directory {
 
     }
 
-    fun <T : Any> onSearchComplete(
+    fun <T : Any> tryFound(
         success: (ActorReference<T>) -> Unit,
         failure: () -> Unit = { }
-    ): ProtocolReceiver<Directory.SearchActorResponse<T>> = { actor, envelop ->
+    ): ProtocolBehavior<Directory.SearchActorResponse<T>> = { actor, envelop ->
         actor.context.self tell Core.Kill
         envelop.content.reference?.let { success(it) } ?: failure()
+
+        actor.behavior()
     }
 
 }

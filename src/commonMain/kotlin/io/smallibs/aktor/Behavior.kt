@@ -5,16 +5,16 @@ package io.smallibs.aktor
 import io.smallibs.aktor.core.Core.Behaviors
 import io.smallibs.aktor.utils.Exhaustive
 
-typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Unit
-typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
-typealias ExhaustiveProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Exhaustive<Unit>
+typealias CoreBehavior<T> = (Actor<T>, CoreEnvelop<T>) -> Behavior<T>
+typealias ProtocolBehavior<T> = (Actor<T>, ProtocolEnvelop<T>) -> Behavior<T>
+typealias ExhaustiveProtocolBehavior<T> = (Actor<T>, ProtocolEnvelop<T>) -> Exhaustive<Behavior<T>>
 
 interface Behavior<T> {
 
-    val core: CoreReceiver<T>
-    val protocol: ProtocolReceiver<T>
+    val core: CoreBehavior<T>
+    val protocol: ProtocolBehavior<T>
 
-    fun receive(actor: Actor<T>, envelop: Envelop<T>): Unit =
+    fun receive(actor: Actor<T>, envelop: Envelop<T>): Behavior<T> =
         when (envelop) {
             is CoreEnvelop<T> -> core(actor, envelop)
             is ProtocolEnvelop<T> -> protocol(actor, envelop)
@@ -22,22 +22,20 @@ interface Behavior<T> {
 
     fun onStart(actor: Actor<T>) {}
 
-    fun onResume(actor: Actor<T>) {}
+    fun onStop(actor: Actor<T>) {}
 
-    fun onPause(actor: Actor<T>) {}
-
-    fun onFinish(actor: Actor<T>) {}
+    fun onKill(actor: Actor<T>) {}
 
     companion object {
-        infix fun <T> of(protocol: ProtocolReceiver<T>): Behavior<T> =
-            ForReceiver(Behaviors.core, protocol)
+        infix fun <T> of(protocol: ProtocolBehavior<T>): Behavior<T> =
+            ForReceiver(Behaviors.core(), protocol)
 
-        infix fun <T> of(receivers: Pair<CoreReceiver<T>, ProtocolReceiver<T>>): Behavior<T> =
+        infix fun <T> of(receivers: Pair<CoreBehavior<T>, ProtocolBehavior<T>>): Behavior<T> =
             ForReceiver(receivers.first, receivers.second)
 
         class ForReceiver<T>(
-            override val core: CoreReceiver<T>,
-            override val protocol: ProtocolReceiver<T>
+            override val core: CoreBehavior<T>,
+            override val protocol: ProtocolBehavior<T>
         ) : Behavior<T>
     }
 }

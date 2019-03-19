@@ -29,7 +29,8 @@ class ActorDispatcher(runner: ActorRunner) {
         return when (actor) {
             null ->
                 universe.root()?.let {
-                    it tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(reference, envelop)))
+                    val message = DeadLetter.NotManaged(reference, envelop, "actor not found")
+                    it tell Core.ToRoot(System.ToDeadLetter(message))
                 }
             else -> {
                 actor.deliver(envelop)

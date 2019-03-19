@@ -16,9 +16,11 @@ object Core {
 
     object Behaviors {
 
-        val core: CoreReceiver<*> =
+        fun <T> core(): CoreBehavior<T> =
             { actor, message ->
                 when (message.content) {
+                    is Live ->
+                        Unit
                     is Kill -> {
                         if (actor.kill()) {
                             actor.context.children().forEach { it tell Core.Kill }
@@ -31,27 +33,29 @@ object Core {
                         actor.context.parent()?.let { it tell message.content }
                     }
                     is ToRoot ->
-                        actor.context.root() tell message.content
+                        actor.context.parent()?.let { it tell message.content }
                     else ->
                         reject
                 }.exhaustive
+
+                actor.behavior()
             }
 
         fun <T> stashBehavior(
-            coreReceiver: CoreReceiver<T>,
-            behavior: ExhaustiveProtocolReceiver<T> = { _, _ -> reject.exhaustive }
+            coreBehavior: CoreBehavior<T>,
+            behavior: ExhaustiveProtocolBehavior<T> = { _, _ -> reject.exhaustive }
         ): Behavior<T> =
-            StashBehavior(coreReceiver, behavior)
+            StashBehavior(coreBehavior, behavior)
 
         private class StashBehavior<T>(
-            val coreReceiver: CoreReceiver<T>,
-            val behavior: ExhaustiveProtocolReceiver<T>,
+            val coreBehavior: CoreBehavior<T>,
+            val behavior: ExhaustiveProtocolBehavior<T>,
             val stashed: Stashed<T> = Stashed(listOf())
         ) : Behavior<T> {
 
-            override val core: CoreReceiver<T> get() = coreReceiver
+            override val core: CoreBehavior<T> get() = coreBehavior
 
-            override val protocol: ProtocolReceiver<T> = { actor, message ->
+            override val protocol: ProtocolBehavior<T> = { actor, message ->
                 try {
                     behavior(actor, message)
                 } catch (e: NotExhaustive) {
@@ -59,16 +63,18 @@ object Core {
                         throw NotExhaustive() // TODO
                     }
                 }
+
+                actor.behavior()
             }
 
-            override fun onPause(actor: Actor<T>) {
-                super.onPause(actor)
-                stashed.unstashAll(actor.context.self)
+            override fun onStop(actor: Actor<T>) {
+                super.onStop(actor)
+                stashed.unStashAll(actor.context.self)
             }
 
-            override fun onFinish(actor: Actor<T>) {
-                super.onFinish(actor)
-                stashed.unstashAll(actor.context.self)
+            override fun onKill(actor: Actor<T>) {
+                super.onKill(actor)
+                stashed.unStashAll(actor.context.self)
             }
         }
 

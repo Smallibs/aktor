@@ -18,12 +18,15 @@ class ActorDispatcher(runner: ActorRunner) {
             .also { actor ->
                 universe.add(reference, actor)
                 execution.manage(actor)
+                reference tell Core.Live
             }
 
     fun <R> unregister(reference: ActorReferenceImpl<R>): Boolean =
         universe.remove(reference)
 
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>): Unit? {
+        println("[DEBUG] ${reference.address} <= $envelop ")
+
         val actor = universe.find(reference)
 
         return when (actor) {

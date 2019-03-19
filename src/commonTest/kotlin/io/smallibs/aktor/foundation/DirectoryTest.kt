@@ -21,7 +21,7 @@ class DirectoryTest {
     @Test
     fun shouldRetrieveARegisteredActor() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+        val directory = Directory from site
 
         directory register (site actorFor TestActor.receiver)
 
@@ -34,7 +34,7 @@ class DirectoryTest {
     @Test
     fun shouldRetrieveARegisteredActorUsingAlsoItsName() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+        val directory = Directory from site
 
         directory register site.actorFor(TestActor.receiver, "test")
 
@@ -47,7 +47,7 @@ class DirectoryTest {
     @Test
     fun shouldNotRetrieveARegisteredActorUsingAWrongName() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+        val directory = Directory from site
 
         directory register (site actorFor TestActor.receiver)
 
@@ -60,7 +60,7 @@ class DirectoryTest {
     @Test
     fun shouldUnregisterWhenKillingRegisteredActor() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+        val directory = Directory from site
 
         val test = site actorFor TestActor.receiver
 
@@ -82,7 +82,8 @@ class DirectoryTest {
     @Test
     fun shouldNotRetrieveAnUnregisteredActor() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+
+        val directory = Directory from site
 
         val atomic = atomic(false)
         directory find (site actorFor tryFound<Directory.Protocol>({ atomic.getAndSet(true) }))
@@ -93,7 +94,7 @@ class DirectoryTest {
     @Test
     fun shouldNotRetrieveAnRegisteredAndThenUnregisteredActor() {
         val site = Aktor.new("site")
-        val directory = Directory from site.system
+        val directory = Directory from site
 
         val test = site actorFor TestActor.receiver
 

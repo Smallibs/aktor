@@ -1,5 +1,6 @@
 package io.smallibs.aktor.foundation
 
+import io.smallibs.aktor.Actor
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.ProtocolBehavior
@@ -49,6 +50,9 @@ object Directory {
         }
 
     fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
+
+    infix fun from(actor: Actor<*>): Bridge =
+        Directory from actor.context.self
 
     infix fun from(reference: ActorReference<*>): Bridge = Bridge { message ->
         reference tell Core.ToRoot(System.ToDirectory(message))

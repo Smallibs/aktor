@@ -29,9 +29,8 @@ object Core {
                             Unit
                         }
                     }
-                    is Killed -> {
+                    is Killed ->
                         actor.context.parent()?.let { it tell message.content }
-                    }
                     is ToRoot ->
                         actor.context.parent()?.let { it tell message.content }
                     else ->

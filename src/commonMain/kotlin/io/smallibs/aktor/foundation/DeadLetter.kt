@@ -1,5 +1,6 @@
 package io.smallibs.aktor.foundation
 
+import io.smallibs.aktor.Actor
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Envelop
 import io.smallibs.aktor.ProtocolBehavior
@@ -48,8 +49,11 @@ object DeadLetter {
 
     }
 
-    infix fun from(system: ActorReference<*>): Bridge = Bridge { message ->
-        system tell Core.ToRoot(System.ToDeadLetter(message))
+    infix fun from(actor: Actor<*>): Bridge =
+        DeadLetter from actor.context.self
+
+    infix fun from(reference: ActorReference<*>): Bridge = Bridge { message ->
+        reference tell Core.ToRoot(System.ToDeadLetter(message))
     }
 
     class Bridge(val bridge: (Protocol) -> Unit) {

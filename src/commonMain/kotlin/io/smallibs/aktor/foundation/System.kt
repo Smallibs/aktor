@@ -40,6 +40,8 @@ object System {
                     actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
                     actor.same()
                 }
+                is Core.ToRoot ->
+                    Core.Behaviors.core<Protocol>()(actor, message)
                 else ->
                     actor.same()
             }

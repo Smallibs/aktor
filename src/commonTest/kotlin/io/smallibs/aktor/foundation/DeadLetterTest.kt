@@ -27,7 +27,7 @@ class DeadLetterTest {
     @Test
     fun shouldBeNotifiedWhenAnActorDoesNotManageAndMessage() {
         val site = Aktor.new("site")
-        val deadLetter = DeadLetter from site.system
+        val deadLetter = DeadLetter from site
 
         val atomic: AtomicRef<ActorReference<*>?> = atomic(null)
         deadLetter configure { reference, _ -> atomic.getAndSet(reference) }
@@ -43,25 +43,25 @@ class DeadLetterTest {
 
     @Test
     fun shouldBeNotifiedWhenAnActorDoesNotExist() {
-        val site = Aktor.new("site")
-        val deadLetter = DeadLetter from site.system
-        val directory = Directory from site.system
+        val aktor = Aktor.new("site")
+        val deadLetter = DeadLetter from aktor.context.self
+        val directory = Directory from aktor
 
         val deadLetterAtomic: AtomicRef<ActorReference<*>?> = atomic(null)
         deadLetter configure { reference, _ -> deadLetterAtomic.getAndSet(reference) }
 
-        val test = site actorFor TestActor.receiver
+        val test = aktor actorFor TestActor.receiver
 
         directory register test
 
         val directoryAtomic = atomic(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({ directoryAtomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({ directoryAtomic.getAndSet(true) }))
         Await(5000).until { directoryAtomic.value }
         directoryAtomic.getAndSet(false)
 
         test tell Core.Kill
 
-        directory find (site actorFor tryFound<TestActor.Protocol>(
+        directory find (aktor actorFor tryFound<TestActor.Protocol>(
             {},
             { directoryAtomic.getAndSet(true) }))
         Await(5000).until { directoryAtomic.value }

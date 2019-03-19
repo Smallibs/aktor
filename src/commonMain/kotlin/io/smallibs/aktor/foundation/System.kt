@@ -17,7 +17,7 @@ object System {
     data class ToDeadLetter(val message: DeadLetter.Protocol) : Protocol
     data class Install(val behavior: Behavior<*>) : Protocol
 
-    private val core: CoreBehavior<Protocol> =
+    private val init: CoreBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
                 is Core.Live -> {
@@ -26,14 +26,22 @@ object System {
 
                     Directory from actor.context.self register deadLetter
 
-                    Behavior.of(protocol(directory, deadLetter))
-                }
-                is Core.Killed -> {
-                    actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
-                    actor.behavior()
+                    Behavior of Pair(running, protocol(directory, deadLetter))
                 }
                 else ->
-                    actor.behavior()
+                    actor.same()
+            }
+        }
+
+    private val running: CoreBehavior<Protocol> =
+        { actor, message ->
+            when (message.content) {
+                is Core.Killed -> {
+                    actor.context.self tell ToDirectory(Directory.UnregisterActor(message.content.reference))
+                    actor.same()
+                }
+                else ->
+                    actor.same()
             }
         }
 
@@ -45,7 +53,7 @@ object System {
             when (message.content) {
                 is ToDirectory ->
                     directory tell message.content.message
-                is ToDeadLetter->
+                is ToDeadLetter ->
                     deadLetter tell message.content.message
                 is Install -> {
                     actor actorFor message.content.behavior
@@ -55,9 +63,9 @@ object System {
                     reject
             }.exhaustive
 
-            actor.behavior()
+            actor.same()
         }
 
-    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashBehavior(System.core)
+    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashBehavior(System.init)
 
 }

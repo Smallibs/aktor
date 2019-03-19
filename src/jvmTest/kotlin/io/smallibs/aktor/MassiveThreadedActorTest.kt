@@ -33,7 +33,7 @@ class MassiveThreadedActorTest {
         val called = AtomicInteger(0)
 
         val references = (0 until actors).map {
-            system.actorFor<Boolean> { a, _ -> called.incrementAndGet(); a.behavior() }
+            system.actorFor<Boolean> { a, _ -> called.incrementAndGet(); a.same() }
         }
 
         stopWatch({ "Submission" }) {

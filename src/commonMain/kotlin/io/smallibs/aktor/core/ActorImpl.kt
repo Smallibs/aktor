@@ -1,9 +1,6 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.Actor
-import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.*
 import io.smallibs.aktor.foundation.DeadLetter
 import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.utils.NotExhaustive
@@ -18,7 +15,10 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val curren
         behavior.onStart(this)
     }
 
-    override fun behavior(): Behavior<T> =
+    override fun become(protocol: ProtocolBehavior<T>): Behavior<T> =
+        Behavior.Companion.ForReceiver(same().core, protocol)
+
+    override fun same(): Behavior<T> =
         this.current.value
 
     private fun become(behavior: Behavior<T>) {
@@ -43,7 +43,7 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val curren
         actorMailbox.next()?.let { envelop ->
             {
                 try {
-                    this.become(behavior().receive(this, envelop))
+                    this.become(current.value.receive(this, envelop))
                 } catch (e: NotExhaustive) {
                     val message = DeadLetter.NotManaged(context.self, envelop, "message not processed")
                     this.context.self tell Core.ToRoot(System.ToDeadLetter(message))

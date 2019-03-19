@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Smallibs/aktor.svg?branch=master)](https://travis-ci.org/Smallibs/aktor)
 
-Multiplatform Actor System written in Kotlin. 
+Multiplatform Typed Actor System written in Kotlin. 
 
 # Relationship
 
@@ -36,7 +36,9 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ```Kotlin
     val context: ActorContext<T>
 
-    fun behavior(): Behavior<T>
+    infix fun become(protocol: ProtocolBehavior<T>): Behavior<T>
+
+    fun same(): Behavior<T>
     
     fun kill() : Boolean
 ```
@@ -89,7 +91,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
 # Actor Assertions
 
-## 'tell'
+## `tell` 
 
 
 ```Kotlin
@@ -106,7 +108,7 @@ reference tell "Hello World!"
 // called value should be "Hello World!
 ```
 
-## 'become'
+## `become`
 
 ```Kotlin
 val called = atomic("")
@@ -125,7 +127,7 @@ reference tell "World!"
 // called value should be "Hello World!
 ```
 
-## 'create'
+## `create` 
 
 ```Kotlin
 val called = atomic("")
@@ -153,7 +155,8 @@ data class PingPong(val sender: ActorReference<PingPong>)
 fun player(name: String): Receiver<PingPong> = { actor, message ->
     println("$name playing ...")
     message.content.sender tell PingPong(actor.context.self)
-}.same()
+    actor.behavior()
+}
 
 fun Game() {
     val system = Aktor.new("test")

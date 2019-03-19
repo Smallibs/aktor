@@ -6,7 +6,6 @@ import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.foundation.Directory.tryFound
 import io.smallibs.utils.Await
 import io.smallibs.utils.TimeOutException
-import io.smallibs.utils.sleep
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 import kotlin.test.assertFailsWith
@@ -16,7 +15,7 @@ class DirectoryTest {
     object TestActor {
         interface Protocol
 
-        val receiver: ProtocolBehavior<Protocol> = { a, _ -> a.behavior() }
+        val receiver: ProtocolBehavior<Protocol> = { a, _ -> a.same() }
     }
 
     @Test
@@ -46,7 +45,7 @@ class DirectoryTest {
     }
 
     @Test
-    fun shouldNotRetrieveARegisteredActorUsingAnotherName() {
+    fun shouldNotRetrieveARegisteredActorUsingAWrongName() {
         val site = Aktor.new("site")
         val directory = Directory from site.system
 
@@ -89,5 +88,26 @@ class DirectoryTest {
         directory find (site actorFor tryFound<Directory.Protocol>({ atomic.getAndSet(true) }))
 
         assertFailsWith<TimeOutException> { Await(5000).until { atomic.value } }
+    }
+
+    @Test
+    fun shouldNotRetrieveAnRegisteredAndThenUnregisteredActor() {
+        val site = Aktor.new("site")
+        val directory = Directory from site.system
+
+        val test = site actorFor TestActor.receiver
+
+        directory register test
+        val atomic = atomic(false)
+        directory find (site actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
+
+        Await(5000).until { atomic.value }
+
+        directory unregister test
+
+        atomic.getAndSet(false)
+        directory find (site actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
+
+        Await(5000).until { atomic.value }
     }
 }

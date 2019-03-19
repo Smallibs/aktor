@@ -28,7 +28,7 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
                 Unit
         }
 
-        actor.behavior()
+        actor.same()
     }
 
     override val protocol: ProtocolBehavior<Protocol> =
@@ -42,7 +42,7 @@ class Site(val system: ActorReference<System.Protocol>, val user: ActorReference
                     reject
             }.exhaustive
 
-            actor.behavior()
+            actor.same()
         }
 
     companion object {

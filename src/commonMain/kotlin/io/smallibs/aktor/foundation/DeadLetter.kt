@@ -1,7 +1,6 @@
 package io.smallibs.aktor.foundation
 
 import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
 import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
@@ -21,10 +20,10 @@ object DeadLetter {
             when (message.content) {
                 is NotManaged -> {
                     notifier.notify(message.content.reference, message.content.envelop)
-                    actor.behavior()
+                    actor.same()
                 }
                 is Configure ->
-                    Behavior of registry(message.content.notifier)
+                    actor become registry(message.content.notifier)
                 else ->
                     reject
             }.exhaustive.value
@@ -43,7 +42,7 @@ object DeadLetter {
 
         companion object {
             fun default() = Delegate { reference, message ->
-                println("[Warning] ${reference.address} cannot manager ${message}" )
+                println("[Warning] ${reference.address} cannot manager ${message}")
             }
         }
 

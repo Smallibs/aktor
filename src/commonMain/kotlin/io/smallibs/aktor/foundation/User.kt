@@ -21,7 +21,7 @@ object User {
                     reject
             }.exhaustive
 
-            actor.behavior()
+            actor.same()
         }
 
     fun new() = Behavior of User.registry()

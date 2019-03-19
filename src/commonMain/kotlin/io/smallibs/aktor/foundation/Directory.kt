@@ -30,18 +30,18 @@ object Directory {
 
             when (content) {
                 is RegisterActor<*> ->
-                    Behavior of registry(actors + Pair(content.type, content.reference))
+                    actor become registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
-                    Behavior of registry(actors.filter { entry -> entry.value.address != content.reference.address })
+                    actor become registry(actors.filter { entry -> entry.value.address != content.reference.address })
                 is SearchActor -> {
                     content.sender tell SearchActorResponse(actors[content.type])
-                    actor.behavior()
+                    actor.same()
                 }
                 is SearchNamedActor -> {
                     content.sender tell SearchActorResponse(actors[content.type].takeIf { reference ->
                         content.name == reference?.address?.name
                     })
-                    actor.behavior()
+                    actor.same()
                 }
                 else ->
                     reject
@@ -78,7 +78,7 @@ object Directory {
         actor.context.self tell Core.Kill
         envelop.content.reference?.let { success(it) } ?: failure()
 
-        actor.behavior()
+        actor.same()
     }
 
 }

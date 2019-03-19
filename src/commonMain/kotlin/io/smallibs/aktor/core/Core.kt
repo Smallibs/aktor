@@ -38,7 +38,7 @@ object Core {
                         reject
                 }.exhaustive
 
-                actor.behavior()
+                actor.same()
             }
 
         fun <T> stashBehavior(
@@ -64,7 +64,7 @@ object Core {
                     }
                 }
 
-                actor.behavior()
+                actor.same()
             }
 
             override fun onStop(actor: Actor<T>) {

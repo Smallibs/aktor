@@ -21,7 +21,7 @@ class MassiveActorTest {
         val references = (0 until actors).map {
             system.actorFor<Boolean> { a, _ ->
                 called.incrementAndGet()
-                a.behavior()
+                a.same()
             }
         }
 

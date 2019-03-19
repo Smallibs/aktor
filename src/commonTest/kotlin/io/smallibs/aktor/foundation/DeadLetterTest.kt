@@ -8,7 +8,6 @@ import io.smallibs.aktor.foundation.Directory.tryFound
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 import io.smallibs.utils.Await
-import io.smallibs.utils.sleep
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
@@ -21,7 +20,7 @@ class DeadLetterTest {
 
         val receiver: ProtocolBehavior<Protocol> = { a, _ ->
             reject.exhaustive
-            a.behavior()
+            a.same()
         }
     }
 

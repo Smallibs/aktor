@@ -13,13 +13,15 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val system =
-            Aktor.new("test", execution = ActorRunner.coroutine())
+        val aktor = Aktor.new("test", execution = ActorRunner.coroutine())
 
         val called = atomic(0)
 
         val references = (0 until actors).map {
-            system.actorFor<Boolean> { _, _ -> called.incrementAndGet() }
+            aktor.actorFor<Boolean> { a, _ ->
+                called.incrementAndGet()
+                a.same()
+            }
         }
 
         repeat(messages) {

@@ -13,7 +13,7 @@ class SimpleActorTest {
         val system = Aktor.new("test")
 
         val called = atomic(0)
-        val reference = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }
+        val reference = system.actorFor<Int> { a, m -> called.getAndSet(m.content); a.same() }
 
         reference tell 42
 
@@ -25,7 +25,7 @@ class SimpleActorTest {
         val system = Aktor.new("test")
 
         val called = atomic(listOf<Int>())
-        val reference = system.actorFor<Int> { _, m -> called.getAndSet(called.value + m.content) }
+        val reference = system.actorFor<Int> { a, m -> called.getAndSet(called.value + m.content); a.same() }
 
         reference tell 41
         reference tell 42
@@ -39,8 +39,8 @@ class SimpleActorTest {
         val system = Aktor.new("test")
 
         val called = atomic(0)
-        val secondary = system.actorFor<Int> { _, m -> called.getAndSet(m.content) }
-        val primary = system.actorFor<Int> { _, m -> secondary.tell(m) }
+        val secondary = system.actorFor<Int> { a, m -> called.getAndSet(m.content); a.same() }
+        val primary = system.actorFor<Int> { a, m -> secondary.tell(m); a.same() }
 
         primary tell 42
 

@@ -1,47 +1,29 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.Actor
-import io.smallibs.aktor.ActorReference
-import io.smallibs.aktor.Behavior
-import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.*
 import io.smallibs.aktor.foundation.DeadLetter
 import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.utils.NotExhaustive
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
 
-class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
+class ActorImpl<T>(override val context: ActorContextImpl<T>, private val current: AtomicRef<Behavior<T>>) : Actor<T> {
 
     private val actorMailbox: ActorMailbox<T> = ActorMailbox()
 
-    private val behaviors: MutableList<Behavior<T>> = mutableListOf()
-
-    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self)) {
-        behaviors.add(behavior)
+    constructor(self: ActorReferenceImpl<T>, behavior: Behavior<T>) : this(ActorContextImpl(self), atomic(behavior)) {
         behavior.onStart(this)
     }
 
-    override fun behavior(): Behavior<T> =
-        currentBehavior()
+    override fun become(protocol: ProtocolBehavior<T>): Behavior<T> =
+        Behavior.Companion.ForReceiver(same().core, protocol)
 
-    override fun become(behavior: Behavior<T>, stacked: Boolean) {
-        currentBehavior().also {
-            if (stacked) {
-                it.onPause(this)
-            } else {
-                removeBehavior()
-                it.onFinish(this)
-            }
-        }
+    override fun same(): Behavior<T> =
+        this.current.value
 
-        addBehavior(behavior)
+    private fun become(behavior: Behavior<T>) {
+        this.current.getAndSet(behavior).onStop(this)
         behavior.onStart(this)
-    }
-
-    override fun unbecome() {
-        currentBehavior().also {
-            removeBehavior()
-            it.onFinish(this)
-            currentBehavior().onResume(this)
-        }
     }
 
     override fun kill(): Boolean =
@@ -51,7 +33,7 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
         context.self.register(behavior, name)
 
     //
-    // Protected behaviors
+    // Protected current
     //
 
     internal fun deliver(envelop: Envelop<T>) =
@@ -61,25 +43,12 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>) : Actor<T> {
         actorMailbox.next()?.let { envelop ->
             {
                 try {
-                    behavior().receive(this, envelop)
+                    this.become(current.value.receive(this, envelop))
                 } catch (e: NotExhaustive) {
-                    context.self tell Core.ToRoot(System.ToDeadLetter(DeadLetter.NotManaged(context.self, envelop)))
+                    val message = DeadLetter.NotManaged(context.self, envelop, "message not processed")
+                    this.context.self tell Core.ToRoot(System.ToDeadLetter(message))
                 }
             }
         }
-
-    //
-    // Private behaviors
-    //
-
-    private fun currentBehavior(): Behavior<T> =
-        behaviors.getOrNull(0) ?: Behavior of { _, _ -> Unit }
-
-    private fun removeBehavior() =
-        behaviors.getOrNull(0)?.let { behaviors.removeAt(0) }
-
-    private fun addBehavior(behavior: Behavior<T>) =
-        behaviors.add(0, behavior)
-
 }
 

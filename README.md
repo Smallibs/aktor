@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/Smallibs/aktor.svg?branch=master)](https://travis-ci.org/Smallibs/aktor)
 
-Multiplatform Actor System written in Kotlin. 
+Multiplatform Typed Actor System written in Kotlin. 
 
 # Relationship
 
@@ -15,8 +15,8 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ## Behavior&lt;T>
 
 ```Kotlin
-    typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Unit
-    typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Unit
+    typealias CoreReceiver<T> = (Actor<T>, CoreEnvelop<T>) -> Behavior<T>
+    typealias ProtocolReceiver<T> = (Actor<T>, ProtocolEnvelop<T>) -> Behavior<T>
 
     val core: CoreReceiver<T>
     
@@ -24,11 +24,9 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     fun onStart(actor: Actor<T>)
 
-    fun onResume(actor: Actor<T>)
+    fun onStop(actor: Actor<T>)
 
-    fun onPause(actor: Actor<T>)
-
-    fun onFinish(actor: Actor<T>)
+    fun onKill(actor: Actor<T>)
 ```
 
 ## Actor&lt;T>
@@ -38,17 +36,9 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ```Kotlin
     val context: ActorContext<T>
 
-    fun behavior(): Behavior<T>
+    infix fun become(protocol: ProtocolBehavior<T>): Behavior<T>
 
-    infix fun become(receiver: Receiver<T>)
-
-    fun become(receiver: ProtocolReceiver<T>, stacked: Boolean)
-
-    infix fun become(behavior: Behavior<T>)
-
-    fun become(behavior: Behavior<T>, stacked: Boolean)
-
-    fun unbecome()
+    fun same(): Behavior<T>
     
     fun kill() : Boolean
 ```
@@ -58,9 +48,9 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 ```Kotlin
     infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R>
 
-    infix fun <R> actorFor(protocolReceiver: ProtocolReceiver<R>): ActorReference<R>
+    infix fun <R> actorFor(protocolReceiver: ProtocolBehavior<R>): ActorReference<R>
 
-    fun <R> actorFor(protocol: ProtocolReceiver<R>, name: String): ActorReference<R>
+    fun <R> actorFor(protocol: ProtocolBehavior<R>, name: String): ActorReference<R>
 
     infix fun <R> actorFor(behavior: Behavior<R>): ActorReference<R>
 
@@ -101,15 +91,16 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
 # Actor Assertions
 
-## 'tell'
+## `tell` 
 
 
 ```Kotlin
 val called = atomic("")
 
 val system = Aktor.new("example")
-val reference = system.actorFor<String> { _, m -> 
+val reference = system.actorFor<String> { a, m -> 
     called.set(m.content) 
+    a.behavior()
 }
 
 reference tell "Hello World!"
@@ -117,15 +108,16 @@ reference tell "Hello World!"
 // called value should be "Hello World!
 ```
 
-## 'become'
+## `become`
 
 ```Kotlin
 val called = atomic("")
 
 val system = Aktor.new("example")
-val reference = system.actorFor<String> { a, m ->
-    a become { _, v -> 
-        called.set("$m.content $v.content") 
+val reference = system.actorFor<String> { _, m ->
+    Behavior of { a, v -> 
+        called.set("$m.content $v.content")
+        a.behavior()
     }
 }
 
@@ -135,7 +127,7 @@ reference tell "World!"
 // called value should be "Hello World!
 ```
 
-## 'create'
+## `create` 
 
 ```Kotlin
 val called = atomic("")
@@ -144,9 +136,11 @@ data class Create(name: String)
 
 val system = Aktor.new("example")
 val reference = system.actorFor<Create> { a, e -> 
-    a.actorFor<String>({ _, v -> 
-       called.set("$m.content $v.content") 
+    a.actorFor<String>({ b, v -> 
+       called.set("$m.content $v.content")
+       b.behavior()
     }, e.name)
+    a.behavior()
 }
 
 reference tell Create("Hello")
@@ -161,6 +155,7 @@ data class PingPong(val sender: ActorReference<PingPong>)
 fun player(name: String): Receiver<PingPong> = { actor, message ->
     println("$name playing ...")
     message.content.sender tell PingPong(actor.context.self)
+    actor.behavior()
 }
 
 fun Game() {

@@ -4,7 +4,7 @@ val reject = null
 
 class NotExhaustive: Exception()
 
-class Exhaustive<T>(val t: T)
+class Exhaustive<T>(val value: T)
 
 val <T> T?.exhaustive: Exhaustive<T>
     get() =

@@ -115,7 +115,7 @@ val called = atomic("")
 
 val system = Aktor.new("example")
 val reference = system.actorFor<String> { _, m ->
-    Behavior of { a, v -> 
+    actor become { a, v -> 
         called.set("$m.content $v.content")
         a.behavior()
     }
@@ -138,9 +138,9 @@ val system = Aktor.new("example")
 val reference = system.actorFor<Create> { a, e -> 
     a.actorFor<String>({ b, v -> 
        called.set("$m.content $v.content")
-       b.behavior()
+       b.same()
     }, e.name)
-    a.behavior()
+    a.same()
 }
 
 reference tell Create("Hello")
@@ -155,7 +155,7 @@ data class PingPong(val sender: ActorReference<PingPong>)
 fun player(name: String): Receiver<PingPong> = { actor, message ->
     println("$name playing ...")
     message.content.sender tell PingPong(actor.context.self)
-    actor.behavior()
+    actor.same()
 }
 
 fun Game() {

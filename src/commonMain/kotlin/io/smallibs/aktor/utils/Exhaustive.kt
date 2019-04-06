@@ -2,7 +2,7 @@ package io.smallibs.aktor.utils
 
 val reject = null
 
-class NotExhaustive: Exception()
+class NotExhaustive : Exception()
 
 class Exhaustive<T>(val value: T)
 

@@ -15,8 +15,6 @@ object Aktor {
 
         val actorSite = dispatcher.register(referenceSite, Site.new())
 
-
-
         return actorSite
     }
 

@@ -8,6 +8,6 @@ interface Actor<T> : ActorBuilder {
 
     fun same(): Behavior<T>
 
-    fun kill() : Boolean
+    fun kill(): Boolean
 
 }

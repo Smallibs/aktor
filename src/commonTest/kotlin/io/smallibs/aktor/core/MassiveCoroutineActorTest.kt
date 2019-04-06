@@ -13,7 +13,7 @@ class MassiveActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
-        val aktor = Aktor.new("test", execution = ActorRunner.coroutine())
+        val aktor = Aktor.new("test")
 
         val called = atomic(0)
 

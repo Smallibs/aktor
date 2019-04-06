@@ -5,7 +5,7 @@ import io.smallibs.aktor.ActorReference
 class Stashed<T>(var actions: List<T>, private val capacity: Int = Int.MAX_VALUE) {
 
     fun stash(action: T): Boolean {
-        val canStash  = actions.size < capacity
+        val canStash = actions.size < capacity
 
         if (canStash) {
             actions = actions + action

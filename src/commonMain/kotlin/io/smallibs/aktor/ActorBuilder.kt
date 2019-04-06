@@ -1,6 +1,6 @@
 package io.smallibs.aktor
 
-interface  ActorBuilder {
+interface ActorBuilder {
 
     infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R> =
         property install this

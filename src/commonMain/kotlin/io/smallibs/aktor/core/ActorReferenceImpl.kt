@@ -15,7 +15,7 @@ data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val a
     internal fun <R> register(behavior: Behavior<R>, name: String): ActorReference<R> =
         dispatcher.register(newChild(name), behavior).context.self
 
-    internal fun <R> unregister(reference: ActorReferenceImpl<R>) : Boolean =
+    internal fun <R> unregister(reference: ActorReferenceImpl<R>): Boolean =
         dispatcher.unregister(reference)
 
     private fun <R> newChild(name: String): ActorReferenceImpl<R> =

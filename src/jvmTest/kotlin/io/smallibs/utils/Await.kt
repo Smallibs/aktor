@@ -1,6 +1,6 @@
-package io.smallibs.utils 
+package io.smallibs.utils
 
-actual fun currentTimeMillis() : Long =
+actual fun currentTimeMillis(): Long =
     System.currentTimeMillis()
 
 actual fun sleep(duration: Int) =

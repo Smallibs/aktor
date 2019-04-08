@@ -43,7 +43,7 @@ object DeadLetter {
 
         companion object {
             fun default() = Delegate { reference, message ->
-                println("[Warning] ${reference.address} cannot manage ${message}")
+                println("[Warning] ${reference.address} cannot manage $message")
             }
         }
     }

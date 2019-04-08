@@ -1,6 +1,5 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.ActorRunner
 import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic

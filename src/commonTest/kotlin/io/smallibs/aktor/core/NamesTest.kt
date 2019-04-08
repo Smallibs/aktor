@@ -12,7 +12,8 @@ class NamesTest {
         with(Names) {
             val array = arrayOf(1, 2)
             val set = mutableSetOf<Int>()
-            repeat(1000) { // it's very unlikely to have 1000 time the same result
+            repeat(1000) {
+                // it's very unlikely to have 1000 time the same result
                 set.add(array.pickRandom())
             }
             assertEquals(array.size, set.size)

@@ -43,10 +43,9 @@ object DeadLetter {
 
         companion object {
             fun default() = Delegate { reference, message ->
-                println("[Warning] ${reference.address} cannot manager ${message}")
+                println("[Warning] ${reference.address} cannot manage ${message}")
             }
         }
-
     }
 
     infix fun from(actor: Actor<*>): Bridge =

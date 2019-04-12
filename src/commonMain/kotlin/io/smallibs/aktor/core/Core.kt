@@ -49,7 +49,7 @@ object Core {
         private class StashBehavior<T>(
             val coreBehavior: CoreBehavior<T>,
             val behavior: ExhaustiveProtocolBehavior<T>,
-            val stashed: Stashed<T> = Stashed(listOf())
+            val stashed: Stashed<T> = Stashed()
         ) : Behavior<T> {
 
             override val core: CoreBehavior<T> get() = coreBehavior

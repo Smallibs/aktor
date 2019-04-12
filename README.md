@@ -38,6 +38,7 @@ Data relationships has been inspired by [Akka System](https://doc.akka.io/docs/a
 
     infix fun become(protocol: ProtocolBehavior<T>): Behavior<T>
 
+    fun behavior(): Behavior<T>   
     fun same(): Behavior<T>
     
     fun kill() : Boolean

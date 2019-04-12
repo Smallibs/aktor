@@ -68,6 +68,6 @@ object System {
             actor.same()
         }
 
-    fun new(): Behavior<System.Protocol> = Core.Behaviors.stashBehavior(System.init)
+    fun new(): Behavior<Protocol> = Core.Behaviors.stashBehavior(init)
 
 }

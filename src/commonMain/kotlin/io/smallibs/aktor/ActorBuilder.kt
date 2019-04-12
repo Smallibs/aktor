@@ -1,5 +1,7 @@
 package io.smallibs.aktor
 
+import io.smallibs.aktor.utils.Names
+
 interface ActorBuilder {
 
     infix fun <R> actorFor(property: ActorProperty<R>): ActorReference<R> =

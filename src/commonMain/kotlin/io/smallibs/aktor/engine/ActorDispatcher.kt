@@ -27,9 +27,7 @@ class ActorDispatcher(runner: ActorRunner) {
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>): Unit? {
         println("[DEBUG] ${reference.address} <= $envelop ")
 
-        val actor = universe.find(reference)
-
-        return when (actor) {
+        return when (val actor = universe.find(reference)) {
             null ->
                 universe.root()?.let {
                     val message = DeadLetter.NotManaged(reference, envelop, "actor not found")

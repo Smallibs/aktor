@@ -1,4 +1,4 @@
-package io.smallibs.aktor
+package io.smallibs.aktor.utils
 
 import kotlin.random.Random
 

@@ -24,6 +24,6 @@ object User {
             actor.same()
         }
 
-    fun new() = Behavior of User.registry()
+    fun new() = Behavior of registry()
 
 }

@@ -1,6 +1,6 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.Names
+import io.smallibs.aktor.utils.Names
 import kotlin.math.roundToInt
 import kotlin.test.Test
 import kotlin.test.assertEquals

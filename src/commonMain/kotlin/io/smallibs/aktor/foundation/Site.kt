@@ -63,5 +63,5 @@ object Site {
         }
 
 
-    fun new(): Behavior<Protocol> = Core.Behaviors.stashBehavior(Site.init)
+    fun new(): Behavior<Protocol> = Core.Behaviors.stashBehavior(init)
 }

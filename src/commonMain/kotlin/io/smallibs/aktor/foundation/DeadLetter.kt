@@ -16,7 +16,7 @@ object DeadLetter {
     data class NotManaged(val reference: ActorReference<*>, val envelop: Envelop<*>, val reason: String) : Protocol
     data class Configure(val notifier: Notifier) : Protocol
 
-    private fun registry(notifier: Notifier): ProtocolBehavior<DeadLetter.Protocol> =
+    private fun registry(notifier: Notifier): ProtocolBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
                 is NotManaged -> {

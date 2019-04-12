@@ -23,8 +23,8 @@ object Core {
                         Unit
                     is Kill -> {
                         if (actor.kill()) {
-                            actor.context.children().forEach { it tell Core.Kill }
-                            actor.context.parent()?.let { it tell Core.Killed(actor.context.self) }
+                            actor.context.children().forEach { it tell Kill }
+                            actor.context.parent()?.let { it tell Killed(actor.context.self) }
                         } else {
                             Unit
                         }
@@ -59,6 +59,7 @@ object Core {
                     behavior(actor, message)
                 } catch (e: NotExhaustive) {
                     if (!stashed.stash(message.content)) {
+                        // Not enough space in the stashed actor
                         throw NotExhaustive() // TODO
                     }
                 }

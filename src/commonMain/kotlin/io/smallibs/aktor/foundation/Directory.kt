@@ -49,7 +49,7 @@ object Directory {
             }.exhaustive.value
         }
 
-    fun new(): Behavior<Protocol> = Behavior of Directory.registry(mapOf())
+    fun new(): Behavior<Protocol> = Behavior of registry(mapOf())
 
     infix fun from(actor: Actor<*>): Bridge =
         Directory from actor.context.self
@@ -78,7 +78,7 @@ object Directory {
     fun <T : Any> tryFound(
         success: (ActorReference<T>) -> Unit,
         failure: () -> Unit = { }
-    ): ProtocolBehavior<Directory.SearchActorResponse<T>> = { actor, envelop ->
+    ): ProtocolBehavior<SearchActorResponse<T>> = { actor, envelop ->
         actor.context.self tell Core.Kill
         envelop.content.reference?.let { success(it) } ?: failure()
 

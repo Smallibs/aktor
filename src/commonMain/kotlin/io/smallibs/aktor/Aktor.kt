@@ -4,6 +4,7 @@ import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.engine.ActorDispatcher
 import io.smallibs.aktor.foundation.Site
+import io.smallibs.aktor.utils.Names
 
 object Aktor {
 
@@ -13,9 +14,7 @@ object Aktor {
         val addressSite = ActorAddressImpl(siteName ?: Names.generate())
         val referenceSite = ActorReferenceImpl<Site.Protocol>(dispatcher, addressSite)
 
-        val actorSite = dispatcher.register(referenceSite, Site.new())
-
-        return actorSite
+        return dispatcher.register(referenceSite, Site.new())
     }
 
 }

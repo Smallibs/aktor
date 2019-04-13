@@ -1,7 +1,9 @@
 package io.smallibs.aktor.foundation
 
-import io.smallibs.aktor.*
-import io.smallibs.aktor.core.ActorAddressImpl
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.CoreBehavior
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
@@ -27,7 +29,7 @@ object System {
                     Behavior of Pair(running, protocol(directory, deadLetter))
                 }
                 else ->
-                    actor.same()
+                    Core.Behaviors.core<Protocol>()(actor, message)
             }
         }
 

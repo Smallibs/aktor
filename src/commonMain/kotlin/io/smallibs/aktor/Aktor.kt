@@ -2,6 +2,7 @@ package io.smallibs.aktor
 
 import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
+import io.smallibs.aktor.core.Core
 import io.smallibs.aktor.engine.ActorDispatcher
 import io.smallibs.aktor.foundation.Site
 import io.smallibs.aktor.foundation.System
@@ -12,10 +13,9 @@ data class AktorSystem(
     private val site: Actor<Site.Protocol>,
     private val system: Actor<System.Protocol>,
     private val user: Actor<User.Protocol>
-) : ActorBuilder by user,
-    ActorReference<User.Protocol> by user.context.self {
+) : ActorBuilder by user, ActorReference<User.Protocol> by user.context.self {
 
-    fun kill(): Boolean = site.kill()
+    fun haltSystem() = site.context.self tell Core.Kill
 
 }
 

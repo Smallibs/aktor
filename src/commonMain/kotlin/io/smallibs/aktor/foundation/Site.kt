@@ -14,12 +14,21 @@ object Site {
     data class UserInstall(val behavior: Behavior<*>) : Protocol
     data class SystemInstall(val behavior: Behavior<*>) : Protocol
 
-    private fun installed(system: ActorReference<System.Protocol>): CoreBehavior<Protocol> =
+    private fun installed(
+        system: ActorReference<System.Protocol>,
+        user: ActorReference<User.Protocol>
+    ): CoreBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
-                is Core.Killed -> {
+                is Core.Kill ->
+                    if (actor.kill()) {
+                        system tell message.content
+                        user tell message.content
+                    }
+
+                is Core.Killed ->
                     system tell message.content
-                }
+                
                 is Core.ToRoot ->
                     when (message.content.message) {
                         is System.Protocol ->
@@ -51,5 +60,5 @@ object Site {
 
 
     fun new(system: ActorReference<System.Protocol>, user: ActorReference<User.Protocol>): Behavior<Protocol> =
-        Behavior of Pair(installed(system), protocol(system, user))
+        Behavior of Pair(installed(system, user), protocol(system, user))
 }

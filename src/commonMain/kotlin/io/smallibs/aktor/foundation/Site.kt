@@ -11,21 +11,8 @@ import io.smallibs.aktor.utils.reject
 object Site {
 
     interface Protocol
-    data class UserInstall<R>(val behavior: Behavior<R>) : Protocol
-    data class SystemInstall<R>(val behavior: Behavior<R>) : Protocol
-
-    private val init: CoreBehavior<Protocol> = { actor, message ->
-        when (message.content) {
-            is Core.Live -> {
-                val system = actor actorFor System.new()
-                val user = actor actorFor User.new()
-
-                Behavior of Pair(installed(system), protocol(system, user))
-            }
-            else ->
-                actor.same()
-        }
-    }
+    data class UserInstall(val behavior: Behavior<*>) : Protocol
+    data class SystemInstall(val behavior: Behavior<*>) : Protocol
 
     private fun installed(system: ActorReference<System.Protocol>): CoreBehavior<Protocol> =
         { actor, message ->
@@ -51,9 +38,9 @@ object Site {
     ): ProtocolBehavior<Protocol> =
         { actor, message ->
             when (message.content) {
-                is SystemInstall<*> ->
+                is SystemInstall ->
                     system tell System.Install(message.content.behavior)
-                is UserInstall<*> ->
+                is UserInstall ->
                     user tell User.Install(message.content.behavior)
                 else ->
                     reject
@@ -63,5 +50,6 @@ object Site {
         }
 
 
-    fun new(): Behavior<Protocol> = Core.Behaviors.stashBehavior(init)
+    fun new(system: ActorReference<System.Protocol>, user: ActorReference<User.Protocol>): Behavior<Protocol> =
+        Behavior of Pair(installed(system), protocol(system, user))
 }

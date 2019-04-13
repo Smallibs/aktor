@@ -44,7 +44,7 @@ class DeadLetterTest {
     @Test
     fun shouldBeNotifiedWhenAnActorDoesNotExist() {
         val aktor = Aktor.new("site")
-        val deadLetter = DeadLetter from aktor.context.self
+        val deadLetter = DeadLetter from aktor
         val directory = Directory from aktor
 
         val deadLetterAtomic: AtomicRef<ActorReference<*>?> = atomic(null)

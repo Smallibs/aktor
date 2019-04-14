@@ -2,6 +2,7 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
+import io.smallibs.utils.currentTimeMillis
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
@@ -9,6 +10,14 @@ private const val actors = 1000
 private const val messages = 1000
 
 class MassiveActorTest {
+
+    private inline fun <T> stopWatch(label: () -> String, block: () -> T): T {
+        val start = currentTimeMillis()
+        val result = block()
+        val duration = currentTimeMillis() - start
+        println("${label()} done in ${duration} ms")
+        return result
+    }
 
     @Test
     fun shouldDoOneMillionTellsUsingCoroutine() {
@@ -23,11 +32,15 @@ class MassiveActorTest {
             }
         }
 
-        repeat(messages) {
-            references.forEach { a -> a tell true }
-        }
+        stopWatch({ "Execution of ${called.value} messages using Coroutines" }) {
+            stopWatch({ "Submission" }) {
+                repeat(messages) {
+                    references.forEach { a -> a tell true }
+                }
+            }
 
-        Await(5000).until { called.value == messages * actors }
+            Await(5000).until { called.value == messages * actors }
+        }
     }
 
 }

@@ -25,8 +25,6 @@ class ActorDispatcher(runner: ActorRunner) {
         universe.remove(reference)
 
     fun <T> deliver(reference: ActorReference<T>, envelop: Envelop<T>): Unit? {
-        println("[DEBUG] ${reference.address} <= $envelop ")
-
         return when (val actor = universe.find(reference)) {
             null ->
                 universe.root()?.let {

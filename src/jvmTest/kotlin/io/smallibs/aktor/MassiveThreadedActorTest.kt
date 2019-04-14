@@ -28,7 +28,7 @@ class MassiveThreadedActorTest {
 
     @Test
     fun shouldDoOneMillionTellsUsingThreads() {
-        val system = new("test", execution = ThreadBasedRunner())
+        val system = new("test", execution = ActorRunner.threaded())
 
         val called = atomic(0)
 

@@ -83,8 +83,6 @@ class DirectoryTest {
         directory find (aktor actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
-
-        aktor.halt()
     }
 
     @Test

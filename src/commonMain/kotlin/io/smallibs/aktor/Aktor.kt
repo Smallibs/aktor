@@ -15,7 +15,7 @@ data class AktorSystem(
     private val user: Actor<User.Protocol>
 ) : ActorBuilder by user, ActorReference<User.Protocol> by user.context.self {
 
-    fun haltSystem() = site.context.self tell Core.Kill
+    fun halt() = site.context.self tell Core.Kill
 
 }
 

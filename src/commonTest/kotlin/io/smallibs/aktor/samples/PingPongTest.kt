@@ -33,17 +33,19 @@ class PingPongTest {
 
     @Test
     fun shouldPlayGame() {
-        val system = Aktor.new("test")
+        val aktor = Aktor.new("test")
 
         val endedPlayers = atomic(0)
 
-        val arbiter = system.actorFor(arbiter(endedPlayers))
-        val ping = system.actorFor(player(arbiter, "ping"))
-        val pong = system.actorFor(player(arbiter, "pong"))
+        val arbiter = aktor.actorFor(arbiter(endedPlayers))
+        val ping = aktor.actorFor(player(arbiter, "ping"))
+        val pong = aktor.actorFor(player(arbiter, "pong"))
 
         ping tell PingPong(pong)
 
         Await(5000).until { endedPlayers.value == 1 }
+
+        aktor.halt()
     }
 
 }

@@ -26,19 +26,21 @@ class DeadLetterTest {
 
     @Test
     fun shouldBeNotifiedWhenAnActorDoesNotManageAndMessage() {
-        val site = Aktor.new("site")
-        val deadLetter = DeadLetter from site
+        val aktor = Aktor.new("site")
+        val deadLetter = DeadLetter from aktor
 
         val atomic: AtomicRef<ActorReference<*>?> = atomic(null)
         deadLetter configure { reference, _ -> atomic.getAndSet(reference) }
 
-        val test = site actorFor TestActor.receiver
+        val test = aktor actorFor TestActor.receiver
 
         test tell TestActor.Dummy
 
         Await(5000).until {
             atomic.value == test
         }
+
+        aktor.halt()
     }
 
     @Test
@@ -69,5 +71,7 @@ class DeadLetterTest {
         test tell TestActor.Dummy
 
         Await(5000).until { deadLetterAtomic.value == test }
+
+        aktor.halt()
     }
 }

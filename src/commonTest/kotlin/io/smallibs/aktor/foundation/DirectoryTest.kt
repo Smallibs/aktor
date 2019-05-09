@@ -20,95 +20,107 @@ class DirectoryTest {
 
     @Test
     fun shouldRetrieveARegisteredActor() {
-        val site = Aktor.new("site")
-        val directory = Directory from site
+        val aktor = Aktor.new("site")
+        val directory = Directory from aktor
 
-        directory register (site actorFor TestActor.receiver)
+        directory register (aktor actorFor TestActor.receiver)
 
         val atomic = atomic(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
+
+        aktor.halt()
     }
 
     @Test
     fun shouldRetrieveARegisteredActorUsingAlsoItsName() {
-        val site = Aktor.new("site")
-        val directory = Directory from site
+        val aktor = Aktor.new("site")
+        val directory = Directory from aktor
 
-        directory register site.actorFor(TestActor.receiver, "test")
+        directory register aktor.actorFor(TestActor.receiver, "test")
 
         val atomic = atomic(false)
-        directory.find("test", site actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
+        directory.find("test", aktor actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
+
+        aktor.halt()
     }
 
     @Test
     fun shouldNotRetrieveARegisteredActorUsingAWrongName() {
-        val site = Aktor.new("site")
-        val directory = Directory from site
+        val aktor = Aktor.new("site")
+        val directory = Directory from aktor
 
-        directory register (site actorFor TestActor.receiver)
+        directory register (aktor actorFor TestActor.receiver)
 
         val atomic = atomic(false)
-        directory.find("dummy", site actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
+        directory.find("dummy", aktor actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
+
+        aktor.halt()
     }
 
     @Test
     fun shouldUnregisterWhenKillingRegisteredActor() {
-        val site = Aktor.new("site")
-        val directory = Directory from site
+        val aktor = Aktor.new("site")
+        val directory = Directory from aktor
 
-        val test = site actorFor TestActor.receiver
+        val test = aktor actorFor TestActor.receiver
 
         directory register test
 
         val atomic = atomic(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
 
         test tell Core.Kill
 
         atomic.getAndSet(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
+
+        aktor.halt()
     }
 
     @Test
     fun shouldNotRetrieveAnUnregisteredActor() {
-        val site = Aktor.new("site")
+        val aktor = Aktor.new("site")
 
-        val directory = Directory from site
+        val directory = Directory from aktor
 
         val atomic = atomic(false)
-        directory find (site actorFor tryFound<Directory.Protocol>({ atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<Directory.Protocol>({ atomic.getAndSet(true) }))
 
         assertFailsWith<TimeOutException> { Await(5000).until { atomic.value } }
+
+        aktor.halt()
     }
 
     @Test
     fun shouldNotRetrieveAnRegisteredAndThenUnregisteredActor() {
-        val site = Aktor.new("site")
-        val directory = Directory from site
+        val aktor = Aktor.new("site")
+        val directory = Directory from aktor
 
-        val test = site actorFor TestActor.receiver
+        val test = aktor actorFor TestActor.receiver
 
         directory register test
         val atomic = atomic(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({ atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
 
         directory unregister test
 
         atomic.getAndSet(false)
-        directory find (site actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
+        directory find (aktor actorFor tryFound<TestActor.Protocol>({}, { atomic.getAndSet(true) }))
 
         Await(5000).until { atomic.value }
+
+        aktor.halt()
     }
 }

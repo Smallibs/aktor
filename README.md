@@ -119,7 +119,7 @@ val system = Aktor.new("example")
 val reference = system.actorFor<String> { _, m ->
     actor become { a, v -> 
         called.set("$m.content $v.content")
-        a.behavior()
+        a.same()
     }
 }
 

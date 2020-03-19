@@ -14,17 +14,34 @@ object Directory {
     const val name = "directory"
 
     interface Protocol
-    data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
-    data class UnregisterActor(val reference: ActorReference<*>) : Protocol
-    data class SearchActors(val type: KClass<*>, val sender: ActorReference<SearchActorsResponse<*>>) : Protocol
-    data class SearchNamedActor(
+
+    data class RegisterActor<T : Any>(
+        val type: KClass<T>,
+        val reference: ActorReference<T>
+    ) : Protocol
+
+    data class UnregisterActor(
+        val reference: ActorReference<*>
+    ) : Protocol
+
+    data class SearchActorsByType(
+        val type: KClass<*>,
+        val sender: ActorReference<SearchActorsResponse<*>>
+    ) : Protocol
+
+    data class SearchActorByNameAndType(
         val type: KClass<*>,
         val name: String,
         val sender: ActorReference<SearchActorResponse<*>>
     ) : Protocol
 
-    data class SearchActorsResponse<T>(val references: List<ActorReference<T>>)
-    data class SearchActorResponse<T>(val reference: ActorReference<T>?)
+    data class SearchActorsResponse<T>(
+        val references: List<ActorReference<T>>
+    )
+
+    data class SearchActorResponse<T>(
+        val reference: ActorReference<T>?
+        @)
 
     @Suppress("UNCHECKED_CAST")
     private fun registry(actors: List<Pair<KClass<*>, ActorReference<*>>>): ProtocolBehavior<Protocol> =
@@ -36,7 +53,7 @@ object Directory {
                     actor become registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
                     actor become registry(actors.filter { entry -> entry.second.address != content.reference.address })
-                is SearchActors -> {
+                is SearchActorsByType -> {
                     val foundActors = actors
                         .filter { entry -> entry.first == content.type }
                         .map { entry -> entry.second }
@@ -44,8 +61,9 @@ object Directory {
                     content.sender tell SearchActorsResponse(foundActors as List<ActorReference<Any?>>)
                     actor.same()
                 }
-                is SearchNamedActor -> {
+                is SearchActorByNameAndType -> {
                     val foundActor = actors
+                        .filter { entry -> entry.first == content.type }
                         .map { entry -> entry.second }
                         .find { reference -> content.name == reference.address.name }
 
@@ -72,11 +90,11 @@ object Directory {
 
         @Suppress("UNCHECKED_CAST")
         inline infix fun <reified T : Any> find(receptor: ActorReference<SearchActorsResponse<T>>) =
-            bridge(SearchActors(T::class, receptor as ActorReference<SearchActorsResponse<*>>))
+            bridge(SearchActorsByType(T::class, receptor as ActorReference<SearchActorsResponse<*>>))
 
         @Suppress("UNCHECKED_CAST")
         inline fun <reified T : Any> find(name: String, receptor: ActorReference<SearchActorResponse<T>>) =
-            bridge(SearchNamedActor(T::class, name, receptor as ActorReference<SearchActorResponse<*>>))
+            bridge(SearchActorByNameAndType(T::class, name, receptor as ActorReference<SearchActorResponse<*>>))
 
         infix fun unregister(reference: ActorReference<*>) =
             bridge(UnregisterActor(reference))

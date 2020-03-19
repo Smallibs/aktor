@@ -16,16 +16,18 @@ object Directory {
     interface Protocol
     data class RegisterActor<T : Any>(val type: KClass<T>, val reference: ActorReference<T>) : Protocol
     data class UnregisterActor(val reference: ActorReference<*>) : Protocol
-    data class SearchActor(val type: KClass<*>, val sender: ActorReference<SearchActorResponse<*>>) : Protocol
+    data class SearchActors(val type: KClass<*>, val sender: ActorReference<SearchActorsResponse<*>>) : Protocol
     data class SearchNamedActor(
         val type: KClass<*>,
         val name: String,
         val sender: ActorReference<SearchActorResponse<*>>
     ) : Protocol
 
+    data class SearchActorsResponse<T>(val reference: List<ActorReference<T>>)
     data class SearchActorResponse<T>(val reference: ActorReference<T>?)
 
-    private fun registry(actors: Map<KClass<*>, ActorReference<*>>): ProtocolBehavior<Protocol> =
+    @Suppress("UNCHECKED_CAST")
+    private fun registry(actors: List<Pair<KClass<*>, ActorReference<*>>>): ProtocolBehavior<Protocol> =
         { actor, message ->
             val content = message.content
 
@@ -33,15 +35,21 @@ object Directory {
                 is RegisterActor<*> ->
                     actor become registry(actors + Pair(content.type, content.reference))
                 is UnregisterActor ->
-                    actor become registry(actors.filter { entry -> entry.value.address != content.reference.address })
-                is SearchActor -> {
-                    content.sender tell SearchActorResponse(actors[content.type])
+                    actor become registry(actors.filter { entry -> entry.second.address != content.reference.address })
+                is SearchActors -> {
+                    val foundActors = actors
+                        .filter { entry -> entry.first != content.type }
+                        .map { entry -> entry.second }
+
+                    content.sender tell SearchActorsResponse(foundActors as List<ActorReference<Any?>>)
                     actor.same()
                 }
                 is SearchNamedActor -> {
-                    content.sender tell SearchActorResponse(actors[content.type].takeIf { reference ->
-                        content.name == reference?.address?.name
-                    })
+                    val foundActor = actors
+                        .map { entry -> entry.second }
+                        .find { reference -> content.name == reference.address.name }
+
+                    content.sender tell SearchActorResponse(foundActor)
                     actor.same()
                 }
                 else ->
@@ -49,7 +57,7 @@ object Directory {
             }.exhaustive.value
         }
 
-    fun new(): Behavior<Protocol> = Behavior of registry(mapOf())
+    fun new(): Behavior<Protocol> = Behavior of registry(listOf())
 
     infix fun from(actor: Actor<*>): Bridge =
         Directory from actor.context.self
@@ -63,8 +71,8 @@ object Directory {
             bridge(RegisterActor(T::class, reference))
 
         @Suppress("UNCHECKED_CAST")
-        inline infix fun <reified T : Any> find(receptor: ActorReference<SearchActorResponse<T>>) =
-            bridge(SearchActor(T::class, receptor as ActorReference<SearchActorResponse<*>>))
+        inline infix fun <reified T : Any> find(receptor: ActorReference<SearchActorsResponse<T>>) =
+            bridge(SearchActors(T::class, receptor as ActorReference<SearchActorsResponse<*>>))
 
         @Suppress("UNCHECKED_CAST")
         inline fun <reified T : Any> find(name: String, receptor: ActorReference<SearchActorResponse<T>>) =
@@ -75,7 +83,17 @@ object Directory {
 
     }
 
-    fun <T : Any> tryFound(
+    fun <T : Any> searchByType(
+        success: (List<ActorReference<T>>) -> Unit,
+        failure: () -> Unit = { }
+    ): ProtocolBehavior<SearchActorsResponse<T>> = { actor, envelop ->
+        actor.context.self tell Core.Kill
+        success(envelop.content.reference) ?: failure()
+
+        actor.same()
+    }
+
+    fun <T : Any> searchByName(
         success: (ActorReference<T>) -> Unit,
         failure: () -> Unit = { }
     ): ProtocolBehavior<SearchActorResponse<T>> = { actor, envelop ->
@@ -84,5 +102,4 @@ object Directory {
 
         actor.same()
     }
-
 }

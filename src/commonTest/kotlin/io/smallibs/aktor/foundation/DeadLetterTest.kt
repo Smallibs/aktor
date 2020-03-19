@@ -4,7 +4,7 @@ import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Aktor
 import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.core.Core
-import io.smallibs.aktor.foundation.Directory.tryFound
+import io.smallibs.aktor.foundation.Directory.searchByType
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 import io.smallibs.utils.Await
@@ -57,13 +57,13 @@ class DeadLetterTest {
         directory register test
 
         val directoryAtomic = atomic(false)
-        directory find (aktor actorFor tryFound<TestActor.Protocol>({ directoryAtomic.getAndSet(true) }))
+        directory find (aktor actorFor searchByType<TestActor.Protocol>({ directoryAtomic.getAndSet(true) }))
         Await(5000).until { directoryAtomic.value }
         directoryAtomic.getAndSet(false)
 
         test tell Core.Kill
 
-        directory find (aktor actorFor tryFound<TestActor.Protocol>(
+        directory find (aktor actorFor searchByType<TestActor.Protocol>(
             {},
             { directoryAtomic.getAndSet(true) }))
         Await(5000).until { directoryAtomic.value }

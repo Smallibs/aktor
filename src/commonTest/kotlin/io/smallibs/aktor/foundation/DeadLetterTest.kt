@@ -36,9 +36,7 @@ class DeadLetterTest {
 
         test tell TestActor.Dummy
 
-        Await(5000).until {
-            atomic.value == test
-        }
+        Await(5000).until { atomic.value == test }
 
         aktor.halt()
     }
@@ -57,15 +55,13 @@ class DeadLetterTest {
         directory register test
 
         val directoryAtomic = atomic(false)
-        directory find (aktor actorFor searchByType<TestActor.Protocol>({ directoryAtomic.getAndSet(true) }))
+        directory find (aktor actorFor searchByType<TestActor.Protocol> { directoryAtomic.getAndSet(it.isNotEmpty()) })
         Await(5000).until { directoryAtomic.value }
         directoryAtomic.getAndSet(false)
 
         test tell Core.Kill
 
-        directory find (aktor actorFor searchByType<TestActor.Protocol>(
-            {},
-            { directoryAtomic.getAndSet(true) }))
+        directory find (aktor actorFor searchByType<TestActor.Protocol> { directoryAtomic.getAndSet(it.isNullOrEmpty()) })
         Await(5000).until { directoryAtomic.value }
 
         test tell TestActor.Dummy

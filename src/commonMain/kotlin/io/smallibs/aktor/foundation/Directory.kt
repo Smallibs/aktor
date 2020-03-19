@@ -23,7 +23,7 @@ object Directory {
         val sender: ActorReference<SearchActorResponse<*>>
     ) : Protocol
 
-    data class SearchActorsResponse<T>(val reference: List<ActorReference<T>>)
+    data class SearchActorsResponse<T>(val references: List<ActorReference<T>>)
     data class SearchActorResponse<T>(val reference: ActorReference<T>?)
 
     @Suppress("UNCHECKED_CAST")
@@ -38,7 +38,7 @@ object Directory {
                     actor become registry(actors.filter { entry -> entry.second.address != content.reference.address })
                 is SearchActors -> {
                     val foundActors = actors
-                        .filter { entry -> entry.first != content.type }
+                        .filter { entry -> entry.first == content.type }
                         .map { entry -> entry.second }
 
                     content.sender tell SearchActorsResponse(foundActors as List<ActorReference<Any?>>)
@@ -84,22 +84,18 @@ object Directory {
     }
 
     fun <T : Any> searchByType(
-        success: (List<ActorReference<T>>) -> Unit,
-        failure: () -> Unit = { }
+        success: (List<ActorReference<T>>) -> Unit
     ): ProtocolBehavior<SearchActorsResponse<T>> = { actor, envelop ->
         actor.context.self tell Core.Kill
-        success(envelop.content.reference) ?: failure()
-
+        success(envelop.content.references)
         actor.same()
     }
 
     fun <T : Any> searchByName(
-        success: (ActorReference<T>) -> Unit,
-        failure: () -> Unit = { }
+        success: (ActorReference<T>?) -> Unit
     ): ProtocolBehavior<SearchActorResponse<T>> = { actor, envelop ->
         actor.context.self tell Core.Kill
-        envelop.content.reference?.let { success(it) } ?: failure()
-
+        success(envelop.content.reference)
         actor.same()
     }
 }

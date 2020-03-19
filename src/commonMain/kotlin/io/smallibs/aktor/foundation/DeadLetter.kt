@@ -58,7 +58,7 @@ object DeadLetter {
     class Bridge(val bridge: (Protocol) -> Unit) {
 
         infix fun configure(notifier: (ActorReference<*>, Envelop<*>) -> Unit) =
-            bridge(Configure(DeadLetter.Notifier.Delegate(notifier)))
+            bridge(Configure(Notifier.Delegate(notifier)))
 
     }
 

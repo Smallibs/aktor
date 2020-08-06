@@ -29,7 +29,7 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory find (aktor actorFor searchByType<TestActor.Protocol> { atomic.getAndSet(true) })
 
-        Await(5000).until { atomic.value }
+        Await().atMost(5000).until { atomic.value }
 
         aktor.halt()
     }
@@ -44,7 +44,7 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory.find("test", aktor actorFor searchByName<TestActor.Protocol> { atomic.getAndSet(it != null) })
 
-        Await(5000).until { atomic.value }
+        Await().atMost(5000).until { atomic.value }
 
         aktor.halt()
     }
@@ -59,7 +59,7 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory.find("dummy", aktor actorFor searchByName<TestActor.Protocol> { atomic.getAndSet(it == null) })
 
-        Await(5000).until { atomic.value }
+        Await().atMost(5000).until { atomic.value }
 
         aktor.halt()
     }
@@ -76,14 +76,14 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory find (aktor actorFor searchByType<TestActor.Protocol> { atomic.getAndSet(it.isNotEmpty()) })
 
-        Await(5000).until { atomic.value }
+        Await().atMost(5000).until { atomic.value }
 
         test tell Core.Kill
 
         atomic.getAndSet(false)
         directory find (aktor actorFor searchByType<TestActor.Protocol> { atomic.getAndSet(it.isNullOrEmpty()) })
 
-        Await(5000).until { atomic.value }
+        Await().atMost(5000).until { atomic.value }
     }
 
     @Test
@@ -95,7 +95,7 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory find (aktor actorFor searchByType<Directory.Protocol> { atomic.getAndSet(it.isNotEmpty()) })
 
-        assertFailsWith<TimeOutException> { Await(5000).until { atomic.value } }
+        assertFailsWith<TimeOutException> { Await().atMost(5000).until { atomic.value } }
 
         aktor.halt()
     }
@@ -111,14 +111,14 @@ class DirectoryTest {
         val atomic = atomic(false)
         directory find (aktor actorFor searchByType<TestActor.Protocol> { atomic.getAndSet(it.isNotEmpty()) })
 
-        Await(5000).until { atomic.value }
+        Await() atMost 5000 until { atomic.value }
 
         directory unregister test
 
         atomic.getAndSet(false)
         directory find (aktor actorFor searchByType<TestActor.Protocol> { atomic.getAndSet(it.isNullOrEmpty()) })
 
-        Await(5000).until { atomic.value }
+        Await() atMost 5000 until { atomic.value }
 
         aktor.halt()
     }

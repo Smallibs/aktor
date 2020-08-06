@@ -7,8 +7,15 @@ expect fun sleep(duration: Int)
 
 object TimeOutException : Exception()
 
-class Await(val timeout: Long) {
-    fun until(predicate: () -> Boolean) {
+class Await private constructor(private val timeout: Long, private val sleepDuration: Int) {
+
+    constructor() : this(500, 100)
+
+    infix fun atMost(timeout: Long): Await = Await(timeout, sleepDuration)
+
+    infix fun every(delay: Int): Await = Await(timeout, delay)
+
+    infix fun until(predicate: () -> Boolean) {
         val currentTime = currentTimeMillis()
 
         while (!predicate()) {
@@ -16,7 +23,7 @@ class Await(val timeout: Long) {
                 throw TimeOutException
             }
 
-            sleep(100)
+            sleep(sleepDuration)
         }
     }
 }

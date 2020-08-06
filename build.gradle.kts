@@ -1,2 +1,2 @@
-group = "io.smallibs.aktor"
+group = "io.aktor"
 version = "Master-SNAPSHOT"

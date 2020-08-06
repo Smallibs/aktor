@@ -41,7 +41,7 @@ object Directory {
 
     data class SearchActorResponse<T>(
         val reference: ActorReference<T>?
-        @)
+    )
 
     @Suppress("UNCHECKED_CAST")
     private fun registry(actors: List<Pair<KClass<*>, ActorReference<*>>>): ProtocolBehavior<Protocol> =

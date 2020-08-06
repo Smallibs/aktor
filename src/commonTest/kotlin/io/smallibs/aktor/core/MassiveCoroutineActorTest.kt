@@ -6,8 +6,8 @@ import io.smallibs.utils.currentTimeMillis
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
-private const val actors = 1000
-private const val messages = 1000
+private const val actors = 1_000
+private const val messages = 1_000
 
 class MassiveActorTest {
 
@@ -39,7 +39,7 @@ class MassiveActorTest {
                 }
             }
 
-            Await(5000).until { called.value == messages * actors }
+            Await() atMost 5000 until { called.value == messages * actors }
         }
     }
 

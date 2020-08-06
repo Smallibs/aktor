@@ -18,8 +18,7 @@ class ActorUniverse {
 
     @Synchronized
     tailrec fun root(reference: ActorReference<*>): ActorReference<*> {
-        val parent = parent(reference)
-        return when (parent) {
+        return when (val parent = parent(reference)) {
             null -> reference
             else -> root(parent)
         }

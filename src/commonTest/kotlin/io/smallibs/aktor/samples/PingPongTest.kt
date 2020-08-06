@@ -43,7 +43,7 @@ class PingPongTest {
 
         ping tell PingPong(pong)
 
-        Await(5000).until { endedGame.value }
+        Await() atMost 5000 until { endedGame.value }
 
         aktor.halt()
     }

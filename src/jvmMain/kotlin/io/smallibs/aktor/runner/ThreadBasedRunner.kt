@@ -6,13 +6,10 @@ import java.util.concurrent.Executors
 
 class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
 
-    private val actorService: ExecutorService = Executors.newFixedThreadPool(availableProcessors(nbThread))
+    private val availableProcessors: Int = (nbThread ?: Runtime.getRuntime().availableProcessors()).coerceAtLeast(2)
 
-    override fun execute(run: () -> Unit) {
-        this.actorService.execute(run)
-    }
+    private val actorService: ExecutorService = Executors.newFixedThreadPool(availableProcessors)
 
-    private fun availableProcessors(nbThread: Int?): Int =
-        (nbThread ?: Runtime.getRuntime().availableProcessors()).coerceAtLeast(2)
+    override fun execute(run: () -> Unit) = this.actorService.execute(run)
 
 }

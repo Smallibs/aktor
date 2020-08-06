@@ -7,9 +7,7 @@ interface ActorRunner {
     fun execute(run: () -> Unit)
 
     companion object {
-        fun coroutine(): ActorRunner =
-            CoroutineBasedRunner()
-
+        fun coroutine(): ActorRunner = CoroutineBasedRunner()
     }
 
 }

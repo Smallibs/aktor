@@ -2,7 +2,6 @@ package io.smallibs.aktor
 
 
 import io.smallibs.aktor.Aktor.new
-import io.smallibs.aktor.runner.ThreadBasedRunner
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
 import org.awaitility.Duration.FIVE_SECONDS
@@ -43,7 +42,7 @@ class MassiveThreadedActorTest {
                 }
             }
 
-            Await(FIVE_SECONDS.valueInMS).until {
+            Await() atMost FIVE_SECONDS.valueInMS until {
                 called.value == messages * actors
             }
         }

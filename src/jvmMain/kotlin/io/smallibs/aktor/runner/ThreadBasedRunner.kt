@@ -11,5 +11,4 @@ class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
     private val actorService: ExecutorService = Executors.newFixedThreadPool(availableProcessors)
 
     override fun execute(run: () -> Unit) = this.actorService.execute(run)
-
 }

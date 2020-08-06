@@ -14,5 +14,4 @@ interface ActorRunner {
         fun threaded(nbThread: Int? = null): ActorRunner =
             ThreadBasedRunner(nbThread)
     }
-
 }

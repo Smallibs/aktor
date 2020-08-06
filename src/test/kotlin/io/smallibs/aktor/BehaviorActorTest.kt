@@ -37,11 +37,14 @@ class BehaviorActorTest {
             if (done.get()) {
                 called.addAndGet(v1.content)
             } else {
-                a.start({ _, v2 ->
-                    done.set(true)
-                    called.addAndGet(v1.content + v2.content)
-                    a.finish()
-                }, true)
+                a.start(
+                    { _, v2 ->
+                        done.set(true)
+                        called.addAndGet(v1.content + v2.content)
+                        a.finish()
+                    },
+                    true
+                )
             }
         }
 

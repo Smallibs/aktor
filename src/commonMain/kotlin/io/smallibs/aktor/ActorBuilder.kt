@@ -17,5 +17,4 @@ interface ActorBuilder {
         actorFor(behavior, Names.generate())
 
     fun <R> actorFor(behavior: Behavior<R>, name: String): ActorReference<R>
-
 }

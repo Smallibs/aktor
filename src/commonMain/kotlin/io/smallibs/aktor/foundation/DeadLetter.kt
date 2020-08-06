@@ -59,8 +59,5 @@ object DeadLetter {
 
         infix fun configure(notifier: (ActorReference<*>, Envelop<*>) -> Unit) =
             bridge(Configure(Notifier.Delegate(notifier)))
-
     }
-
 }
-

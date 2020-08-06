@@ -5,9 +5,10 @@ import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
 import io.smallibs.aktor.engine.ActorDispatcher
 
-data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val address: ActorAddressImpl) :
-    ActorReference<T> {
-
+data class ActorReferenceImpl<T>(
+    val dispatcher: ActorDispatcher,
+    override val address: ActorAddressImpl
+) : ActorReference<T> {
     override fun tell(envelop: Envelop<T>) {
         this.dispatcher.deliver(this, envelop)
     }
@@ -24,6 +25,4 @@ data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val a
     override fun toString(): String {
         return "ActorReference($address)"
     }
-
-
 }

@@ -17,5 +17,4 @@ data class ActorReferenceImpl<T>(val dispatcher: ActorDispatcher, override val a
 
     private fun <R> newChild(name: String): ActorReferenceImpl<R> =
         ActorReferenceImpl(dispatcher, this.address.newChild(name))
-
 }

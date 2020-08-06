@@ -35,5 +35,4 @@ class NamesTest {
 
         assertEquals(testNb, set.size)
     }
-
 }

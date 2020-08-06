@@ -1,6 +1,5 @@
 package io.smallibs.aktor
 
-
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
@@ -8,12 +7,10 @@ import java.text.DecimalFormat
 import java.time.Duration
 import java.util.concurrent.atomic.AtomicInteger
 
-
 private const val actors = 1000
 private const val messages = 1000
 
 class MassiveActorTest {
-
 
     private val format = DecimalFormat.getIntegerInstance()
     private fun Int.format(): String =
@@ -48,7 +45,6 @@ class MassiveActorTest {
                 called.get() == messages * actors
             }
         }
-
     }
 
     @Test
@@ -73,5 +69,4 @@ class MassiveActorTest {
             }
         }
     }
-
 }

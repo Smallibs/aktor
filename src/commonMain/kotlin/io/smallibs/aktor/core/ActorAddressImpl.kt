@@ -2,7 +2,10 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.ActorAddress
 
-data class ActorAddressImpl(override val name: String, override val parent: ActorAddress? = null) : ActorAddress {
+data class ActorAddressImpl(
+    override val name: String,
+    override val parent: ActorAddress? = null
+) : ActorAddress {
 
     override fun parentOf(address: ActorAddress): Boolean =
         address.parent?.let { this === it } ?: false
@@ -30,5 +33,4 @@ data class ActorAddressImpl(override val name: String, override val parent: Acto
         result = 31 * result + (parent?.hashCode() ?: 0)
         return result
     }
-
 }

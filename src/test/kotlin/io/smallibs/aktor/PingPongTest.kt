@@ -45,5 +45,4 @@ class PingPongTest {
             endedPlayers.get() == 1
         }
     }
-
 }

@@ -15,5 +15,4 @@ class ThreadBasedRunner(nbThread: Int? = null) : ActorRunner {
     private fun availableProcessors(nbThread: Int?): Int =
         (nbThread ?: Runtime.getRuntime().availableProcessors())
             .coerceAtLeast(2)
-
 }

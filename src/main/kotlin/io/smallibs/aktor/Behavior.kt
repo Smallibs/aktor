@@ -13,5 +13,4 @@ class Behavior<T>(val receiver: Receiver<T>) {
     fun onPause(actor: Actor<T>) {}
 
     fun onStop(actor: Actor<T>) {}
-
 }

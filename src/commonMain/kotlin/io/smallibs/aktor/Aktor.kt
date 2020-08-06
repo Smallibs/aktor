@@ -16,7 +16,6 @@ data class AktorSystem(
 ) : ActorBuilder by user, ActorReference<User.Protocol> by user.context.self {
 
     fun halt() = site.context.self tell Core.Kill
-
 }
 
 object Aktor {
@@ -36,5 +35,4 @@ object Aktor {
 
         return AktorSystem(site, system, user)
     }
-
 }

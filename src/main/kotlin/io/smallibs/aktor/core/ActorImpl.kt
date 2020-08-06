@@ -4,7 +4,6 @@ import io.smallibs.aktor.Actor
 import io.smallibs.aktor.ActorReference
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.Envelop
-import java.util.*
 
 class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>) :
     Actor<T> {
@@ -65,6 +64,4 @@ class ActorImpl<T> private constructor(override val context: ActorContextImpl<T>
         } else {
             null
         }
-
 }
-

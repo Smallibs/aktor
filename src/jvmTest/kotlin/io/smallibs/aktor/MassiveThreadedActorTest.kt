@@ -1,6 +1,5 @@
 package io.smallibs.aktor
 
-
 import io.smallibs.aktor.Aktor.new
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
@@ -46,7 +45,5 @@ class MassiveThreadedActorTest {
                 called.value == messages * actors
             }
         }
-
     }
-
 }

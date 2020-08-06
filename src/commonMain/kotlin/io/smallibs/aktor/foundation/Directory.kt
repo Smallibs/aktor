@@ -98,7 +98,6 @@ object Directory {
 
         infix fun unregister(reference: ActorReference<*>) =
             bridge(UnregisterActor(reference))
-
     }
 
     fun <T : Any> searchByType(

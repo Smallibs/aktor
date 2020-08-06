@@ -20,5 +20,4 @@ class ActorAddressTest {
 
         assertTrue { child childOf root }
     }
-
 }

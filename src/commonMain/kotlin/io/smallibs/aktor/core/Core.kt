@@ -1,6 +1,11 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.*
+import io.smallibs.aktor.Actor
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.CoreBehavior
+import io.smallibs.aktor.ExhaustiveProtocolBehavior
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.foundation.Stashed
 import io.smallibs.aktor.utils.NotExhaustive
 import io.smallibs.aktor.utils.exhaustive
@@ -77,8 +82,5 @@ object Core {
                 stashed.unStashAll(actor.context.self)
             }
         }
-
     }
-
 }
-

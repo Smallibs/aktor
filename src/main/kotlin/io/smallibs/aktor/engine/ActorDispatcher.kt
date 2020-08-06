@@ -1,6 +1,7 @@
 package io.smallibs.aktor.engine
 
-import io.smallibs.aktor.*
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.core.ActorImpl
 import io.smallibs.aktor.core.ActorReferenceImpl
 import io.smallibs.aktor.core.ActorUniverse
@@ -33,5 +34,4 @@ class ActorDispatcher private constructor(private val universe: ActorUniverse, p
 
     fun <T> children(reference: ActorReferenceImpl<T>): Collection<ActorReference<*>> =
         universe.children(reference)
-
 }

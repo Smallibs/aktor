@@ -20,5 +20,4 @@ internal class ActorMailbox<T> {
         } else {
             envelops.removeAt(0)
         }
-
 }

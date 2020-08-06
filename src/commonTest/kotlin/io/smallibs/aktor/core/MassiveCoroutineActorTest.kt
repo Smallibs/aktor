@@ -15,7 +15,7 @@ class MassiveActorTest {
         val start = currentTimeMillis()
         val result = block()
         val duration = currentTimeMillis() - start
-        println("${label()} done in ${duration} ms")
+        println("${label()} done in $duration ms")
         return result
     }
 
@@ -42,5 +42,4 @@ class MassiveActorTest {
             Await() atMost 5000 until { called.value == messages * actors }
         }
     }
-
 }

@@ -2,7 +2,6 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.ActorAddress
 import io.smallibs.aktor.ActorReference
-import java.util.*
 
 class ActorUniverse {
 
@@ -36,6 +35,4 @@ class ActorUniverse {
                 null
             }
         }
-
-
 }

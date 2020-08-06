@@ -69,5 +69,4 @@ object System {
         }
 
     fun new(): Behavior<Protocol> = Core.Behaviors.stashBehavior(init)
-
 }

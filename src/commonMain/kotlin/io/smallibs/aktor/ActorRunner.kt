@@ -9,5 +9,4 @@ interface ActorRunner {
     companion object {
         fun coroutine(): ActorRunner = CoroutineBasedRunner()
     }
-
 }

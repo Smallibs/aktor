@@ -13,5 +13,4 @@ data class ActorAddressImpl(override val name: String, override val parent: Acto
 
     fun newChild(name: String): ActorAddressImpl =
         ActorAddressImpl(name, this)
-
 }

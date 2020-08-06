@@ -28,7 +28,7 @@ object Site {
 
                 is Core.Killed ->
                     system tell message.content
-                
+
                 is Core.ToRoot ->
                     when (message.content.message) {
                         is System.Protocol ->
@@ -57,7 +57,6 @@ object Site {
 
             actor.same()
         }
-
 
     fun new(system: ActorReference<System.Protocol>, user: ActorReference<User.Protocol>): Behavior<Protocol> =
         Behavior of Pair(installed(system, user), protocol(system, user))

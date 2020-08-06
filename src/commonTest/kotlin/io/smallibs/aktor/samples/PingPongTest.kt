@@ -47,5 +47,4 @@ class PingPongTest {
 
         aktor.halt()
     }
-
 }

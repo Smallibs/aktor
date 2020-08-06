@@ -1,13 +1,20 @@
 package io.smallibs.aktor.core
 
-import io.smallibs.aktor.*
+import io.smallibs.aktor.Actor
+import io.smallibs.aktor.ActorReference
+import io.smallibs.aktor.Behavior
+import io.smallibs.aktor.Envelop
+import io.smallibs.aktor.ProtocolBehavior
 import io.smallibs.aktor.foundation.DeadLetter
 import io.smallibs.aktor.foundation.System
 import io.smallibs.aktor.utils.NotExhaustive
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
 
-class ActorImpl<T>(override val context: ActorContextImpl<T>, private val current: AtomicRef<Behavior<T>>) : Actor<T> {
+class ActorImpl<T>(
+    override val context: ActorContextImpl<T>,
+    private val current: AtomicRef<Behavior<T>>
+) : Actor<T> {
 
     private val actorMailbox: ActorMailbox<T> = ActorMailbox()
 
@@ -51,4 +58,3 @@ class ActorImpl<T>(override val context: ActorContextImpl<T>, private val curren
             }
         }
 }
-

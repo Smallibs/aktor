@@ -21,5 +21,4 @@ interface Actor<T> : ActorBuilder {
     }
 
     fun finish()
-
 }

@@ -1,6 +1,5 @@
 package io.smallibs.aktor
 
-
 import org.awaitility.Awaitility.await
 import org.awaitility.Duration.FIVE_SECONDS
 import org.junit.Test
@@ -51,5 +50,4 @@ class SimpleActorTest {
             called.get() == 42
         }
     }
-
 }

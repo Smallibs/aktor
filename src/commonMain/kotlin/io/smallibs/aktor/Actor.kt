@@ -11,6 +11,4 @@ interface Actor<T> : ActorBuilder {
     fun behavior(): Behavior<T> = same()
 
     fun kill(): Boolean
-
 }
-

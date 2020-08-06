@@ -9,6 +9,4 @@ class CoroutineBasedRunner : ActorRunner {
     override fun execute(run: () -> Unit) {
         GlobalScope.launch { run() }
     }
-
-
 }

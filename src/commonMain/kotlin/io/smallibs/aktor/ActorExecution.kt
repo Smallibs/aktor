@@ -7,5 +7,4 @@ interface ActorExecution {
     fun manage(actor: ActorImpl<*>)
 
     fun notifyEpoch(address: ActorAddress)
-
 }

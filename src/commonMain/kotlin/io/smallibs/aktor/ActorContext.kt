@@ -9,5 +9,4 @@ interface ActorContext<T> {
     fun parent(): ActorReference<*>?
 
     fun children(): Collection<ActorReference<*>>
-
 }

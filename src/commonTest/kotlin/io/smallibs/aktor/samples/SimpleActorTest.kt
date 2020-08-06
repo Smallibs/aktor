@@ -1,6 +1,5 @@
 package io.smallibs.aktor.samples
 
-
 import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
 import kotlinx.atomicfu.atomic
@@ -30,7 +29,7 @@ class SimpleActorTest {
 
         val called = atomic(listOf<Int>())
         val reference = aktor.actorFor<Int> { a, m ->
-            called.getAndSet(called.value + m.content);
+            called.getAndSet(called.value + m.content)
             a.same()
         }
 
@@ -49,11 +48,11 @@ class SimpleActorTest {
 
         val called = atomic(0)
         val secondary = aktor.actorFor<Int> { a, m ->
-            called.getAndSet(m.content);
+            called.getAndSet(m.content)
             a.same()
         }
         val primary = aktor.actorFor<Int> { a, m ->
-            secondary.tell(m);
+            secondary.tell(m)
             a.same()
         }
 
@@ -63,5 +62,4 @@ class SimpleActorTest {
 
         aktor.halt()
     }
-
 }

@@ -1,9 +1,7 @@
 package io.smallibs.aktor.foundation
 
-import io.smallibs.aktor.ActorAddress
 import io.smallibs.aktor.Behavior
 import io.smallibs.aktor.ProtocolBehavior
-import io.smallibs.aktor.core.ActorAddressImpl
 import io.smallibs.aktor.utils.exhaustive
 import io.smallibs.aktor.utils.reject
 
@@ -27,5 +25,4 @@ object User {
         }
 
     fun new() = Behavior of registry()
-
 }

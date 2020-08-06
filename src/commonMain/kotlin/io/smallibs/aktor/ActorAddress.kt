@@ -10,5 +10,4 @@ interface ActorAddress {
         address parentOf this
 
     infix fun parentOf(address: ActorAddress): Boolean
-
 }

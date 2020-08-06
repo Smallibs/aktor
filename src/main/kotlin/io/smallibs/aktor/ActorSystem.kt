@@ -8,5 +8,4 @@ interface ActorSystem : Actor<Any> {
         fun system(site: String, execution: ActorRunner = ActorRunner.threaded()): ActorSystem =
             ActorSystemImpl(site, execution)
     }
-
 }

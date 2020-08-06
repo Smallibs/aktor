@@ -11,5 +11,4 @@ class ActorContextImpl<T>(override val self: ActorReferenceImpl<T>) :
 
     override fun children(): Collection<ActorReference<*>> =
         this.self.dispatcher.children(self)
-
 }

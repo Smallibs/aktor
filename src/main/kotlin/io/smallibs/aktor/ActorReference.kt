@@ -8,5 +8,4 @@ interface ActorReference<T> {
 
     infix fun tell(content: T) =
         tell(Envelop(content))
-
 }

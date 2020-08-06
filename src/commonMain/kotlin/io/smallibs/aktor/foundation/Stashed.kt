@@ -20,5 +20,4 @@ class Stashed<T> private constructor(private var actions: List<T> = listOf(), pr
         actions.forEach { a tell it }
         actions = listOf()
     }
-
 }

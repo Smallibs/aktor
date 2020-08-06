@@ -2,12 +2,28 @@ plugins {
     kotlin("multiplatform") version "1.3.72"
     id("maven-publish")
 }
+
 repositories {
     mavenCentral()
 }
 
 group = "io.aktor"
 version = "Master-SNAPSHOT"
+
+buildscript {
+    repositories {
+        maven("https://plugins.gradle.org/m2/")
+    }
+    dependencies {
+        classpath("org.jlleitschuh.gradle:ktlint-gradle:9.3.0")
+    }
+}
+
+apply(plugin = "org.jlleitschuh.gradle.ktlint")
+
+repositories {
+    jcenter()
+}
 
 kotlin {
     jvm()

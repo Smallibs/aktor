@@ -2,7 +2,7 @@ package io.smallibs.aktor.core
 
 import io.smallibs.aktor.Aktor
 import io.smallibs.utils.Await
-import io.smallibs.utils.currentTimeMillis
+import io.smallibs.utils.System
 import kotlinx.atomicfu.atomic
 import kotlin.test.Test
 
@@ -12,9 +12,9 @@ private const val messages = 1_000
 class MassiveActorTest {
 
     private inline fun <T> stopWatch(label: () -> String, block: () -> T): T {
-        val start = currentTimeMillis()
+        val start = System.currentTimeMillis()
         val result = block()
-        val duration = currentTimeMillis() - start
+        val duration = System.currentTimeMillis() - start
         println("${label()} done in $duration ms")
         return result
     }

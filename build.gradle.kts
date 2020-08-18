@@ -27,7 +27,19 @@ repositories {
 
 kotlin {
     jvm()
-    js().nodejs()
+    js {
+        /*
+        nodejs {
+        }
+        browser {
+            testTask {
+                useMocha {
+                    timeout = "5000" // mochaTimeout here as string
+                }
+            }
+        }
+        */
+    }
 
     sourceSets {
         val commonMain by getting {

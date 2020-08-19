@@ -6,22 +6,29 @@ import io.smallibs.aktor.ActorRunner
 import io.smallibs.aktor.core.ActorImpl
 import kotlinx.atomicfu.AtomicRef
 import kotlinx.atomicfu.atomic
-import kotlin.jvm.Synchronized
+import kotlinx.atomicfu.update
 
 internal class ActorExecutionImpl(private val runner: ActorRunner) : ActorExecution {
 
     internal enum class Status { STOPPED, RUN }
 
-    private val actors: MutableMap<ActorAddress, Pair<ActorImpl<*>, AtomicRef<Status>>> = HashMap()
+    private val actors: AtomicRef<Map<ActorAddress, Pair<ActorImpl<*>, AtomicRef<Status>>>> = atomic(mapOf())
 
-    @Synchronized
     override fun manage(actor: ActorImpl<*>) {
-        actors[actor.context.self.address] = Pair(actor, atomic(Status.STOPPED))
+        actors.update {
+            it + (actor.context.self.address to (actor to atomic(Status.STOPPED)))
+        }
     }
 
-    @Synchronized
     override fun notifyEpoch(address: ActorAddress) {
-        actors[address]?.let { performEpoch(it.first, it.second) }
+        var actor: Pair<ActorImpl<*>, AtomicRef<Status>>? = null
+
+        actors.update {
+            actor = it[address]
+            it
+        }
+
+        actor?.let { performEpoch(it.first, it.second) }
     }
 
     //

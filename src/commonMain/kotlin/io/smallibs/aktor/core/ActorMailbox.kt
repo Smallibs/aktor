@@ -1,23 +1,32 @@
 package io.smallibs.aktor.core
 
 import io.smallibs.aktor.Envelop
-import kotlin.jvm.Synchronized
+import kotlinx.atomicfu.AtomicRef
+import kotlinx.atomicfu.atomic
+import kotlinx.atomicfu.update
 
-// Investigate: Can we use coroutine in this section instead of synchronized block
 internal class ActorMailbox<T> {
 
-    private val envelops: ArrayList<Envelop<T>> = arrayListOf()
+    private val envelops: AtomicRef<List<Envelop<T>>> = atomic(listOf())
 
-    @Synchronized
     fun deliver(envelop: Envelop<T>) {
-        envelops.add(envelop)
+        envelops.update {
+            it + envelop
+        }
     }
 
-    @Synchronized
-    fun next(): Envelop<T>? =
-        if (envelops.isEmpty()) {
-            null
-        } else {
-            envelops.removeAt(0)
+    fun next(): Envelop<T>? {
+        var response: Envelop<T>? = null
+
+        envelops.update {
+            if (it.isNotEmpty()) {
+                response = it[0]
+                it.drop(1)
+            } else {
+                it
+            }
         }
+
+        return response
+    }
 }

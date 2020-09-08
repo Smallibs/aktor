@@ -44,7 +44,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-common"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-common:1.3.8")
                 implementation("org.jetbrains.kotlinx:atomicfu-common:0.14.2")
             }
@@ -57,7 +56,6 @@ kotlin {
         }
         val jvmMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-jdk8"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.8")
                 implementation("org.jetbrains.kotlinx:atomicfu:0.14.2")
             }
@@ -70,7 +68,6 @@ kotlin {
         }
         val jsMain by getting {
             dependencies {
-                implementation(kotlin("stdlib-js"))
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.8")
                 implementation("org.jetbrains.kotlinx:atomicfu-js:0.14.2")
             }

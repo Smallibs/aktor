@@ -65,7 +65,7 @@ object Core {
                 } catch (e: NotExhaustive) {
                     if (!stashed.stash(message.content)) {
                         // Not enough space in the stashed actor
-                        throw NotExhaustive() // TODO
+                        throw NotExhaustive() // TODO(didier) Add a specific exception
                     }
                 }
 
